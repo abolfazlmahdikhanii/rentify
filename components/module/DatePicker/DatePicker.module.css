@@ -1,0 +1,24 @@
+.customCalendar {
+    border-radius: 16px !important;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    width: 42rem !important;
+    height: 63vh !important;
+    overflow: hidden;
+    -webkit-border-radius: 16px !important;
+    -moz-border-radius: 16px !important;
+    -ms-border-radius: 16px !important;
+    -o-border-radius: 16px !important;
+    position: relative;
+    z-index: 1;
+  }
+  .customCalendar * {
+    width: 100%;
+  }
+  
+  .btnArrow {
+    all: unset;
+    cursor: pointer;
+  }
+  
+  

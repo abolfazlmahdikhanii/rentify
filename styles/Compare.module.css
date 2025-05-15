@@ -1,0 +1,27 @@
+.btnPrimary {
+  width: 130px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.8rem;
+  -webkit-border-radius: 0.8rem;
+  -moz-border-radius: 0.8rem;
+  -ms-border-radius: 0.8rem;
+  -o-border-radius: 0.8rem;
+}
+
+.secondaryButton {
+  color: var(--primary);
+  background: #f5f5f5;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  -webkit-border-radius: 0.8rem;
+  -moz-border-radius: 0.8rem;
+  -ms-border-radius: 0.8rem;
+  -o-border-radius: 0.8rem;
+}

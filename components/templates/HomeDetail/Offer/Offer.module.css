@@ -1,0 +1,27 @@
+.offer {
+  padding: 2.4rem 1.6rem;
+  background-color: #e7f1ff;
+  border-radius: 0.8rem;
+  -webkit-border-radius: 0.8rem;
+  -moz-border-radius: 0.8rem;
+  -ms-border-radius: 0.8rem;
+  -o-border-radius: 0.8rem;
+  border: 2px dashed var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4rem;
+}
+.offerTitle {
+  font-size: 2rem;
+  color: #0a58ca;
+}
+.offerCopy {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.8rem;
+  color: #0a58ca;
+  cursor: pointer;
+  user-select: none;
+}

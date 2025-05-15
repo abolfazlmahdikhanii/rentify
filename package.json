@@ -6,11 +6,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "server": "npx json-server ./data/db.json -p 4000",
     "lint": "next lint"
   },
   "dependencies": {
+    "@bprogress/next": "^3.2.10",
+    "@hookform/devtools": "^4.4.0",
+    "@lottiefiles/dotlottie-react": "^0.13.4",
+    "cookies-next": "^5.1.0",
+    "jalali-date": "^1.2.0",
+    "json-server": "^1.0.0-beta.3",
+    "maplibre-gl": "^5.2.0",
+    "next": "15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.0"
+    "react-hook-form": "^7.55.0",
+    "react-map-gl": "^8.0.1",
+    "react-multi-date-picker": "^4.5.2",
+    "react-otp-input": "^3.1.1",
+    "react-toastify": "^11.0.5",
+    "swr": "^2.3.3"
   }
 }

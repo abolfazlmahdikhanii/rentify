@@ -1,0 +1,86 @@
+
+  
+  .title {
+    font-size: 32px;
+    padding-bottom: 50px;
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .stepsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+  }
+  
+  .iconContainer {
+    position: relative;
+    width: 112px;
+    height: 112px;
+    background-color: #353739;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .number {
+    position: absolute;
+    top: 50%;
+    left: -18px;
+    transform: translateY(-50%);
+    width: 37px;
+    height: 37px;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .icon {
+    color: white;
+    width: 24px;
+    height: 24px;
+  }
+  
+  .stepTitle {
+    font-size: 24px;
+
+    margin-bottom: 11px;
+    color: #333;
+    
+  }
+  
+  .stepDescription {
+    font-size: 14px;
+    color: #7E8288;
+    margin: 0;
+    line-height: 1.8;
+    text-align: center;
+    /* width: 160px; */
+  }
+  
+  .connector {
+    flex-grow: 1;
+    height: 4px;
+    background-color: #e5e5e5;
+    margin-top: 56px;
+    max-width: 122px;
+  }
+  
+  

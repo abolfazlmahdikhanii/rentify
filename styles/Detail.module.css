@@ -1,0 +1,74 @@
+.detailGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 39rem;
+  margin-top: 5rem;
+  gap: 2rem;
+  position: relative;
+}
+.detailInfo {
+  width: 100%;
+  position: relative;
+}
+.detailInfo__Title {
+}
+.detailTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.detailTitle__title {
+  font-size: 2.4rem;
+}
+.detailShare__btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.detailDate {
+  width: fit-content;
+  margin-top: 1.7rem;
+  column-count: 2;
+  column-rule: solid 1px #d7d8da;
+  column-gap: 4rem;
+}
+.detailDate__sub {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #989ba0;
+}
+.detailPrice {
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+.detailPrice__text {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  color: #353739;
+  font-weight: bold;
+  font-size: 2.4rem;
+}
+.detailPrice__text span {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.detailReport {
+  border-top: 1px solid #d7d8da;
+  margin: 4rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 2.5rem;
+}
+.detailReport__text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #45484b;
+  font-size: 1.8rem;
+}

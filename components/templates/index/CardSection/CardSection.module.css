@@ -1,0 +1,97 @@
+/* Main container */
+.cardSection {
+  margin: 8rem 0;
+}
+
+/* Main heading */
+.heading {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #000;
+}
+.titlePrimary{
+    color: var(--primary);
+}
+/* Cards container */
+.cardsContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  gap: 22px;
+  justify-content: center;
+}
+
+/* Individual card */
+.card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+  width: 100%;
+  max-width: 372px;
+  height: 463px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  -ms-border-radius: 16px;
+  -o-border-radius: 16px;
+}
+.card:nth-child(2){
+    height:502px ;
+}
+.cardInfoBox {
+  flex-basis: 90%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Card image */
+.cardImage {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 27px;
+}
+
+/* Card title */
+.cardTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 22px;
+  color: #000;
+}
+
+/* Card text */
+.cardText {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #595c61;
+  margin-bottom: 20px;
+  padding-inline: 7px;
+}
+
+/* Blue button */
+.blueButton {
+  font: inherit;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  height: 48px;
+  font-size: 17px;
+
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.blueButton:hover {
+  background-color: #0052cc;
+}

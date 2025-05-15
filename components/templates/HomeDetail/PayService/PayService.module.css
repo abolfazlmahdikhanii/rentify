@@ -1,0 +1,45 @@
+.payRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0 0 0;
+}
+.payInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.payInfo__Img {
+  width: 7.6rem;
+  height: 7.3rem;
+  border: 1px solid #989ba0;
+  border-radius: 1.2rem;
+  -webkit-border-radius: 1.2rem;
+  -moz-border-radius: 1.2rem;
+  -ms-border-radius: 1.2rem;
+  -o-border-radius: 1.2rem;
+  display: grid;
+  place-items: center;
+}
+.payInfo__Img img {
+  width: 6.8rem;
+  height: 6.5rem;
+  object-fit: cover;
+}
+.payInfo__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.payInfo__title {
+  font-size: 2rem;
+}
+.payInfo__subtitle {
+  font-size: 1.2rem;
+  color: #7e8288;
+}
+.payNotice {
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  color: #73767C;
+}

@@ -1,0 +1,49 @@
+.bestHouse {
+  height: 37.6rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1.6rem;
+  -webkit-border-radius: 1.6rem;
+  -moz-border-radius: 1.6rem;
+  -ms-border-radius: 1.6rem;
+  -o-border-radius: 1.6rem;
+  position: relative;
+}
+.bestHouseImg {
+  width: 100%;
+  height: 100%;
+}
+.bestHouseImg__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bestHouseBox {
+  position: absolute;
+  bottom: .7rem;
+  left: 1rem;
+  right: 1rem;
+  background-color: #fff;
+  padding: 1.5rem 1.2rem 1.5rem 1.6rem;
+  border-radius: 0.8rem;
+  -webkit-border-radius: 0.8rem;
+  -moz-border-radius: 0.8rem;
+  -ms-border-radius: 0.8rem;
+  -o-border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bestHouseBoxInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.bestHouseBoxInfo__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.bestHouseBoxInfo__subtitle {
+  color: #989ba0;
+  font-size: 1.5rem;
+}

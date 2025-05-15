@@ -1,0 +1,316 @@
+/* Main container */
+.backDrop {
+  position: fixed; /* Covers the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+  backdrop-filter: blur(5px); /* Apply blur effect */
+  z-index: 1000; /* Ensure it appears above other content */
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  background-color: white;
+  z-index: 2000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 1.2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: right;
+  -webkit-border-radius: 1.2rem;
+  -moz-border-radius: 1.2rem;
+  -ms-border-radius: 1.2rem;
+  -o-border-radius: 1.2rem;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  max-height: 625px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: 1px solid #d7d8da;
+  padding: 1.6rem 2.4rem;
+}
+
+.closeButton {
+  padding: 0.25rem; /* 2.5px */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 1.8rem; /* 16px */
+  font-weight: bold;
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+.content::-webkit-scrollbar {
+  display: none;
+}
+/* Filter Section */
+.filterSection {
+  padding: 1.6rem 2.4rem;
+}
+.filterSection:not(:last-of-type) {
+  border-bottom: 1px solid #d7d8da;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0; /* 5px 0 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: right;
+}
+
+.sectionTitle {
+  font-family: "shabnam", sans-serif;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 1.4rem; /* 14px */
+}
+
+.sectionContent {
+  margin-top: 2.5rem; /* 5px */
+}
+
+/* Checkbox */
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 7.5px */
+  margin-top: 0.5rem; /* 5px */
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* 5px */
+}
+
+.checkbox {
+  width: 1.8rem; /* 12.5px */
+  height: 1.8rem; /* 12.5px */
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem; /* 2.5px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 0.5rem; /* 5px - for RTL layout */
+}
+
+.checkboxChecked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkmark {
+  height: 1.4rem; /* 8.75px */
+  width: 1.4rem; /* 8.75px */
+  color: white;
+}
+
+.checkboxLabel {
+  font-size: 1.4rem; /* 14px */
+  color: #4b5563;
+}
+.inputControl {
+}
+.controlText {
+  font-size: 1.4rem;
+  color: #45484b;
+}
+/* Input */
+
+
+.clearButton {
+  position: absolute;
+  left: 0.5rem; /* 5px */
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.clearButton:hover {
+  color: #4b5563;
+}
+
+/* Room Counter */
+.roomCountWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.roomCounter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 26.8rem; /* 200px */
+  border-radius: 9999px;
+  border: 1px solid #eaeaea;
+  padding: 0 0.8rem; /* 2.5px */
+  height: 4rem;
+}
+
+.counterButton {
+  width: 2.4rem; /* 20px */
+  height: 2.4rem; /* 20px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #6b7280;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.counterButton:hover {
+  background-color: #f3f4f6;
+}
+
+.counterButtonText {
+  color: #595c61; /* 12.5px */
+}
+
+.roomCount {
+  font-size: 1.4rem; /* 14px */
+  color: #4b5563;
+  font-weight: 500;
+}
+
+/* Toggle */
+.toggleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 10px */
+  margin-top: 0.5rem; /* 5px */
+}
+
+.toggleItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggleLabel {
+  font-size: 1.4rem; /* 14px */
+  color: #4b5563;
+}
+
+.toggleSwitch {
+  position: relative;
+  display: inline-flex;
+  height: 2.4rem; /* 15px */
+  width: 4.2rem; /* 27.5px */
+  align-items: center;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  background-color: #e5e7eb;
+  border: none;
+  cursor: pointer;
+}
+
+.toggleSwitchActive {
+  background-color: #3b82f6;
+}
+
+.toggleKnob {
+  display: inline-block;
+  height: 1.6rem;
+  width: 1.6rem;
+  transform: translateX(-90%);
+  border-radius: 9999px;
+  background-color: white;
+  transition: transform 0.2s;
+  -webkit-transition: transform 0.2s;
+  -moz-transition: transform 0.2s;
+  -ms-transition: transform 0.2s;
+  -o-transition: transform 0.2s;
+  -webkit-transform: translateX(-90%);
+  -moz-transform: translateX(-90%);
+  -ms-transform: translateX(-90%);
+  -o-transform: translateX(-90%);
+}
+
+.toggleKnobActive {
+  transform: translateX(0.25rem);
+  -webkit-transform: translateX(0.25rem);
+  -moz-transform: translateX(0.25rem);
+  -ms-transform: translateX(0.25rem);
+  -o-transform: translateX(0.25rem);
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 1rem; /* 10px */
+
+  padding: 1.6rem 2.4rem;
+}
+
+.primaryButton {
+  flex: 1;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem; /* 3.75px */
+  padding: 0.625rem 1.25rem; /* 6.25px 12.5px */
+  font-size: 1.4rem; /* 14px */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font: inherit;
+}
+
+.primaryButton:hover {
+  background-color: #2563eb;
+}
+
+.secondaryButton {
+  color: #3b82f6;
+  background-color: white;
+  border: 1px solid #3b82f6;
+  border-radius: 0.375rem; /* 3.75px */
+  padding: 0.625rem 1.25rem; /* 6.25px 12.5px */
+  font-size: 1.4rem; /* 14px */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: "Vazir", sans-serif;
+}
+
+.secondaryButton:hover {
+  background-color: #ebf5ff;
+}

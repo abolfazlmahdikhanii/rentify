@@ -1,0 +1,157 @@
+
+  
+  .footer {
+    background-color: #ffffff;
+    padding: 5rem 1rem;
+    
+   
+    border-top: 1px solid #eaeaea;
+    
+  }
+  
+  .containers {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .column:nth-child(1){
+    flex: 1 1;
+    max-width: 30rem;
+    
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 3rem;
+  }
+  
+  .column {
+    flex: 1;
+    min-width: 160px;
+  }
+  
+  .logo {
+    margin-bottom: 1rem;
+  }
+  .logo img{
+    margin-bottom: 1.3rem;
+  }
+  .tagline {
+    font-size: 1.4rem; /* Was 0.9rem, now 14px */
+    color: #45484B;
+    margin: 1.2rem 0;
+  }
+  
+  .subTagline {
+    font-size: 1.4rem; /* Was 0.8rem, now 13px */
+    color: #45484B;
+    margin-bottom: 2.5rem;
+  }
+  
+  .columnTitle {
+    color: #0056b3;
+    font-size: 1.8rem; /* Was 1.1rem, now 18px */
+    font-weight: 600;
+    margin-bottom: 3rem;
+  }
+  
+  .linkList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .linkList li {
+    margin-bottom: 2rem;
+  }
+  
+  .linkList a {
+    color: #73767C;
+    text-decoration: none;
+    font-size: 1.6rem; /* Was 0.9rem, now 14px */
+    transition: color 0.2s;
+  }
+  
+  .linkList a:hover {
+    color: #0056b3;
+  }
+  
+  .contactList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .contactItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+    color: #555;
+    font-size: 1.6rem; /* Was 0.9rem, now 14px */
+    line-height: 1.8;
+    text-align: center;
+  }
+  
+  .icon {
+    flex-shrink: 0;
+    color: #555;
+  }
+  
+  .socialIcons {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+  
+  .socialIcon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    transition: background-color 0.2s;
+  }
+  
+  .socialIcon:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .certifications {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eaeaea;
+  }
+  
+  .certItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .certItem img{
+    object-fit: cover;
+  }
+  
+  @media (max-width: 768px) {
+    .columns {
+      flex-direction: column;
+    }
+  
+    .column {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+  
+    .certifications {
+      flex-wrap: wrap;
+    }
+  }
+  

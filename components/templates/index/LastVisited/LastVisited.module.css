@@ -1,0 +1,16 @@
+.headerTitle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8.5rem 0 5rem 0;
+}
+.headerTitle__title{
+font-size: 3.2rem;
+font-weight: bold;
+}
+.headerTitle__allBtn{
+display: flex;
+align-items: center;
+gap: 1.2rem;
+color: var(--primary);
+}
