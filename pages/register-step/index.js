@@ -274,7 +274,7 @@ export default function RegisterStep() {
       setStep((prev) => prev + 1);
     } catch (error) {
       console.error("Submission Error:", error);
-      toast.error("ثبت آگهی با خطا مواجه شد ",toastOption)
+      toast.error("ثبت آگهی با خطا مواجه شد ", toastOption);
       setIsSuccess(false);
       setIsLoading(false);
       // Show error to user
@@ -339,466 +339,471 @@ export default function RegisterStep() {
     return title;
   };
   return (
-     <PrivateRoute role={["admin","user"]}>
- <form onSubmit={handleSubmit(onSubmitFinalHandler)}>
-      <Layout active={step}>
-        {step === 1 && (
-          <StepContent
-            step={step}
-            event={nextStepHandler}
-            prevEvent={prevStepHandler}
-          >
-            <div className={`${styles.formRow} ${styles.mb4}`}>
-              <Select
-                label="نوع ملک"
-                placeHolder="نوع ملک خود را انتخاب کنید"
-                size="lg"
-                val={watch("houseType")}
-                defaultValue={watch("houseType")}
-                onChange={(val) => setValue("houseType", val)}
-                error={errors.houseType} // Pass error message
-                options={[
-                  { value: "villa", label: "ویلا" },
-                  { value: "apartment", label: "آپارتمان" },
-                  { value: "house", label: "خانه ویلایی" },
-                ]}
-              />
-              <Select
-                label="نوع معامله"
-                placeHolder="نوع معامله خود را انتخاب کنید"
-                size="lg"
-                val={watch("contractType")}
-                defaultValue={watch("contractType")}
-                onChange={(val) => setValue("contractType", val)}
-                error={errors.contractType}
-                options={[
-                  { value: "sale", label: "فروش" },
-                  { value: "rahn-ejare", label: "رهن و اجاره" },
-                  { value: "ejare", label: "اجاره" },
-                ]}
-              />
-            </div>
-
-            <div className={styles.formRow}>
-              <Input
-                label="رهن"
-                type="text"
-                placeholder="مثلا 500 میلیون تومان"
-                size="lg"
-                val={watch("rahnPrice")}
-                onChange={(val) => {
-                  const digitsOnly = val.replace(/\D/g, "");
-                  const formatted = digitsOnly.replace(
-                    /\B(?=(\d{3})+(?!\d))/g,
-                    ","
-                  );
-                  setValue("rahnPrice", formatted);
-                }}
-                error={errors.rahnPrice}
-              />
-              <Input
-                label="اجاره"
-                type="text"
-                placeholder="مثلا 50 میلیون تومان"
-                size="lg"
-                val={watch("ejarePrice")}
-                onChange={(val) => {
-                  const digitsOnly = val.replace(/\D/g, "");
-                  const formatted = digitsOnly.replace(
-                    /\B(?=(\d{3})+(?!\d))/g,
-                    ","
-                  );
-                  setValue("ejarePrice", formatted);
-                }}
-                error={errors.ejarePrice}
-              />
-            </div>
-          </StepContent>
-        )}
-        {step === 2 && (
-          <StepContent
-            step={step}
-            isDisable={isDisable}
-            event={nextStepHandler}
-            prevEvent={prevStepHandler}
-          >
-            <div className={`${styles.formRow} ${styles.mb4}`}>
-              <Select
-                label="شهر"
-                placeHolder="شهر خود را انتخاب کنید"
-                size="lg"
-                val={watch("city")}
-                defaultValue={watch("city")}
-                error={errors.city}
-                options={city?.map((item) => ({
-                  value: item.slug,
-                  label: item.name,
-                }))}
-                onChange={(val) => setValue("city", val)}
-              />
-              <Input
-                label="خیابان فرعی یا کوچه"
-                type="text"
-                placeholder="آدرس خود را وارد کنید"
-                size="lg"
-                val={watch("street")}
-                error={errors.street}
-                onChange={(val) => setValue("street", val)}
-              />
-            </div>
-
-            <div className={`${styles.formRow}`}>
-              <Input
-                label="خیابان یا محله‌ی اصلی"
-                type="text"
-                placeholder="آدرس خود را وارد کنید"
-                size="lg"
-                val={watch("mainArea")}
-                error={errors.mainArea}
-                onChange={(val) => setValue("mainArea", val)}
-              />
-              <Input
-                label="آدرس دقیق و پلاک"
-                type="text"
-                placeholder="آدرس خود را وارد کنید"
-                size="lg"
-                val={watch("exactAddress")}
-                error={errors.exactAddress}
-                onChange={(val) => setValue("exactAddress", val)}
-              />
-            </div>
-            <div className={`${styles.formRow} ${styles.mapContainer}`}>
-              <MapSelect isEnable={false} />
-              <div
-                className={styles.showMap}
-                onClick={() => setIsShowModal(true)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="#353739"
-                    d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2"
-                  ></path>
-                </svg>
-                ثبت روی نقشه
-              </div>
-            </div>
-            {isShowModal && (
-              <ModalMap
-                onClose={() => setIsShowModal(false)}
-                onConfirm={() => {
-                  setValue("position", position);
-                  setIsShowModal(false);
-                }}
-              >
-                <MapSelect
-                  isEnable={true}
-                  position={position}
-                  setPosition={setPosition}
+    <PrivateRoute role={["admin", "user"]}>
+      <form onSubmit={handleSubmit(onSubmitFinalHandler)}>
+        <Layout active={step}>
+          {step === 1 && (
+            <StepContent
+              step={step}
+              event={nextStepHandler}
+              prevEvent={prevStepHandler}
+            >
+              <div className={`${styles.formRow} ${styles.mb4}`}>
+                <Select
+                  label="نوع ملک"
+                  placeHolder="نوع ملک خود را انتخاب کنید"
+                  size="lg"
+                  val={watch("houseType")}
+                  defaultValue={watch("houseType")}
+                  onChange={(val) => setValue("houseType", val)}
+                  error={errors.houseType} // Pass error message
+                  options={[
+                    { value: "villa", label: "ویلا" },
+                    { value: "apartment", label: "آپارتمان" },
+                    { value: "house", label: "خانه ویلایی" },
+                  ]}
                 />
-              </ModalMap>
-            )}
-          </StepContent>
-        )}
-        {step === 3 && (
-          <StepContent
-            step={step}
-            isDisable={!watch("bedrooms")&&!watch("buildingAge")&&!watch("areaSize")&&!watch("floor")}
-            event={nextStepHandler}
-            prevEvent={prevStepHandler}
-          >
-            <div className={`${styles.formRow} ${styles.mb4}`}>
-              <Select
-                label="تعداد اتاق خواب"
-                placeHolder="تعداد اتاق خواب را انتخاب کنید"
-                size="lg"
-                val={watch("bedrooms")}
-                defaultValue={watch("bedrooms")}
-                onChange={(val) => setValue("bedrooms", val)}
-                error={errors.bedrooms}
-                options={Array(10)
-                  .fill(0)
-                  .map((item, i) => ({
-                    value: i + 1,
-                    label: `${i + 1} خوابه`,
-                  }))}
-              />
-              <Select
-                label="سن بنا"
-                placeHolder="سن بنا را انتخاب کنید"
-                size="lg"
-                val={watch("buildingAge")}
-                defaultValue={watch("buildingAge")}
-                onChange={(val) => setValue("buildingAge", val)}
-                error={errors.buildingAge}
-                options={Array(50)
-                  .fill(0)
-                  .map((item, i) => ({
-                    value: i + 1,
-                    label: `${i + 1} سال ساخت`,
-                  }))}
-              />
-            </div>
-
-            <div className={`${styles.formRow} ${styles.mb4}`}>
-              <Select
-                label="نوع واحد"
-                placeHolder="نوع واحد را انتخاب کنید"
-                size="lg"
-                val={watch("unitType")}
-                defaultValue={watch("unitType")}
-                onChange={(val) => setValue("unitType", val)}
-                error={errors.unitType}
-                options={[
-                  { value: "maskoni", label: "واحد مسکونی" },
-                  { value: "tejari", label: "واحد تجاری" },
-                  { value: "tejari", label: "واحد صنعتی" },
-                ]}
-              />
-              <Input
-                label="زیر بنا (متر)"
-                type="number"
-                placeholder="متراژ زیر بنا را وارد کنید"
-                size="lg"
-                val={watch("areaSize")}
-                onChange={(val) => setValue("areaSize", val)}
-                error={errors.areaSize}
-              />
-            </div>
-            <div className={`${styles.formRow} ${styles.mb4}`}>
-              <Select
-                label="موقعیت"
-                placeHolder="موقعیت جغرافیایی ملک را انتخاب کنید"
-                size="lg"
-                val={watch("location")}
-                defaultValue={watch("location")}
-                onChange={(val) => setValue("location", val)}
-                error={errors.location}
-                options={[
-                  { value: "north", label: "شمال" },
-                  { value: "south", label: "جنوب" },
-                  { value: "east", label: "شرق" },
-                  { value: "west", label: "غرب" },
-                  { value: "center", label: "مرکز شهر" },
-                ]}
-              />
-              <Select
-                label="طبقه"
-                placeHolder="طبقه ملک را انتخاب کنید"
-                size="lg"
-                val={watch("floor")}
-                defaultValue={watch("floor")}
-                onChange={(val) => setValue("floor", val)}
-                error={errors.floor}
-                options={[
-                  { value: "basement", label: "زیرزمین" },
-                  { value: "ground", label: "همکف" },
-                  ...Array.from({ length: 20 }, (_, i) => ({
-                    value: String(i + 1),
-                    label: `${i + 1}${i === 0 ? "م" : "م"}`, // "اول" for 1, "دوم" for 2, etc.
-                  })),
-                  { value: "penthouse", label: "پنت هاوس" },
-                  { value: "rooftop", label: "پشت بام" },
-                ]}
-              />
-            </div>
-            <div className={`${styles.formRow} ${styles.mb1}`}>
-              <Select
-                label="تعداد طبقات"
-                placeHolder="تعداد طبقات ساختمان را انتخاب کنید"
-                size="lg"
-                val={watch("totalFloors")}
-                defaultValue={watch("totalFloors")}
-                onChange={(val) => setValue("totalFloors", val)}
-                error={errors.totalFloors}
-                options={[
-                  ...Array.from({ length: 20 }, (_, i) => ({
-                    value: String(i + 1),
-                    label: `${i + 1} طبقه`,
-                  })),
-                  { value: "more_than_20", label: "بیش از ۲۰ طبقه" },
-                ]}
-              />
-              <Select
-                label="تعداد واحد هر طبقه"
-                placeHolder="تعداد واحد هر طبقه را انتخاب کنید"
-                size="lg"
-                val={getValues("unitsPerFloor")}
-                defaultValue={getValues("unitsPerFloor")}
-                onChange={(val) => setValue("unitsPerFloor", val)}
-                error={errors.unitsPerFloor}
-                options={[
-                  ...Array.from({ length: 10 }, (_, i) => ({
-                    value: String(i + 1),
-                    label: `${i + 1} واحد`,
-                  })),
-                  { value: "more_than_10", label: "بیش از ۱۰ واحد" },
-                ]}
-              />
-            </div>
-          </StepContent>
-        )}
-        {step === 4 && (
-          <StepContent
-            isDisable={isDisable}
-            title="تجهیزات و امکانات"
-            step={step}
-            event={nextStepHandler}
-            prevEvent={prevStepHandler}
-          >
-            {equip?.data ? (
-              <div className={styles.gridForm}>
-                {equip.data.map((item) => {
-                  const isChecked =
-                    watch("facilities")?.includes(item.id) || false;
-                  return (
-                    <CheckBox
-                      key={item.id}
-                      title={item.title}
-                      val={item.id === watch("facilities")[item.id]}
-                      onChange={(checked) => {
-                        const current = watch("facilities") || [];
-                        setValue(
-                          "facilities",
-                          checked
-                            ? [...current, item.id]
-                            : current.filter((id) => id !== item.id),
-                          { shouldValidate: true } // Trigger validation immediately
-                        );
-                      }}
-                      value={isChecked}
-                    />
-                  );
-                })}
+                <Select
+                  label="نوع معامله"
+                  placeHolder="نوع معامله خود را انتخاب کنید"
+                  size="lg"
+                  val={watch("contractType")}
+                  defaultValue={watch("contractType")}
+                  onChange={(val) => setValue("contractType", val)}
+                  error={errors.contractType}
+                  options={[
+                    { value: "sale", label: "فروش" },
+                    { value: "rahn-ejare", label: "رهن و اجاره" },
+                    { value: "ejare", label: "اجاره" },
+                  ]}
+                />
               </div>
-            ) : (
-              <div>در حال بارگذاری تجهیزات...</div>
-            )}
 
-            {errors.facilities && (
-              <p role="alert" className="errorMessage">
-                {errors.facilities.message}
-              </p>
-            )}
-          </StepContent>
-        )}
-        {step === 5 && (
-          <StepContent
-            isDisable={isDisable}
-            title="توضیحات تکمیلی"
-            step={step}
-            event={nextStepHandler}
-            prevEvent={prevStepHandler}
-          >
-            <Input
-              label="عنوان را وارد کنید"
-              type="text"
-              placeholder="عنوان خود را وارد کنید"
-              size="lg"
-              val={watch("title") || fillTitle()}
-              error={errors.title}
-              onChange={(val) => setValue("title", val)}
-            />
-            <textarea
-              className="text-area"
-              placeholder="توضیحات خود را اینجا بنویسید..."
-              onChange={(e) => setValue("description", e.target.value)}
-              value={watch("description")}
-            />
-            {errors.description && (
-              <p role="alert" className="errorMessage">
-                {errors.description.message}
-              </p>
-            )}
-            <div className={styles.chkContainer}>
-              <CheckBox
-                title="ملک در اجاره است."
-                onChange={(val) => setValue("isRented", val)}
-              />
-              <CheckBox
-                title="ملک تخلیه و مناسب بازدید است."
-                onChange={(val) => setValue("isReadyForVisit", val)}
-              />
-            </div>
-          </StepContent>
-        )}
-        {step === 6 && (
-          <StepContent
-            title="عکس‌ها و ویدیو ملک خود را بارگذاری کنید"
-            step={step}
-            isLoading={isLoading}
-            // event={nextStepHandler}
-            onSubmit={onSubmitFinalHandler}
-            prevEvent={prevStepHandler}
-            isDisable={!watch("images")?.length}
-          >
-            <div className={styles.uploaderGrid}>
-              <Uploader
-                onFileSelect={(file) => {
-                  const current = watch("images") || [];
-                  setValue("images", [...current, file]);
-                }}
-              />
-              <Uploader
-                onFileSelect={(file) => {
-                  const current = watch("images") || [];
-                  setValue("images", [...current, file]);
-                }}
-              />
-              <Uploader
-                onFileSelect={(file) => {
-                  const current = watch("images") || [];
-                  setValue("images", [...current, file]);
-                }}
-              />
-              <Uploader
-                onFileSelect={(file) => {
-                  const current = watch("images") || [];
-                  setValue("images", [...current, file]);
-                }}
-              />
-              <Uploader
-                onFileSelect={(file) => {
-                  const current = watch("images") || [];
-                  setValue("images", [...current, file]);
-                }}
-              />
-              <Uploader
-                onFileSelect={(file) => {
-                  const current = watch("images") || [];
-                  setValue("images", [...current, file]);
-                }}
-              />
-            </div>
-            {errors.images && (
-              <p role="alert" className={styles.error}>
-                {errors.images.message}
-              </p>
-            )}
-          </StepContent>
-        )}
+              <div className={styles.formRow}>
+                <Input
+                  label="رهن"
+                  type="text"
+                  placeholder="مثلا 500 میلیون تومان"
+                  size="lg"
+                  val={watch("rahnPrice")}
+                  onChange={(val) => {
+                    const digitsOnly = val.replace(/\D/g, "");
+                    const formatted = digitsOnly.replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      ","
+                    );
+                    setValue("rahnPrice", formatted);
+                  }}
+                  error={errors.rahnPrice}
+                />
+                <Input
+                  label="اجاره"
+                  type="text"
+                  placeholder="مثلا 50 میلیون تومان"
+                  size="lg"
+                  val={watch("ejarePrice")}
+                  onChange={(val) => {
+                    const digitsOnly = val.replace(/\D/g, "");
+                    const formatted = digitsOnly.replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      ","
+                    );
+                    setValue("ejarePrice", formatted);
+                  }}
+                  error={errors.ejarePrice}
+                />
+              </div>
+            </StepContent>
+          )}
+          {step === 2 && (
+            <StepContent
+              step={step}
+              isDisable={isDisable}
+              event={nextStepHandler}
+              prevEvent={prevStepHandler}
+            >
+              <div className={`${styles.formRow} ${styles.mb4}`}>
+                <Select
+                  label="شهر"
+                  placeHolder="شهر خود را انتخاب کنید"
+                  size="lg"
+                  val={watch("city")}
+                  defaultValue={watch("city")}
+                  error={errors.city}
+                  options={city?.map((item) => ({
+                    value: item.slug,
+                    label: item.name,
+                  }))}
+                  onChange={(val) => setValue("city", val)}
+                />
+                <Input
+                  label="خیابان فرعی یا کوچه"
+                  type="text"
+                  placeholder="آدرس خود را وارد کنید"
+                  size="lg"
+                  val={watch("street")}
+                  error={errors.street}
+                  onChange={(val) => setValue("street", val)}
+                />
+              </div>
 
-        {step === 7 && isSuccess && (
-          <div className={styles.formSection}>
-            <div className={"sucessContainer"}>
-              {/* <DotLottieReact
+              <div className={`${styles.formRow}`}>
+                <Input
+                  label="خیابان یا محله‌ی اصلی"
+                  type="text"
+                  placeholder="آدرس خود را وارد کنید"
+                  size="lg"
+                  val={watch("mainArea")}
+                  error={errors.mainArea}
+                  onChange={(val) => setValue("mainArea", val)}
+                />
+                <Input
+                  label="آدرس دقیق و پلاک"
+                  type="text"
+                  placeholder="آدرس خود را وارد کنید"
+                  size="lg"
+                  val={watch("exactAddress")}
+                  error={errors.exactAddress}
+                  onChange={(val) => setValue("exactAddress", val)}
+                />
+              </div>
+              <div className={`${styles.formRow} ${styles.mapContainer}`}>
+                <MapSelect isEnable={false} />
+                <div
+                  className={styles.showMap}
+                  onClick={() => setIsShowModal(true)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="#353739"
+                      d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2"
+                    ></path>
+                  </svg>
+                  ثبت روی نقشه
+                </div>
+              </div>
+              {isShowModal && (
+                <ModalMap
+                  onClose={() => setIsShowModal(false)}
+                  onConfirm={() => {
+                    setValue("position", position);
+                    setIsShowModal(false);
+                  }}
+                >
+                  <MapSelect
+                    isEnable={true}
+                    position={position}
+                    setPosition={setPosition}
+                  />
+                </ModalMap>
+              )}
+            </StepContent>
+          )}
+          {step === 3 && (
+            <StepContent
+              step={step}
+              isDisable={
+                !watch("bedrooms") &&
+                !watch("buildingAge") &&
+                !watch("areaSize") &&
+                !watch("floor")
+              }
+              event={nextStepHandler}
+              prevEvent={prevStepHandler}
+            >
+              <div className={`${styles.formRow} ${styles.mb4}`}>
+                <Select
+                  label="تعداد اتاق خواب"
+                  placeHolder="تعداد اتاق خواب را انتخاب کنید"
+                  size="lg"
+                  val={watch("bedrooms")}
+                  defaultValue={watch("bedrooms")}
+                  onChange={(val) => setValue("bedrooms", val)}
+                  error={errors.bedrooms}
+                  options={Array(10)
+                    .fill(0)
+                    .map((item, i) => ({
+                      value: i + 1,
+                      label: `${i + 1} خوابه`,
+                    }))}
+                />
+                <Select
+                  label="سن بنا"
+                  placeHolder="سن بنا را انتخاب کنید"
+                  size="lg"
+                  val={watch("buildingAge")}
+                  defaultValue={watch("buildingAge")}
+                  onChange={(val) => setValue("buildingAge", val)}
+                  error={errors.buildingAge}
+                  options={Array(50)
+                    .fill(0)
+                    .map((item, i) => ({
+                      value: i + 1,
+                      label: `${i + 1} سال ساخت`,
+                    }))}
+                />
+              </div>
+
+              <div className={`${styles.formRow} ${styles.mb4}`}>
+                <Select
+                  label="نوع واحد"
+                  placeHolder="نوع واحد را انتخاب کنید"
+                  size="lg"
+                  val={watch("unitType")}
+                  defaultValue={watch("unitType")}
+                  onChange={(val) => setValue("unitType", val)}
+                  error={errors.unitType}
+                  options={[
+                    { value: "maskoni", label: "واحد مسکونی" },
+                    { value: "tejari", label: "واحد تجاری" },
+                    { value: "tejari", label: "واحد صنعتی" },
+                  ]}
+                />
+                <Input
+                  label="زیر بنا (متر)"
+                  type="number"
+                  placeholder="متراژ زیر بنا را وارد کنید"
+                  size="lg"
+                  val={watch("areaSize")}
+                  onChange={(val) => setValue("areaSize", val)}
+                  error={errors.areaSize}
+                />
+              </div>
+              <div className={`${styles.formRow} ${styles.mb4}`}>
+                <Select
+                  label="موقعیت"
+                  placeHolder="موقعیت جغرافیایی ملک را انتخاب کنید"
+                  size="lg"
+                  val={watch("location")}
+                  defaultValue={watch("location")}
+                  onChange={(val) => setValue("location", val)}
+                  error={errors.location}
+                  options={[
+                    { value: "north", label: "شمال" },
+                    { value: "south", label: "جنوب" },
+                    { value: "east", label: "شرق" },
+                    { value: "west", label: "غرب" },
+                    { value: "center", label: "مرکز شهر" },
+                  ]}
+                />
+                <Select
+                  label="طبقه"
+                  placeHolder="طبقه ملک را انتخاب کنید"
+                  size="lg"
+                  val={watch("floor")}
+                  defaultValue={watch("floor")}
+                  onChange={(val) => setValue("floor", val)}
+                  error={errors.floor}
+                  options={[
+                    { value: "basement", label: "زیرزمین" },
+                    { value: "ground", label: "همکف" },
+                    ...Array.from({ length: 20 }, (_, i) => ({
+                      value: String(i + 1),
+                      label: `${i + 1}${i === 0 ? "م" : "م"}`, // "اول" for 1, "دوم" for 2, etc.
+                    })),
+                    { value: "penthouse", label: "پنت هاوس" },
+                    { value: "rooftop", label: "پشت بام" },
+                  ]}
+                />
+              </div>
+              <div className={`${styles.formRow} ${styles.mb1}`}>
+                <Select
+                  label="تعداد طبقات"
+                  placeHolder="تعداد طبقات ساختمان را انتخاب کنید"
+                  size="lg"
+                  val={watch("totalFloors")}
+                  defaultValue={watch("totalFloors")}
+                  onChange={(val) => setValue("totalFloors", val)}
+                  error={errors.totalFloors}
+                  options={[
+                    ...Array.from({ length: 20 }, (_, i) => ({
+                      value: String(i + 1),
+                      label: `${i + 1} طبقه`,
+                    })),
+                    { value: "more_than_20", label: "بیش از ۲۰ طبقه" },
+                  ]}
+                />
+                <Select
+                  label="تعداد واحد هر طبقه"
+                  placeHolder="تعداد واحد هر طبقه را انتخاب کنید"
+                  size="lg"
+                  val={getValues("unitsPerFloor")}
+                  defaultValue={getValues("unitsPerFloor")}
+                  onChange={(val) => setValue("unitsPerFloor", val)}
+                  error={errors.unitsPerFloor}
+                  options={[
+                    ...Array.from({ length: 10 }, (_, i) => ({
+                      value: String(i + 1),
+                      label: `${i + 1} واحد`,
+                    })),
+                    { value: "more_than_10", label: "بیش از ۱۰ واحد" },
+                  ]}
+                />
+              </div>
+            </StepContent>
+          )}
+          {step === 4 && (
+            <StepContent
+              isDisable={isDisable}
+              title="تجهیزات و امکانات"
+              step={step}
+              event={nextStepHandler}
+              prevEvent={prevStepHandler}
+            >
+              {equip?.data ? (
+                <div className={styles.gridForm}>
+                  {equip.data.map((item) => {
+                    const isChecked =
+                      watch("facilities")?.includes(item.id) || false;
+                    return (
+                      <CheckBox
+                        key={item.id}
+                        title={item.title}
+                        val={item.id === watch("facilities")[item.id]}
+                        onChange={(checked) => {
+                          const current = watch("facilities") || [];
+                          setValue(
+                            "facilities",
+                            checked
+                              ? [...current, item.id]
+                              : current.filter((id) => id !== item.id),
+                            { shouldValidate: true } // Trigger validation immediately
+                          );
+                        }}
+                        value={isChecked}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>در حال بارگذاری تجهیزات...</div>
+              )}
+
+              {errors.facilities && (
+                <p role="alert" className="errorMessage">
+                  {errors.facilities.message}
+                </p>
+              )}
+            </StepContent>
+          )}
+          {step === 5 && (
+            <StepContent
+              isDisable={isDisable}
+              title="توضیحات تکمیلی"
+              step={step}
+              event={nextStepHandler}
+              prevEvent={prevStepHandler}
+            >
+              <Input
+                label="عنوان را وارد کنید"
+                type="text"
+                placeholder="عنوان خود را وارد کنید"
+                size="lg"
+                val={watch("title") || fillTitle()}
+                error={errors.title}
+                onChange={(val) => setValue("title", val)}
+              />
+              <textarea
+                className="text-area"
+                placeholder="توضیحات خود را اینجا بنویسید..."
+                onChange={(e) => setValue("description", e.target.value)}
+                value={watch("description")}
+              />
+              {errors.description && (
+                <p role="alert" className="errorMessage">
+                  {errors.description.message}
+                </p>
+              )}
+              <div className={styles.chkContainer}>
+                <CheckBox
+                  title="ملک در اجاره است."
+                  onChange={(val) => setValue("isRented", val)}
+                />
+                <CheckBox
+                  title="ملک تخلیه و مناسب بازدید است."
+                  onChange={(val) => setValue("isReadyForVisit", val)}
+                />
+              </div>
+            </StepContent>
+          )}
+          {step === 6 && (
+            <StepContent
+              title="عکس‌ها و ویدیو ملک خود را بارگذاری کنید"
+              step={step}
+              isLoading={isLoading}
+              // event={nextStepHandler}
+              onSubmit={onSubmitFinalHandler}
+              prevEvent={prevStepHandler}
+              isDisable={!watch("images")?.length}
+            >
+              <div className={styles.uploaderGrid}>
+                <Uploader
+                  onFileSelect={(file) => {
+                    const current = watch("images") || [];
+                    setValue("images", [...current, file]);
+                  }}
+                />
+                <Uploader
+                  onFileSelect={(file) => {
+                    const current = watch("images") || [];
+                    setValue("images", [...current, file]);
+                  }}
+                />
+                <Uploader
+                  onFileSelect={(file) => {
+                    const current = watch("images") || [];
+                    setValue("images", [...current, file]);
+                  }}
+                />
+                <Uploader
+                  onFileSelect={(file) => {
+                    const current = watch("images") || [];
+                    setValue("images", [...current, file]);
+                  }}
+                />
+                <Uploader
+                  onFileSelect={(file) => {
+                    const current = watch("images") || [];
+                    setValue("images", [...current, file]);
+                  }}
+                />
+                <Uploader
+                  onFileSelect={(file) => {
+                    const current = watch("images") || [];
+                    setValue("images", [...current, file]);
+                  }}
+                />
+              </div>
+              {errors.images && (
+                <p role="alert" className={styles.error}>
+                  {errors.images.message}
+                </p>
+              )}
+            </StepContent>
+          )}
+
+          {step === 7 && isSuccess && (
+            <div className={styles.formSection}>
+              <div className={"sucessContainer"}>
+                {/* <DotLottieReact
                 src="/images/successMessage.json"
                 loop
                 autoplay
                 className="sucessAnimate"
                 style={{ width: 200, height: 200 }}
               /> */}
-              <p>آگهی شما با موفقیت ثبت شد</p>
+                <p>آگهی شما با موفقیت ثبت شد</p>
+              </div>
             </div>
-          </div>
-        )}
-      </Layout>
-    </form>
-     </PrivateRoute>
+          )}
+        </Layout>
+      </form>
+    </PrivateRoute>
   );
 }
