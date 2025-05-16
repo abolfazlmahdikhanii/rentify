@@ -5,7 +5,7 @@ import Image from "next/image";
 import styles from "../../styles/login.module.css";
 import Input from "@/components/module/Form/Input";
 import OtpInput from "react-otp-input";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { setCookie } from "cookies-next";
 import { timeFormat } from "@/helper/helper";
@@ -40,9 +40,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     let timer;
-    if ( countdown > 0) {
+    if (countdown > 0) {
       timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      }
+    }
     // } else if (countdown === 0) {
     //   setIsResendDisabled(false);
     //   setCountdown(180);
@@ -88,11 +88,12 @@ export default function LoginPage() {
         { name: "name", required: true },
         { name: "last_name", required: true },
         {
-          name: "phone",
+          name: "email",
           required: true,
           validate: (value) => {
-            const phoneRegex = /^09\d{9}$/;
-            return phoneRegex.test(value) || "شماره موبایل معتبر نیست";
+            const emailRegex =
+              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(value) || "ایمیل معتبر نیست";
           },
         },
       ];
@@ -103,11 +104,12 @@ export default function LoginPage() {
         { name: "last_name", required: true },
         { name: "agency_name", required: true },
         {
-          name: "phone",
+          name: "email",
           required: true,
           validate: (value) => {
-            const phoneRegex = /^09\d{9}$/;
-            return phoneRegex.test(value) || "شماره موبایل معتبر نیست";
+            const emailRegex =
+              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(value) || "ایمیل معتبر نیست";
           },
         },
       ];
@@ -117,19 +119,24 @@ export default function LoginPage() {
   const sendOtp = () => {
     const isValid = validationFormHandler(activeTab);
     if (isValid) {
+      const email = getValues("email");
+
       fetch("http://localhost:5000/api/auth/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone: "09376565476", // Replace with the actual phone number
+          email: email, // Replace with the actual phone number
         }),
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("OTP sent:", data);
-          setOtp(true); // Set otp to true after sending OTP
+          if (data.success) {
+            setOtp(true);
+            setCountdown(180);
+          }
+          // Set otp to true after sending OTP
         })
         .catch((error) => {
           console.error("Error sending OTP:", error);
@@ -146,7 +153,7 @@ export default function LoginPage() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        phone: getValues("phone"),
+        email: getValues("email"),
         otp: otpValue,
         name: getValues("name"),
         lastName: getValues("last_name"),
@@ -162,24 +169,24 @@ export default function LoginPage() {
       })
       .then((data) => {
         console.log("OTP verified:", data);
-       if(data.token){
-        setCookie("token", data.token, { maxAge: 60 * 60 * 24 * 7 });
-        route.replace("/");
-       }
+        if (data.token) {
+          setCookie("token", data.token, { maxAge: 60 * 60 * 24 * 7 });
+          route.replace("/");
+        }
       })
       .catch((error) => {
         console.error("Error verifying OTP:", error);
       });
   };
   const resendOtp = () => {
-    const phone = getValues("phone");
+    const email = getValues("email");
     fetch("http://localhost:5000/api/auth/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        phone: phone,
+        email: email,
       }),
     })
       .then((response) => response.json())
@@ -274,12 +281,12 @@ export default function LoginPage() {
                       />
                     </div>
                     <Input
-                      label="تلفن همراه"
-                      placeholder="تلفن همراه را وارد کنید"
-                      error={errors.phone}
-                      val={watch("phone")}
+                      label="ایمیل"
+                      placeholder="ایمیل را وارد کنید"
+                      error={errors.email}
+                      val={watch("email")}
                       onChange={(val) =>
-                        setValue("phone", val, {
+                        setValue("email", val, {
                           shouldValidate: true,
                         })
                       }
@@ -325,12 +332,12 @@ export default function LoginPage() {
                       }
                     />
                     <Input
-                      label="تلفن همراه"
-                      placeholder="تلفن همراه را وارد کنید"
-                      error={errors.phone}
-                      val={watch("phone")}
+                      label="ایمیل"
+                      placeholder="ایمیل را وارد کنید"
+                      error={errors.email}
+                      val={watch("email")}
                       onChange={(val) =>
-                        setValue("phone", val, {
+                        setValue("email", val, {
                           shouldValidate: true,
                         })
                       }
@@ -350,7 +357,9 @@ export default function LoginPage() {
                 <p className={styles.otpText}>
                   کد ارسال شده به شماره موبایل {getValues("phone")} را وارد کنید
                 </p>
-                <p className={styles.otpEdit} onClick={()=>setOtp(false)}>ویرایش موبایل</p>
+                <p className={styles.otpEdit} onClick={() => setOtp(false)}>
+                  ویرایش موبایل
+                </p>
               </div>
               <OtpInput
                 value={otpValue}
@@ -401,12 +410,15 @@ export default function LoginPage() {
                   </defs>
                 </svg>
                 <p className={styles.otpTimeText}>
-                 
-                    <span className={styles.otpTimer}>
-                     {timeFormat(countdown)}
-                    </span>
-                  
-                  {countdown!==0 ? " تا دریافت مجدد کد":<span onClick={resendOtp}>دریافت کد مجدد</span>}
+                  <span className={styles.otpTimer}>
+                    {timeFormat(countdown)}
+                  </span>
+
+                  {countdown !== 0 ? (
+                    " تا دریافت مجدد کد"
+                  ) : (
+                    <span onClick={resendOtp}>دریافت کد مجدد</span>
+                  )}
                 </p>
               </div>
             </>
