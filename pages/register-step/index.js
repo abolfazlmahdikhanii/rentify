@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
+import PrivateRoute from "@/components/module/PrivateRoute/PrivateRoute";
 
 const fetcher = () =>
   fetch("https://iranplacesapi.liara.run/api/provinces").then((res) =>
@@ -338,7 +339,8 @@ export default function RegisterStep() {
     return title;
   };
   return (
-    <form onSubmit={handleSubmit(onSubmitFinalHandler)}>
+     <PrivateRoute role={["admin","user"]}>
+ <form onSubmit={handleSubmit(onSubmitFinalHandler)}>
       <Layout active={step}>
         {step === 1 && (
           <StepContent
@@ -797,5 +799,6 @@ export default function RegisterStep() {
         )}
       </Layout>
     </form>
+     </PrivateRoute>
   );
 }
