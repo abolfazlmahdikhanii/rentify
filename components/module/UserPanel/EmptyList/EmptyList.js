@@ -49,7 +49,7 @@ const EmptyList = ({ title, subtitle, src, type, btnText }) => {
   }
   return (
     <div className={styles.emptyContent}>
-      <Image src={src} width={type!=="add"?200:226} height={type!=="add"?200:180} />
+      <Image src={src} width={type!=="add"?200:226} height={type!=="add"?200:180} alt="icon "/>
       <div className={styles.emptyInfo}>
         <h5 className={styles.emptyTitle}>{title}</h5>
         <p className={styles.emptyDesc}>{subtitle}</p>
