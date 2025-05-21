@@ -6,8 +6,13 @@ import LastVisited from "@/components/templates/index/LastVisited/LastVisited";
 import CardSection from "@/components/templates/index/CardSection/CardSection";
 import StepProcess from "@/components/templates/index/StepProcess/StepProcess";
 import LoanBanner from "@/components/templates/index/LoanBanner/LoanBanner";
+import { getCookie } from "cookies-next";
+import useSWR from "swr";
+
 
 const Page = ({ houses }) => {
+
+
   return (
     <div className={styles.main}>
       <HeroBg houses={houses} />
@@ -35,24 +40,22 @@ const Page = ({ houses }) => {
       <div className="container">
         <CardSection />
         <StepProcess />
-        <LoanBanner/>
+        <LoanBanner />
       </div>
     </div>
   );
 };
-export async function getStaticProps(context) {
-  const { params } = context;
-  const res = await fetch(`http://localhost:5000/api/properties`);
-  // if (res.status !== 200) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
-  const data = await res.json();
+export async function getServerSideProps(context) {
+  // Access cookies from the request
+  const cookies = context.req.cookies || {};
+  const token = cookies.token;
 
-  return {
-    props: { houses: data.data||[] },
-    revalidate: 30,
-  };
+
+  const res = await fetch("http://localhost:5000/api/properties", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const data = await res.json();
+  return { props: { houses: data.data || [] } };
 }
 export default Page;
