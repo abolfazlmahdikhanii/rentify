@@ -10,26 +10,40 @@ import useSWR from "swr";
 const fetcher = () =>
   fetch("http://localhost:5000/api/favorites", {
     method: "GET",
-    headers: { Authorization: `Bearer ${getCookie("token")}` },
-  }).then((res) => res.json());
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getCookie("token")}`,
+    },
+  }).then((res) => {
+    if (res.ok) return res.json();
+  });
 const Favorites = () => {
-  const { data, isLoading } = useSWR("favorites", fetcher);
+  const { data=[], isLoading, mutate } = useSWR("favorites", fetcher);
 
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده">
       <Content>
-        {/* <div className="fav-grid">
-        {data?.splice(0, 6).map((home) => (
-          <Home key={home.id} {...home} isBorder={true} />
-        ))}
-        </div> */}
-        <EmptyList
-          src={"/images/empty-ad.png"}
-          title="شما هنوز آگهی‌ای رو ذخیره نکردید!"
-          subtitle="از طریق آیکون «نشان‌کردن» می‌تونید آگهی‌های مورد نظرتون رو در این لیست ذخیره کنید."
-          btnText="جستجو کنید"
-          type="search"
-        />
+        {data?.length > 0 ? (
+          <div className="fav-grid">
+            {data&&data?.map((home) => (
+              <Home
+                key={home.id}
+                {...home}
+                isBorder={true}
+                getFav={() => mutate()}
+                is_favorite={true}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyList
+            src={"/images/empty-ad.png"}
+            title="شما هنوز آگهی‌ای رو ذخیره نکردید!"
+            subtitle="از طریق آیکون «نشان‌کردن» می‌تونید آگهی‌های مورد نظرتون رو در این لیست ذخیره کنید."
+            btnText="جستجو کنید"
+            type="search"
+          />
+        )}
       </Content>
     </DashboardLayout>
   );
