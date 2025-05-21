@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import styles from "./HomeCard.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { getCookie } from "cookies-next";
+import useSWR from "swr";
+import { toast } from "react-toastify";
+import { toastOption } from "@/helper/helper";
 
 const Home = ({
   type,
@@ -15,11 +19,16 @@ const Home = ({
   isMyAd,
   isCompare,
   onChecked,
-  checked=false,
+  checked = false,
   isMyCompare,
   main_image,
-  remove
+  remove,
+  is_favorite,
+  getFav,
+  status,
 }) => {
+  const [isFav, setIsFav] = useState(is_favorite);
+
   let typeColor = null;
   let typeName = null;
 
@@ -34,6 +43,36 @@ const Home = ({
     typeName = "ویلا";
   }
 
+  const likeHomeHandler = (id) => {
+    fetch(`http://localhost:5000/api/favorites`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+      body: JSON.stringify({ propertyId: id }),
+    }).then((res) => {
+      if (res.ok) {
+        setIsFav(true);
+        toast.success("با موفقیت به عللاقه مندی ها اضافه شد", toastOption);
+      }
+    });
+  };
+  const removeLikeHomeHandler = (id) => {
+    fetch(`http://localhost:5000/api/favorites/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+    }).then((res) => {
+      if (!res.ok) {
+        toast.error("خطا در حدف ملک از مورد علاقه ها", toastOption);
+      }
+      setIsFav(false);
+      if (getFav) getFav();
+    });
+  };
+
   return (
     <div
       className={`${styles.cardParents} ${
@@ -43,7 +82,7 @@ const Home = ({
       <div className={styles.cardImg}>
         <Image
           src={main_image || "/images/empty-image.jpg"}
-          alt={title}
+          alt={title || "img"}
           width="200"
           height="200"
           unoptimized
@@ -55,7 +94,12 @@ const Home = ({
         {!isMyAd ? (
           <>
             {!isCompare ? (
-              <button className={styles.likeBtn}>
+              <button
+                className={styles.likeBtn}
+                onClick={() =>
+                  !isFav ? likeHomeHandler(id) : removeLikeHomeHandler(id)
+                }
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -64,7 +108,7 @@ const Home = ({
                   viewBox="0 0 14 14"
                 >
                   <path
-                    fill="#C4C4C4"
+                    fill={!isFav ? "#C4C4C4" : "#f65"}
                     d="m7.001 12.454-.846-.77C3.151 8.96 1.168 7.158 1.168 4.958A3.174 3.174 0 0 1 4.376 1.75c1.015 0 1.99.473 2.625 1.213A3.5 3.5 0 0 1 9.626 1.75a3.174 3.174 0 0 1 3.209 3.208c0 2.2-1.984 4.002-4.988 6.726z"
                   ></path>
                 </svg>
@@ -76,29 +120,11 @@ const Home = ({
             )}
           </>
         ) : (
-          <div className={`${styles.status} ${styles.status__wait}`}>
-            در انتظار تأیید
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="none"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill="#F4B740"
-                fillRule="evenodd"
-                d="M8.575 3.625a.667.667 0 0 0-1.15 0l-4.335 7.37A.667.667 0 0 0 3.665 12h8.67c.516 0 .837-.56.575-1.005zm-2.299-.676c.774-1.315 2.675-1.315 3.448 0l4.335 7.37c.785 1.333-.177 3.014-1.723 3.014H3.665c-1.547 0-2.508-1.68-1.724-3.014z"
-                clipRule="evenodd"
-              ></path>
-              <path
-                fill="#F4B740"
-                fillRule="evenodd"
-                d="M7.334 8.666v-4h1.333v4zM7.334 11v-1h1.333v1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </div>
+          <>
+            {status === "pending" && <StatusBadge status="pending" />}
+            {status === "rejected" && <StatusBadge status="rejected" />}
+            {status === "approved" && <StatusBadge status="approved" />}
+          </>
         )}
       </div>
       <Link href={`homes/${id}`} className={`${styles.card} `}>
@@ -198,34 +224,98 @@ const Home = ({
           </div>
         </div>
       </Link>
-      {isMyAd||isMyCompare && (
-        <button className={styles.removeBtn} onClick={remove}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <g clipPath="url(#clip0_3930_15314)">
-              <path
-                fill="#ED2E2E"
-                fillRule="evenodd"
-                stroke="#fff"
-                d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm-1.414 11L7.05 8.464 8.464 7.05 12 10.586l3.536-3.536 1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536z"
-                clipRule="evenodd"
-              ></path>
-            </g>
-            <defs>
-              <clipPath id="clip0_3930_15314">
-                <path fill="#fff" d="M0 0h24v24H0z"></path>
-              </clipPath>
-            </defs>
-          </svg>
-        </button>
-      )}
+      {(isMyAd || isMyCompare) && (
+          <button className={styles.removeBtn} onClick={remove}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <g clipPath="url(#clip0_3930_15314)">
+                <path
+                  fill="#ED2E2E"
+                  fillRule="evenodd"
+                  stroke="#fff"
+                  d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm-1.414 11L7.05 8.464 8.464 7.05 12 10.586l3.536-3.536 1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536z"
+                  clipRule="evenodd"
+                ></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_3930_15314">
+                  <path fill="#fff" d="M0 0h24v24H0z"></path>
+                </clipPath>
+              </defs>
+            </svg>
+          </button>
+        )}
     </div>
   );
 };
+const StatusBadge = ({ status }) => {
+  // Define status configurations
+  const statusConfig = {
+    pending: {
+      text: "در انتظار تأیید",
+      iconColor: "#F4B740",
+      bgClass: styles.status__wait,
+    },
+    approved: {
+      text: "تأیید شده",
+      iconColor: "#4CAF50",
+      bgClass: styles.status__success,
+    },
+    rejected: {
+      text: "رد شده",
+      iconColor: "#F44336",
+      bgClass: styles.status__reject,
+    },
+  };
 
+  // Get current status config or default to pending
+  const currentStatus = statusConfig[status] || statusConfig.pending;
+
+  return (
+    <div className={`${styles.status} ${currentStatus.bgClass}`}>
+      {currentStatus.text}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="none"
+        viewBox="0 0 16 16"
+      >
+        {status === "pending" ? (
+          <>
+            <path
+              fill={currentStatus.iconColor}
+              fillRule="evenodd"
+              d="M8.575 3.625a.667.667 0 0 0-1.15 0l-4.335 7.37A.667.667 0 0 0 3.665 12h8.67c.516 0 .837-.56.575-1.005zm-2.299-.676c.774-1.315 2.675-1.315 3.448 0l4.335 7.37c.785 1.333-.177 3.014-1.723 3.014H3.665c-1.547 0-2.508-1.68-1.724-3.014z"
+              clipRule="evenodd"
+            />
+            <path
+              fill={currentStatus.iconColor}
+              fillRule="evenodd"
+              d="M7.334 8.666v-4h1.333v4zM7.334 11v-1h1.333v1z"
+              clipRule="evenodd"
+            />
+          </>
+        ) : status === "approved" ? (
+          <path
+            fill="#00BA88"
+            fillRule="evenodd"
+            d="M14.471 4.471 6.04 12.903 1.51 8.02l.978-.907 3.587 3.868 7.453-7.453z"
+            clipRule="evenodd"
+          ></path>
+        ) : (
+          <path
+            fill={currentStatus.iconColor}
+            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+          />
+        )}
+      </svg>
+    </div>
+  );
+};
 export default Home;
