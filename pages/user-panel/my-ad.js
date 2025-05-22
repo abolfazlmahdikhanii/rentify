@@ -1,11 +1,12 @@
 import Home from "@/components/module/Home/Home";
+import Pagination from "@/components/module/Pagination/Pagination";
 import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { toastOption } from "@/helper/helper";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
@@ -20,7 +21,9 @@ const fetcher = () =>
     if (res.ok) return res.json();
   });
 const MyAdvertisement = () => {
-  const { data, isLoading,mutate } = useSWR("user-ad", fetcher);
+  const { data, isLoading, mutate } = useSWR("user-ad", fetcher);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [newData, setNewData] = useState([]);
 
   const removeAdHandler = (id) => {
     fetch(`http://localhost:5000/api/properties/${id}`, {
@@ -31,21 +34,40 @@ const MyAdvertisement = () => {
     }).then((res) => {
       if (res.ok) {
         toast.success("ملک با موفقیت حذف شد", toastOption);
-        mutate()
+        mutate();
       } else {
         toast.error("حذف ملک خطا مواجه شد", toastOption);
       }
     });
   };
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+  const paginationData = data?.data
+    ? data.data.slice((currentPage - 1) * 9, currentPage * 9)
+    : [];
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده">
       <Content>
         {data?.data && data?.data.length > 0 ? (
-          <div className="fav-grid">
-            {data?.data.map((home) => (
-              <Home key={home.id} {...home} isBorder={true} isMyAd={true} remove={()=>removeAdHandler(home.id)} />
-            ))}
-          </div>
+          <>
+            <div className="fav-grid">
+              {paginationData.map((home) => (
+                <Home
+                  key={home.id}
+                  {...home}
+                  isBorder={true}
+                  isMyAd={true}
+                  remove={() => removeAdHandler(home.id)}
+                />
+              ))}
+            </div>
+            <Pagination
+              totalPages={Math.ceil(data.length / 10)}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+            />
+          </>
         ) : (
           <EmptyList
             src={"/images/empty-add-ad.png"}
