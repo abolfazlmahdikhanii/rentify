@@ -206,7 +206,7 @@ export default function LoginPage() {
       <div className={styles.rightSection}>
         <div className={styles.logoContainer}>
           <div className={styles.logo}>
-            <Image src="/images/logo.png" width={170} height={60} />
+            <Image src="/images/logo.png" width={170} height={60} alt="logo" />
           </div>
         </div>
 
@@ -320,7 +320,8 @@ export default function LoginPage() {
                         }
                       />
                     </div>
-                    <Input
+                   <div className={styles.emailRow}>
+                     <Input
                       label="نام دفتر"
                       placeholder="نام دفتر را وارد کنید"
                       error={errors.agency_name}
@@ -331,17 +332,21 @@ export default function LoginPage() {
                         })
                       }
                     />
-                    <Input
-                      label="ایمیل"
-                      placeholder="ایمیل را وارد کنید"
-                      error={errors.email}
-                      val={watch("email")}
-                      onChange={(val) =>
-                        setValue("email", val, {
-                          shouldValidate: true,
-                        })
-                      }
-                    />
+                   </div>
+                    <div className={styles.emailRow}>
+                      {" "}
+                      <Input
+                        label="ایمیل"
+                        placeholder="ایمیل را وارد کنید"
+                        error={errors.email}
+                        val={watch("email")}
+                        onChange={(val) =>
+                          setValue("email", val, {
+                            shouldValidate: true,
+                          })
+                        }
+                      />
+                    </div>
                   </form>
                 )}
               </div>
