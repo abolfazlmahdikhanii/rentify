@@ -9,6 +9,7 @@
 
 .content {
   flex: 1;
+overflow: hidden;
 }
 .titleContent {
   margin-bottom: 3.6rem;
@@ -32,6 +33,7 @@
   -ms-border-radius: 1.6rem;
   -o-border-radius: 1.6rem;
   position: relative;
+
 }
 .compare-footer {
   position: fixed;
