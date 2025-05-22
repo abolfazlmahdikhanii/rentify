@@ -128,7 +128,7 @@
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
   margin-bottom: 20px;
 }
 
@@ -177,6 +177,9 @@
   & > div {
     width: 100%;
   }
+}
+.emailRow{
+  margin-top: 20px;
 }
 .socialLogin {
   display: flex;
