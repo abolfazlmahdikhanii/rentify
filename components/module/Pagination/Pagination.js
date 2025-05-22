@@ -68,7 +68,7 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
         disabled={currentPage === 1}
         aria-label="Go to previous page"
       >
-       قبلی &laquo;
+   &laquo;    قبلی 
       </button>
 
       <ul className={styles.pageList}>
