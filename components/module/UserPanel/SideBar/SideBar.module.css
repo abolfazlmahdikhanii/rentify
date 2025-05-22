@@ -25,13 +25,18 @@
   .profileName {
     font-size: 1.6rem;
   
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
   
   .profilePhone {
     font-size: 1.4rem;
     color: #45484b;
     text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+width: 93%;
+direction: ltr;
   }
   
   .navigation {
