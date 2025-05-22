@@ -53,7 +53,7 @@ const Header = () => {
               ورود | ثبت نام
             </Link>
           ) : (
-            <Link className="btn btn-link" href="/user-panel">
+            <Link className="btn btn-link" href={user.role==="admin"?"/admin-panel":"/user-panel"}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
