@@ -3,13 +3,13 @@
 
   background-color: #fff;
   border-radius: 8px;
-
 }
 
 .tbl {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
 }
 
 .propertyTable {
@@ -21,9 +21,10 @@
 .propertyTable th,
 .propertyTable td {
   padding: 16px;
-  text-align: right;
+  text-align: center;
   border-bottom: 1px solid #f0f0f0;
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 .propertyTable th {
