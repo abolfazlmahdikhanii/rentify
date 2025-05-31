@@ -1,4 +1,6 @@
+import ColumnChart from "@/components/AdminPanel/ColumnChart/ColumnChart";
 import { InfoCards } from "@/components/AdminPanel/InfoCard/InfoCard";
+import LineChart from "@/components/AdminPanel/LineChart/LineChart";
 import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
 import PrivateRoute from "@/components/module/PrivateRoute/PrivateRoute";
 import Content from "@/components/module/UserPanel/Content/Content";
@@ -20,14 +22,35 @@ const fetcher = () =>
   }).then((res) => res.json());
 const Dashboard = () => {
   const { data, isLoading } = useSWR("info", fetcher);
-
+  const series = [
+    {
+      name: "Client Acquisition",
+      data: [65, 45, 35, 75, 85, 25, 55],
+    },
+  ];
+  const seriesLine = [
+    {
+      name: "Property Sales",
+      data: [45, 65, 35, 55, 40, 30, 20],
+    },
+  ];
   return (
     <DashboardLayout title="ویرایش اطلاعات" role="admin">
       <Content>
         <InfoCards />
-        <div >
+        <div className="panel-main">
           {" "}
-          <PropertyTable showData={true} />
+          {/* <PropertyTable showData={true} /> */}
+          <div className="panel-charts">
+            <ColumnChart
+              categories={["Jan", "Feb", "Mar", "Apr", "May"]}
+              series={series}
+            />
+            <LineChart
+              categories={["Jan", "Feb", "Mar", "Apr", "May"]}
+              series={seriesLine}
+            />
+          </div>
         </div>
       </Content>
     </DashboardLayout>
