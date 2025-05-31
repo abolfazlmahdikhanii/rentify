@@ -1,0 +1,64 @@
+/* ClientAcquisitionChart.module.css */
+.container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+  width: 90%;
+  
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mainMetric {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1;
+}
+
+.subMetric {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.positive {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.chartContainer {
+  margin-top: 8px;
+  height: 200px;
+}
+
+/* Override ApexCharts styles if needed */
+.container :global(.apexcharts-canvas) {
+  font-family: inherit;
+}
+
+.container :global(.apexcharts-xaxis-texts-g text) {
+  font-size: 12px !important;
+  fill: #9ca3af !important;
+}
+.apexcharts-series path  {
+  border-top:2px solid #f65 !important;
+}
