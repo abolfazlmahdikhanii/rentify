@@ -2,23 +2,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 7rem;
+ 
   font: inherit;
 }
 
 .pageList {
   display: flex;
   list-style: none;
-  margin: 0 1.5rem;
+  margin: 0 1rem;
   padding: 0;
 }
 
 .pageItem {
-  margin: 0 0.5rem;
+  margin: 0 0.4rem;
 }
 
 .pageButton {
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
   color: #4a5568;
@@ -48,8 +48,8 @@
   align-items: center;
   justify-content: center;
   min-width: 3rem;
-  height: 3rem;
-  padding: 1.5rem 1.5rem;
+  height: 3.4rem;
+  padding: 1.2rem 1.4rem;
   border: 1px solid #e2e8f0;
   background-color: #ffffff;
   color: #4a5568;

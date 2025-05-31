@@ -3,7 +3,12 @@
 import React from "react";
 import styles from "./pagination.module.css";
 
-const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
+const Pagination = ({
+  currentPage = 1,
+  totalPages = 1,
+  onPageChange,
+  type,
+}) => {
   // Generate page numbers to display
   const getPageNumbers = () => {
     const pages = [];
@@ -61,15 +66,19 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
   const pageNumbers = getPageNumbers();
 
   return (
-    <nav className={styles.pagination} aria-label="Pagination">
-      <button
+    <nav
+      className={styles.pagination}
+      style={{ marginTop: type !== "tbl" && "70px" }}
+      aria-label="Pagination"
+    >
+      {/* <button
         className={styles.pageButton}
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Go to previous page"
       >
-   &laquo;    قبلی 
-      </button>
+        &laquo; قبلی
+      </button> */}
 
       <ul className={styles.pageList}>
         {pageNumbers.map((page, index) => (
@@ -96,14 +105,14 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
         ))}
       </ul>
 
-      <button
+      {/* <button
         className={styles.pageButton}
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Go to next page"
       >
-       بعدی &raquo;
-      </button>
+        بعدی &raquo;
+      </button> */}
     </nav>
   );
 };
