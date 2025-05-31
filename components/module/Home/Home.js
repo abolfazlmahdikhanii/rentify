@@ -259,17 +259,17 @@ const StatusBadge = ({ status }) => {
     pending: {
       text: "در انتظار تأیید",
       iconColor: "#F4B740",
-      bgClass: styles.status__wait,
+      bgClass: "status__pending",
     },
     approved: {
       text: "تأیید شده",
       iconColor: "#4CAF50",
-      bgClass: styles.status__success,
+      bgClass: "status__approved",
     },
     rejected: {
       text: "رد شده",
       iconColor: "#F44336",
-      bgClass: styles.status__reject,
+      bgClass: "status__rejected",
     },
   };
 
@@ -277,7 +277,7 @@ const StatusBadge = ({ status }) => {
   const currentStatus = statusConfig[status] || statusConfig.pending;
 
   return (
-    <div className={`${styles.status} ${currentStatus.bgClass}`}>
+    <div className={`status-home ${currentStatus.bgClass}`}>
       {currentStatus.text}
       <svg
         xmlns="http://www.w3.org/2000/svg"
