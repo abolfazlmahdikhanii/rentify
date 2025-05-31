@@ -1,6 +1,7 @@
 import Header from "@/components/module/Header/Header";
 import "@/styles/globals.css";
 import "@/styles/panel.css";
+import "@/styles/admin-panel.css";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from 'react-toastify';
 
