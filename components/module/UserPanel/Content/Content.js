@@ -1,14 +1,13 @@
-import React from 'react'
+import React from "react";
 
-const Content = ({children}) => {
+const Content = ({ children, type }) => {
   return (
     <>
-    <div className="form-card">
+      <div className={`form-card ${type === "tbl" ? "form-card__tbl" : ""}`}>
         {children}
-    </div>
-    
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Content
+export default Content;
