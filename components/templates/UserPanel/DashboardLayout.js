@@ -1,5 +1,5 @@
 import PrivateRoute from "@/components/module/PrivateRoute/PrivateRoute";
-import SideBar from "@/components/module/UserPanel/SideBar/SideBar";
+import SideBar from "@/components/module/SideBar/SideBar";
 import React from "react";
 
 const DashboardLayout = ({ children, title, subTitle,role="user" }) => {
