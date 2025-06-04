@@ -214,14 +214,14 @@ input:focus-visible {
   background-color: transparent;
   display: inline;
   color: #374151;
-  border:1px solid #d1d5db;
+  border: 1px solid #d1d5db;
   height: 3.8rem;
   border-radius: 0.8rem;
   padding: 0 1.6rem;
   width: fit-content;
-  &:hover{
-     background-color: #f3f4f6;
-  border-color: #9ca3af;
+  &:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
   }
 }
 .btn-sm {
@@ -504,6 +504,28 @@ input:focus-visible {
   line-height: 1.8;
   &::placeholder {
     color: #73767c;
+  }
+  border-radius: 1rem;
+  -webkit-border-radius: 1rem;
+  -moz-border-radius: 1rem;
+  -ms-border-radius: 1rem;
+  -o-border-radius: 1rem;
+}
+.text-area2 {
+  all: unset;
+  font: inherit;
+  width: 92%;
+  border: 1px solid #d7d8da;
+  height: 13rem;
+  padding: 1.5rem 1rem;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  line-height: 1.8;
+  &::placeholder {
+    color: #73767c;
+  }
+  &:read-only {
+    background-color: #f2f2f2;
   }
   border-radius: 1rem;
   -webkit-border-radius: 1rem;
