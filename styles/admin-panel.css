@@ -17,28 +17,63 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.status,
-.status-home {
-  padding: 0.8rem 1.6rem;
-  display: flex;
+.status,.status-home {
+  display: inline-flex;
   align-items: center;
-  background-color: #fff;
-
-  font-size: 1.4rem;
-  gap: 0.6rem;
-  border-radius: 0.8rem;
-  -webkit-border-radius: 0.8rem;
-  -moz-border-radius: 0.8rem;
-  -ms-border-radius: 0.8rem;
-  -o-border-radius: 0.8rem;
-  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 7px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border: 1px solid;
+  flex-shrink: 0;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  -ms-border-radius: 7px;
+  -o-border-radius: 7px;
 }
+
+.status__pending {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fbbf24;
+}
+
+.status__approved {
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #10b981;
+}
+
+.status__rejected {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #ef4444;
+}
+.status__pending-2 {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fbbf24;
+}
+
+.status__approved-2 {
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #10b981;
+}
+
+.status__rejected-2 {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #ef4444;
+}
+
 .status-home {
   position: absolute;
   top: 0.7rem;
   right: 0.7rem;
 }
-.status__pending {
+/* .status__pending {
   color: var(--light-warning);
 }
 .status__rejected {
@@ -61,4 +96,4 @@
   color: var(--light-success);
   background-color: rgba(0, 186, 136, 0.1);
   font-size: 1.3rem;
-}
+} */
