@@ -108,7 +108,7 @@
   grid-template-columns: repeat(3, 1fr);
   column-gap: 2rem;
   row-gap: 3rem;
-  padding: 3rem 0;
+  padding: 3rem 2.5rem;
   border-top: 2px solid #d7d8da;
 }
 
