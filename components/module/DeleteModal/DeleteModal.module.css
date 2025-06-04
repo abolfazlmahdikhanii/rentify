@@ -1,0 +1,247 @@
+/* DeleteDialog.module.css */
+
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  direction: rtl;
+}
+
+.dialogContainer {
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dialogHeader {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+.warningIcon {
+  color: #dc3545;
+  font-size: 24px;
+
+  display: inline-block;
+}
+
+.dialogTitle {
+  color: #dc3545;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.dialogBody {
+  padding: 25px;
+}
+
+.deleteQuestion {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.propertyInfo {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 25px;
+  border-right: 4px solid #dc3545;
+}
+
+.propertyTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.propertyAddress {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+    font: inherit;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btnDelete {
+  background: #dc3545;
+  color: white;
+}
+
+.btnDelete:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btnDelete:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btnCancel {
+  background: #6c757d;
+  color: white;
+}
+
+.btnCancel:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  animation: slideInNotification 0.3s ease-out;
+  color: white;
+  font-weight: 500;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  direction: rtl;
+}
+
+.notificationSuccess {
+  background: #28a745;
+}
+
+.notificationError {
+  background: #dc3545;
+}
+
+.notificationInfo {
+  background: #17a2b8;
+}
+
+/* Loading spinner */
+.loadingSpinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+
+
+@keyframes slideInNotification {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .dialogContainer {
+    margin: 20px;
+    max-width: none;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .dialogBody {
+    padding: 20px;
+  }
+
+  .dialogHeader {
+    padding: 15px;
+  }
+
+  .notification {
+    right: 10px;
+    left: 10px;
+    top: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .deleteQuestion {
+    font-size: 14px;
+  }
+
+  .propertyTitle {
+    font-size: 14px;
+  }
+
+  .propertyAddress {
+    font-size: 12px;
+  }
+}
