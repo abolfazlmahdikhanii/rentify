@@ -17,12 +17,13 @@ const Input = ({
   return (
     <div className="inputContainer">
       {label && <div className="inputLabel">{label}</div>}
-      <div className={size === "md" ? "inputWrapper" : "inputWrapper2"}>
+      <div className={`inputWrapper inputWrapper_${size}`}>
         <input
           type={type}
           className={`input ${error ? "inputError" : ""}`}
           placeholder={placeholder}
           value={val}
+          dir="auto"
           // {...(register
           //   ? register(name, {
           //       required: required && "لطفا این فیلد را تکمیل کنید",
@@ -30,7 +31,7 @@ const Input = ({
           //       ...rest,
           //     })
           //   : {})}
-          onChange={(e => onChange(e.target.value))}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
       {error && (
