@@ -460,21 +460,25 @@ input:focus-visible {
 
 .inputWrapper {
   position: relative;
-  min-width: 100%;
+
   display: flex;
   border: 1px solid #d1d5db;
   border-radius: 1.2rem;
   /* width: 24.9rem; */
   height: 4.2rem;
 }
-.inputWrapper2 {
-  position: relative;
-
-  display: flex;
-  border: 1px solid #d1d5db;
-  border-radius: 1.2rem;
+.inputWrapper_md,
+.inputWrapper_lg {
+  min-width: 100%;
+}
+.inputWrapper_lg {
+  height: 5.2rem;
+  &::placeholder{
+    font-size: 1.8rem;
+  }
+}
+.inputWrapper_sm {
   width: 26.6rem;
-  height: 4.2rem;
 }
 
 .checkboxGroup {
