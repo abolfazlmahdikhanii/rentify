@@ -17,6 +17,7 @@
     "cookies-next": "^5.1.0",
     "jalali-date": "^1.2.0",
     "json-server": "^1.0.0-beta.3",
+    "lucide-react": "^0.512.0",
     "maplibre-gl": "^5.2.0",
     "next": "15.2.0",
     "react": "^19.0.0",
