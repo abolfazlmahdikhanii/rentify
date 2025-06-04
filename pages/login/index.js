@@ -119,8 +119,9 @@ export default function LoginPage() {
   const sendOtp = () => {
     const isValid = validationFormHandler(activeTab);
     if (isValid) {
+      setOtp(true);
       const email = getValues("email");
-
+      setCountdown(180);
       fetch("http://localhost:5000/api/auth/send-otp", {
         method: "POST",
         headers: {
@@ -133,8 +134,7 @@ export default function LoginPage() {
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            setOtp(true);
-            setCountdown(180);
+            console.log(data);
           }
           // Set otp to true after sending OTP
         })
@@ -320,19 +320,19 @@ export default function LoginPage() {
                         }
                       />
                     </div>
-                   <div className={styles.emailRow}>
-                     <Input
-                      label="نام دفتر"
-                      placeholder="نام دفتر را وارد کنید"
-                      error={errors.agency_name}
-                      val={watch("agency_name")}
-                      onChange={(val) =>
-                        setValue("agency_name", val, {
-                          shouldValidate: true,
-                        })
-                      }
-                    />
-                   </div>
+                    <div className={styles.emailRow}>
+                      <Input
+                        label="نام دفتر"
+                        placeholder="نام دفتر را وارد کنید"
+                        error={errors.agency_name}
+                        val={watch("agency_name")}
+                        onChange={(val) =>
+                          setValue("agency_name", val, {
+                            shouldValidate: true,
+                          })
+                        }
+                      />
+                    </div>
                     <div className={styles.emailRow}>
                       {" "}
                       <Input
@@ -415,14 +415,15 @@ export default function LoginPage() {
                   </defs>
                 </svg>
                 <p className={styles.otpTimeText}>
-                  <span className={styles.otpTimer}>
-                    {timeFormat(countdown)}
-                  </span>
-
-                  {countdown !== 0 ? (
-                    " تا دریافت مجدد کد"
+                  {countdown >0 ? (
+                    <>
+                      <span className={styles.otpTimer}>
+                        {timeFormat(countdown)}
+                      </span>
+                      تا دریافت مجدد کد
+                    </>
                   ) : (
-                    <span onClick={resendOtp}>دریافت کد مجدد</span>
+                    <button className="btn pageLink" onClick={resendOtp}>دریافت کد مجدد</button>
                   )}
                 </p>
               </div>
