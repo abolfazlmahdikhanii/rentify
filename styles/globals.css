@@ -224,6 +224,26 @@ input:focus-visible {
     border-color: #9ca3af;
   }
 }
+.btn-outline-5 {
+  font-size: 1.2rem;
+  background-color: transparent;
+  display: inline;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  height: 2.7rem;
+  border-radius: 0.6rem;
+  padding: 0 0.6rem;
+  width: fit-content;
+  -webkit-border-radius: 0.6rem;
+  -moz-border-radius: 0.6rem;
+  -ms-border-radius: 0.6rem;
+  -o-border-radius: 0.6rem;
+  &:hover 
+{
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+}
 .btn-sm {
   border-radius: 0.8rem;
   -webkit-border-radius: 0.8rem;
@@ -473,7 +493,7 @@ input:focus-visible {
 }
 .inputWrapper_lg {
   height: 5.2rem;
-  &::placeholder{
+  &::placeholder {
     font-size: 1.8rem;
   }
 }
