@@ -3,6 +3,7 @@
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import styles from "./propertyTable.module.css";
 import Pagination from "@/components/module/Pagination/Pagination";
+import { useEffect, useState } from "react";
 
 // Sample data
 
@@ -10,14 +11,18 @@ export function PropertyTable({
   showData = false,
   cols = [],
   children,
-  pageHandler,
-  totalPages,
-  currPage,
-  startIndex,
-  endIndex,
-  total
+  data = [],
+  setNewData,
 }) {
-  // If there's no data and showData is false, show the empty state
+  const [currPage, setCurrPage] = useState(1);
+  const endIndex = currPage * 8;
+  const startIndex = (currPage - 1) * 8;
+  const total = data?.length;
+  const totalPages = Math.ceil(total / 8);
+  useEffect(() => {
+    const currentPageData = data.slice(startIndex, endIndex);
+    setNewData(currentPageData);
+  }, [currPage,setNewData]);
   if (!showData) {
     return (
       <EmptyList
@@ -45,14 +50,18 @@ export function PropertyTable({
       </div>
 
       <div className={styles.tablePagination}>
-        <div className={styles.paginationInfo}>نمایش {startIndex+1} تا {currPage===totalPages?total:endIndex} از {total} مورد</div>
+        <div className={styles.paginationInfo}>
+          نمایش {startIndex + 1} تا {currPage === totalPages ? total : endIndex}{" "}
+          از {total} مورد
+        </div>
 
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currPage}
-          type="tbl"
-          onPageChange={pageHandler}
-        />
+        {totalPages > 1 && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currPage}
+            onPageChange={(page) => setCurrPage(page)}
+          />
+        )}
       </div>
     </div>
   );
