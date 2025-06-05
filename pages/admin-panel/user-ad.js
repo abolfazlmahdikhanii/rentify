@@ -20,23 +20,13 @@ const fetcher = () =>
   }).then((res) => res.json());
 const MyAdvertisement = () => {
   const { data, isLoading, mutate } = useSWR("admin-ad", fetcher);
-  const [page, setPage] = useState(1);
+
   const [newAd, setNewAd] = useState([]);
   const [adDetail, setAdDetail] = useState(null);
   const [isOpenDiaog, setIsOpenDialog] = useState(false);
   const [propertyDetail, setPropertyDetail] = useState(null);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  useEffect(() => {
-    if (!data?.data) return;
-    const ads = [...data?.data];
-    const endIndex = page * 8;
-    const startIndex = (page - 1) * 8;
-    setNewAd(ads.slice(startIndex, endIndex));
-  }, [page, data]);
 
-  const pageHandler = (page) => {
-    setPage(page);
-  };
 
   const approveHandler = (id) => {
     fetch(`http://localhost:5000/api/properties/${id}/approve`, {
@@ -104,12 +94,8 @@ const MyAdvertisement = () => {
         <PropertyTable
           showData={true}
           cols={["ملک", "آدرس", "ثبت کننده", "تاریخ ثبت", "وضعیت", "عملیات"]}
-          pageHandler={pageHandler}
-          totalPages={Math.ceil(data?.count / 8)}
-          currPage={page}
-          startIndex={(page - 1) * 8}
-          endIndex={page * 8}
-          total={data?.count || data?.data?.length}
+          data={[...data?.data]}
+          setNewData={setNewAd}
         >
           <tbody className="tbody">
             {data?.data?.length > 0
