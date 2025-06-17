@@ -94,7 +94,7 @@ const MyAdvertisement = () => {
         <PropertyTable
           showData={true}
           cols={["ملک", "آدرس", "ثبت کننده", "تاریخ ثبت", "وضعیت", "عملیات"]}
-          data={[...data?.data]}
+          data={data?.data}
           setNewData={setNewAd}
         >
           <tbody className="tbody">
