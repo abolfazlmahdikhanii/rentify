@@ -3,7 +3,7 @@
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import styles from "./propertyTable.module.css";
 import Pagination from "@/components/module/Pagination/Pagination";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Sample data
 
@@ -19,10 +19,13 @@ export function PropertyTable({
   const startIndex = (currPage - 1) * 8;
   const total = data?.length;
   const totalPages = Math.ceil(total / 8);
-  useEffect(() => {
+  const updateData = useCallback(() => {
     const currentPageData = data.slice(startIndex, endIndex);
     setNewData(currentPageData);
-  }, [currPage,setNewData]);
+  }, [data, startIndex, endIndex,setNewData]);
+  useEffect(() => {
+    updateData();
+  }, [updateData, currPage]);
   if (!showData) {
     return (
       <EmptyList
