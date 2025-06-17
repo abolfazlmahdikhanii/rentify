@@ -55,6 +55,11 @@ const Home = ({
       if (res.ok) {
         setIsFav(true);
         toast.success("با موفقیت به عللاقه مندی ها اضافه شد", toastOption);
+      } else if (res.status == 401) {
+        toast.error(
+          "برای افزودن به موردعلاقه ها  ثبت نام کنید",
+          toastOption
+        );
       }
     });
   };
@@ -225,31 +230,31 @@ const Home = ({
         </div>
       </Link>
       {(isMyAd || isMyCompare) && (
-          <button className={styles.removeBtn} onClick={remove}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <g clipPath="url(#clip0_3930_15314)">
-                <path
-                  fill="#ED2E2E"
-                  fillRule="evenodd"
-                  stroke="#fff"
-                  d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm-1.414 11L7.05 8.464 8.464 7.05 12 10.586l3.536-3.536 1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536z"
-                  clipRule="evenodd"
-                ></path>
-              </g>
-              <defs>
-                <clipPath id="clip0_3930_15314">
-                  <path fill="#fff" d="M0 0h24v24H0z"></path>
-                </clipPath>
-              </defs>
-            </svg>
-          </button>
-        )}
+        <button className={styles.removeBtn} onClick={remove}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <g clipPath="url(#clip0_3930_15314)">
+              <path
+                fill="#ED2E2E"
+                fillRule="evenodd"
+                stroke="#fff"
+                d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm-1.414 11L7.05 8.464 8.464 7.05 12 10.586l3.536-3.536 1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536z"
+                clipRule="evenodd"
+              ></path>
+            </g>
+            <defs>
+              <clipPath id="clip0_3930_15314">
+                <path fill="#fff" d="M0 0h24v24H0z"></path>
+              </clipPath>
+            </defs>
+          </svg>
+        </button>
+      )}
     </div>
   );
 };
