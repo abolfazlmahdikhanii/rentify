@@ -7,7 +7,7 @@ const Pagination = ({
   currentPage = 1,
   totalPages = 1,
   onPageChange,
-  type,
+  type="tbl",
 }) => {
   // Generate page numbers to display
   const getPageNumbers = () => {
