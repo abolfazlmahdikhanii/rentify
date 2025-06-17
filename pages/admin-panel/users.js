@@ -33,44 +33,6 @@ const Users = () => {
     setPage(page);
   };
 
-  const approveHandler = (id) => {
-    fetch(`http://localhost:5000/api/properties/${id}/approve`, {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${getCookie("token")}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsOpenDialog(false);
-        setPropertyDetail(null);
-        toast.success("ملک با موفقیت ثبت شد", toastOption);
-        mutate("admin-ad");
-      })
-      .catch((err) => {
-        setIsOpenDialog(false);
-        toast.error("خطا در ثبت ملک", toastOption);
-      });
-  };
-  const rejectHandler = (id, reason) => {
-    fetch(`http://localhost:5000/api/properties/${id}/reject`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${getCookie("token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ reason }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsOpenDialog(false);
-        setPropertyDetail(null);
-        mutate("admin-ad");
-        toast.success("ملک با موفقیت رد شد", toastOption);
-      })
-      .catch((err) => {
-        setIsOpenDialog(false);
-        toast.error("خطا در رد ملک", toastOption);
-      });
-  };
   const deleteHandler = (data) => {
     setPropertyDetail(data);
     setIsOpenDeleteModal(true);
@@ -93,8 +55,39 @@ const Users = () => {
         toast.error("خطا در حذف ملک", toastOption);
       });
   };
+  const changeUserRoleHandler = (id, role) => {
+    const newRole = role === "user" ? "admin" : "user";
+    fetch(`http://localhost:5000/api/auth/admin/change-role/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+      body: JSON.stringify({ newRole: newRole }),
+    })
+      .then((res) => {
+        if (res.status !== 200) {
+          toast.error("خطا در تغییر کاربر", toastOption);
+        } else if (res.ok) {
+          toast.success("کاربر با موفقیت تغییر یافت", toastOption);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setIsOpenDeleteModal(false);
+        setIsOpenDialog(false);
+        setOpenDropdownId(null);
+        mutate("users");
+      })
+      .catch((err) => {
+        setIsOpenDeleteModal(false);
+        setOpenDropdownId(null);
+        setIsOpenDialog(false);
+        toast.error("خطا در تغییر کاربر", toastOption);
+      });
+  };
   return (
-    <DashboardLayout title="آگهی‌های ذخیره شده" role="admin">
+    <DashboardLayout title="کابران" role="admin">
       <Content type="tbl">
         <PropertyTable
           showData={true}
@@ -130,19 +123,19 @@ const Users = () => {
                       {item.name} {item.lastName}
                     </td>
                     <td className="tbl-txt">{item.email}</td>
-                    <td className="tbl-txt">{item.job?item.job:"--"}</td>
+                    <td className="tbl-txt">{item.job ? item.job : "--"}</td>
                     <td className="tbl-txt">
                       {item.role === "admin" ? "مدیر" : "کاربر عادی"}
                     </td>
 
-                    <td style={{position:"relative"}}>
+                    <td style={{ position: "relative" }}>
                       <button
                         className="btn btn-outline-5"
                         onClick={() => {
                           setOpenDropdownId(
                             openDropdownId === item.id ? null : item.id
                           );
-                          setShowDropdown(prev=>!prev)
+                          setShowDropdown((prev) => !prev);
                         }}
                       >
                         <EllipsisVertical size={14} />
@@ -152,18 +145,22 @@ const Users = () => {
               ${openDropdownId === item.id ? "active" : ""}`}
                         onMouseLeave={() => setShowDropdown(false)}
                       >
-                        <li className="drop-down__btn">
-                  
-                          {item.role==="user"?"تغییر به مدیر":"تغییر به کاربر"}
+                        <li
+                          className="drop-down__btn"
+                          onClick={() =>
+                            changeUserRoleHandler(item.id, item.role)
+                          }
+                        >
+                          {item.role === "user"
+                            ? "تغییر به مدیر"
+                            : "تغییر به کاربر"}
                         </li>
                         <li
                           className="drop-down__btn"
-                        //   onClick={() => setIsShowDeleteModal(true)}
+                          //   onClick={() => setIsShowDeleteModal(true)}
                         >
-               
                           حذف
                         </li>
-                  
                       </ul>
                     </td>
                   </tr>
