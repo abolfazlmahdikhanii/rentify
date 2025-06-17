@@ -175,11 +175,14 @@ export default function LoginPage() {
       }),
     })
       .then((response) => {
-        if (!response.ok) {
+        if (!response.status===400) {
           setOtp(false);
           setOtpValue("");
+          toast.error("کد تایید منقضی شده است", toastOption);
         }
-        return response.json();
+        else if(response.ok){
+          return response.json();
+        }
       })
       .then((data) => {
         if (data.success) {
