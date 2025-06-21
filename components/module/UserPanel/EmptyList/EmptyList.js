@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./emptyList.module.css";
 import { useRouter } from "next/router";
 
-const EmptyList = ({ title, subtitle, src, type, btnText, href }) => {
+const EmptyList = ({ title, subtitle, src, type, btnText, href, noBtn=false }) => {
   const router = useRouter();
   let icon = null;
   if (type === "add") {
@@ -64,19 +64,21 @@ const EmptyList = ({ title, subtitle, src, type, btnText, href }) => {
       <div className={styles.emptyInfo}>
         <h5 className={styles.emptyTitle}>{title}</h5>
         <p className={styles.emptyDesc}>{subtitle}</p>
-        <button
-          className={`submit-btn ${styles.emptyBtn}`}
-          onClick={() => {
-            if (type === "add") {
-              router.push("/register-step");
-            } else if (type === "search") {
-              router.push("/homes");
-            }
-          }}
-        >
-          {icon}
-          {btnText}
-        </button>
+        {!noBtn && (
+          <button
+            className={`submit-btn ${styles.emptyBtn}`}
+            onClick={() => {
+              if (type === "add") {
+                router.push("/register-step");
+              } else if (type === "search") {
+                router.push("/homes");
+              }
+            }}
+          >
+            {icon}
+            {btnText}
+          </button>
+        )}
       </div>
     </div>
   );
