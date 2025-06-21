@@ -1,49 +1,88 @@
 import React, { useState } from "react";
 import styles from "./ModalVisitRequest.module.css";
-import JDate from "jalali-date"
+import JDate from "jalali-date";
 import DatePicker from "@/components/module/DatePicker/DatePicker";
 import ConfirmationModal from "@/components/module/ConfirmationModal/ConfirmationModal";
+import { getCookie } from "cookies-next";
+import { toast } from "react-toastify";
+import { toastOption } from "@/helper/helper";
 
-const ModalVisitRequest = ({ onClose }) => {
+const ModalVisitRequest = ({ onClose, id }) => {
   const [isOpenTime, setIsOpenTime] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const [date, setDate] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const timeSlots = [
-    "۱۰:۰۰",
-    "۱۱:۰۰",
-    "۱۲:۰۰",
-    "۱۳:۰۰",
-    "۱۴:۰۰",
-    "۱۵:۰۰",
-    "۱۶:۰۰",
-    "۱۷:۰۰",
-    "۱۸:۰۰",
-    "۱۹:۰۰",
-    "۲۰:۰۰",
-    "۲۱:۰۰",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
   ];
-  const visitRequestHandler = (e) => {
-    e.preventDefault();
-    console.log(selectedTime);
-    console.log(date);
-    setIsSuccess(true);
-
-    setTimeout(() => {
-      setIsSuccess(false);
-      onClose();
-    }, 2000);
-  };
   const formatDate = (date) => {
-    const englishDate = date.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    const englishDate = date.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
 
     // Split into components and convert to numbers
-    const [year, month, day] = englishDate.split('/').map(Number);
+    const [year, month, day] = englishDate.split("/").map(Number);
     const jdate2 = new JDate(year, month, day);
-    const format=jdate2.format(' DD MMMM ,YYYY') 
+    const format = jdate2.format(" DD MMMM ,YYYY");
 
-    return format
+    return format;
   };
+  const formatNewDate = (date) => {
+    const englishDate = date.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+
+    // Split into components and convert to numbers
+    const [year, month, day] = englishDate.split("/").map(Number);
+    const jdate2 = new JDate(year, month, day);
+    return jdate2._d;
+  };
+  const visitRequestHandler = (e) => {
+    e.preventDefault();
+    console.log(formatNewDate(date));
+    if (!selectedTime || !date) {
+      toast.error("لطفا زمان و تاریخ را انتخاب کنید", toastOption);
+      return;
+    }
+    const newVisit = {
+      visitTime: selectedTime,
+      visitDate: formatNewDate(date),
+    };
+    fetch(`http://localhost:5000/api/visits/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+      body: JSON.stringify(newVisit),
+    })
+      .then((res) => {
+        console.log(res);
+        if (!res.ok) throw Error;
+        return res.json();
+      })
+      .then((res) => {
+        console.log(selectedTime);
+        console.log(date);
+        setIsSuccess(true);
+
+        setTimeout(() => {
+          setIsSuccess(false);
+          onClose();
+        }, 2000);
+      })
+      .catch((err) => {
+        toast.error("خطا در انتخاب بازدید", toastOption);
+      });
+  };
+
   return (
     <>
       <div className="backdrop">
