@@ -20,11 +20,15 @@ export function PropertyTable({
   const total = data?.length;
   const totalPages = Math.ceil(total / 8);
   const updateData = useCallback(() => {
-    const currentPageData = data.slice(startIndex, endIndex);
-    setNewData(currentPageData);
-  }, [data, startIndex, endIndex,setNewData]);
+    if (data.length) {
+      const currentPageData = data?.slice(startIndex, endIndex);
+      setNewData(currentPageData);
+    }
+  }, [data, startIndex, endIndex, setNewData]);
   useEffect(() => {
-    updateData();
+    if (data.length) {
+      updateData();
+    }
   }, [updateData, currPage]);
   if (!showData) {
     return (
