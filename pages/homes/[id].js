@@ -41,7 +41,10 @@ const HomePageDetail = ({ houses }) => {
         </section>
       </div>
       {isModalOpen && (
-        <ModalVisitRequest onClose={() => setIsModalOpen(false)} />
+        <ModalVisitRequest
+          onClose={() => setIsModalOpen(false)}
+          id={query.id}
+        />
       )}
     </div>
   );
@@ -65,17 +68,16 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const { params } = context;
   const res = await fetch(`http://localhost:5000/api/properties/${params.id}`);
-  if (res.status!==200) {
+  if (res.status !== 200) {
     return {
       notFound: true,
     };
   }
-  
+
   const data = await res.json();
-console.log(data);
+
   return {
     props: { houses: [data] },
-  
   };
 }
 
