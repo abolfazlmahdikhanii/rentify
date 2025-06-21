@@ -1,0 +1,323 @@
+
+.container{
+    padding-bottom: 3rem;
+}
+.card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  height: 325px;
+  position: relative;
+  
+}
+.cardActive{
+    height: 100%;
+}
+/* هدر */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.visitId {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.statusBadge {
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* بخش‌ها */
+.section {
+  padding: 24px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section:last-of-type {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* جزئیات ملک */
+.propertyDetails {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  /* display: flex; */
+}
+
+.propertyImage {
+  width: 80px;
+  height: 80px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.propertyInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.propertyHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.propertyTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.propertyType {
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.propertyAddress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 14px;
+  margin: 17px 0 14px 0;
+}
+.houseInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.propertyMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.specs {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* برنامه */
+.scheduleItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.scheduleItem:last-child {
+  margin-bottom: 0;
+}
+
+/* ردیف افراد */
+.peopleRow {
+  display: flex;
+  gap: 40px;
+}
+.moreBtn{
+position: absolute;
+bottom: 7px;
+left: 50%;
+transform: translateX(-50%);
+cursor: pointer;
+  background: #f1f5f9;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1d4ed8;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  display: grid;
+  place-items: center;
+
+}
+.moreBtnActive{
+position: static;
+margin-top: 7px;
+max-width: max-content;
+margin-bottom: 15px;
+margin-inline: auto;
+}
+/* اطلاعات شخص */
+.personInfo {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.personDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.personHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.personName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.personType {
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* یادداشت‌ها */
+.notesBox {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* دکمه‌ها */
+.actions {
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+  background: #f8fafc;
+}
+
+.editBtn,
+.cancelBtn,
+.completeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid;
+}
+
+.editBtn {
+  background: white;
+  color: #374151;
+  border-color: #d1d5db;
+  flex: 1;
+}
+
+.editBtn:hover {
+  background: #f9fafb;
+}
+
+.cancelBtn {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.cancelBtn:hover {
+  background: #fecaca;
+}
+
+.completeBtn {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+
+.completeBtn:hover {
+  background: #dcfce7;
+}
+
+/* فوتر */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #f8fafc;
+  color: #6b7280;
+  font-size: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.icon {
+  font-size: 14px;
+}
+
+/* واکنش‌گرا */
