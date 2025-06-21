@@ -37,6 +37,16 @@
   gap: 15px;
   position: relative;
 }
+.dialogHeader2 {
+  background: linear-gradient(135deg, rgba(10, 88, 202,0.3), rgba(10, 88, 202,.7));
+  padding: 20px; /* Adjusted padding */
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Increased gap between items */
+  /* Added a border at the bottom */
+  border-radius: 5px; /* Added rounded corners */
+  position: relative;
+}
 
 .warningIcon {
   color: #dc3545;
@@ -44,9 +54,21 @@
 
   display: inline-block;
 }
+.infoIcon {
+  color: #fff;
+  font-size: 24px;
+
+  display: inline-block;
+}
 
 .dialogTitle {
   color: #dc3545;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+.dialogTitle2 {
+  color: #fff; /* Change this to your desired color */
   font-size: 18px;
   font-weight: 600;
   margin: 0;
@@ -93,7 +115,7 @@
 }
 
 .btn {
-    font: inherit;
+  font: inherit;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
@@ -127,6 +149,23 @@
 }
 
 .btnDelete:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.btnModify {
+  background: #28a745;
+  color: white;
+}
+
+.btnModify:hover:not(:disabled) {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow:0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btnModify:disabled {
   background: #6c757d;
   cursor: not-allowed;
   transform: none;
@@ -182,8 +221,6 @@
   animation: spin 1s linear infinite;
   margin-left: 8px;
 }
-
-
 
 @keyframes slideInNotification {
   from {
