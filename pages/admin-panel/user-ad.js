@@ -27,7 +27,6 @@ const MyAdvertisement = () => {
   const [propertyDetail, setPropertyDetail] = useState(null);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
-
   const approveHandler = (id) => {
     fetch(`http://localhost:5000/api/properties/${id}/approve`, {
       method: "PATCH",
@@ -91,56 +90,62 @@ const MyAdvertisement = () => {
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده" role="admin">
       <Content type="tbl">
-        <PropertyTable
-          showData={true}
-          cols={["ملک", "آدرس", "ثبت کننده", "تاریخ ثبت", "وضعیت", "عملیات"]}
-          data={data?.data}
-          setNewData={setNewAd}
-        >
-          <tbody className="tbody">
-            {data?.data?.length > 0
-              ? newAd.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <img
-                        src={
-                          item.images.length > 0
-                            ? item.images[0]?.url
-                            : "/images/empty-image.jpg"
-                        }
-                        alt="house"
-                        className="tbl-img"
-                      />
-                    </td>
+        {data?.data?.length ? (
+          <PropertyTable
+            showData={true}
+            cols={["ملک", "آدرس", "ثبت کننده", "تاریخ ثبت", "وضعیت", "عملیات"]}
+            data={data?.data}
+            setNewData={setNewAd}
+          >
+            <tbody className="tbody">
+              {data?.data?.length > 0
+                ? newAd.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <img
+                          src={
+                            item.images.length > 0
+                              ? item.images[0]?.url
+                              : "/images/empty-image.jpg"
+                          }
+                          alt="house"
+                          className="tbl-img"
+                        />
+                      </td>
 
-                    <td className="tbl-txt tbl-txt-2">{item.title}</td>
-                    <td className="tbl-txt">{item.author}</td>
-                    <td className="tbl-txt">{getDate(item.created_at)}</td>
-                    <td className="tbl-txt">
-                      <span className={`status status__${[item.status]}-2`}>
-                        {item.status === "pending" && "در انتظار ثبت"}
-                        {item.status === "approved" && "ثبت شده"}
-                        {item.status === "rejected" && "رد شده"}
-                      </span>
-                    </td>
+                      <td className="tbl-txt tbl-txt-2">{item.title}</td>
+                      <td className="tbl-txt">{item.author}</td>
+                      <td className="tbl-txt">{getDate(item.created_at)}</td>
+                      <td className="tbl-txt">
+                        <span className={`status status__${[item.status]}-2`}>
+                          {item.status === "pending" && "در انتظار ثبت"}
+                          {item.status === "approved" && "ثبت شده"}
+                          {item.status === "rejected" && "رد شده"}
+                        </span>
+                      </td>
 
-                    <td>
-                      <button
-                        className="btn btn-outline-4"
-                        onClick={() => {
-                          setAdDetail(item);
-                          setIsOpenDialog(true);
-                        }}
-                      >
-                        نمایش جزییات
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              : null}
-          </tbody>
-        </PropertyTable>
-
+                      <td>
+                        <button
+                          className="btn btn-outline-4"
+                          onClick={() => {
+                            setAdDetail(item);
+                            setIsOpenDialog(true);
+                          }}
+                        >
+                          نمایش جزییات
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                : null}
+            </tbody>
+          </PropertyTable>
+        ) : (
+          <EmptyList
+            src={"/images/empty-add-ad.png"}
+            title="شما هنوز آگهی‌ای ثبت نکردید!"
+          />
+        )}
         {isOpenDiaog && (
           <PropertyDialog
             isOpen={isOpenDiaog}
@@ -152,10 +157,6 @@ const MyAdvertisement = () => {
           />
         )}
 
-        {/* <EmptyList
-          src={"/images/empty-add-ad.png"}
-          title="شما هنوز آگهی‌ای ثبت نکردید!"
-        /> */}
         {isOpenDeleteModal && (
           <DeleteModal
             isOpen={isOpenDeleteModal}
