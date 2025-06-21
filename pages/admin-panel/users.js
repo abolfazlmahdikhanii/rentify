@@ -24,21 +24,18 @@ const Users = () => {
   const [page, setPage] = useState(1);
   const [newUsers, setNewUsers] = useState([]);
   const [adDetail, setAdDetail] = useState(null);
-  const [isOpenDiaog, setIsOpenDialog] = useState(false);
+  const [isOpenChangeDialog, setIsOpenChangeDialog] = useState(false);
   const [propertyDetail, setPropertyDetail] = useState(null);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [userRole, setUserRole] = useState("user");
   const pageHandler = (page) => {
     setPage(page);
   };
 
-  const deleteHandler = (data) => {
-    setPropertyDetail(data);
-    setIsOpenDeleteModal(true);
-  };
-  const deleteProperty = (id) => {
-    fetch(`http://localhost:5000/api/properties/${id}`, {
+  const deleteUser = (id) => {
+    fetch(`http://localhost:5000/api/auth/admin/users/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getCookie("token")}` },
     })
@@ -47,12 +44,13 @@ const Users = () => {
         setIsOpenDeleteModal(false);
         setIsOpenDialog(false);
         setPropertyDetail(null);
-        mutate("admin-ad");
-        toast.success("ملک با موفقیت حذف شد", toastOption);
+        setOpenDropdownId(null);
+        mutate("users");
+        toast.success("کاربر با موفقیت حذف شد", toastOption);
       })
       .catch((err) => {
         setIsOpenDeleteModal(false);
-        toast.error("خطا در حذف ملک", toastOption);
+        toast.error("خطا در حذف کاربر", toastOption);
       });
   };
   const changeUserRoleHandler = (id, role) => {
@@ -87,111 +85,116 @@ const Users = () => {
       });
   };
   return (
-    <DashboardLayout title="کابران" role="admin">
+    <DashboardLayout title="کاربران" role="admin">
       <Content type="tbl">
-        <PropertyTable
-          showData={true}
-          cols={[
-            "تصویر",
-            "نام و نام خانوادگی",
-            "ایمیل",
-            "شغل",
-            "نقش",
-            "عملیات",
-          ]}
-          data={data?.users}
-          setNewData={setNewUsers}
-        >
-          <tbody className="tbody">
-            {data?.users?.length > 0
-              ? newUsers.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <img
-                        // src={
-                        //   item.images.length > 0
-                        //     ? item.images[0]?.url
-                        //     : "/images/empty-image.jpg"
-                        // }
-                        src={"/images/empty-image.jpg"}
-                        alt="house"
-                        className="tbl-img"
-                      />
-                    </td>
+        {data?.users?.length ? (
+          <PropertyTable
+            showData={true}
+            cols={[
+              "تصویر",
+              "نام و نام خانوادگی",
+              "ایمیل",
+              "شغل",
+              "نقش",
+              "عملیات",
+            ]}
+            data={data?.users}
+            setNewData={setNewUsers}
+          >
+            <tbody className="tbody">
+              {data?.users?.length > 0
+                ? newUsers.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <img
+                          // src={
+                          //   item.images.length > 0
+                          //     ? item.images[0]?.url
+                          //     : "/images/empty-image.jpg"
+                          // }
+                          src={"/images/empty-image.jpg"}
+                          alt="house"
+                          className="tbl-img"
+                        />
+                      </td>
 
-                    <td className="tbl-txt">
-                      {item.name} {item.lastName}
-                    </td>
-                    <td className="tbl-txt">{item.email}</td>
-                    <td className="tbl-txt">{item.job ? item.job : "--"}</td>
-                    <td className="tbl-txt">
-                      {item.role === "admin" ? "مدیر" : "کاربر عادی"}
-                    </td>
+                      <td className="tbl-txt">
+                        {item.name} {item.lastName}
+                      </td>
+                      <td className="tbl-txt">{item.email}</td>
+                      <td className="tbl-txt">{item.job ? item.job : "--"}</td>
+                      <td className="tbl-txt">
+                        {item.role === "admin" ? "مدیر" : "کاربر عادی"}
+                      </td>
 
-                    <td style={{ position: "relative" }}>
-                      <button
-                        className="btn btn-outline-5"
-                        onClick={() => {
-                          setOpenDropdownId(
-                            openDropdownId === item.id ? null : item.id
-                          );
-                          setShowDropdown((prev) => !prev);
-                        }}
-                      >
-                        <EllipsisVertical size={14} />
-                      </button>
-                      <ul
-                        className={`drop-down--tbl shadow-light
-              ${openDropdownId === item.id ? "active" : ""}`}
-                        onMouseLeave={() => setShowDropdown(false)}
-                      >
-                        <li
-                          className="drop-down__btn"
-                          onClick={() =>
-                            changeUserRoleHandler(item.id, item.role)
-                          }
+                      <td style={{ position: "relative" }}>
+                        <button
+                          className="btn btn-outline-5"
+                          onClick={() => {
+                            setOpenDropdownId(item.id);
+                            setShowDropdown((prev) => !prev);
+                          }}
                         >
-                          {item.role === "user"
-                            ? "تغییر به مدیر"
-                            : "تغییر به کاربر"}
-                        </li>
-                        <li
-                          className="drop-down__btn"
-                          //   onClick={() => setIsShowDeleteModal(true)}
+                          <EllipsisVertical size={14} />
+                        </button>
+                        <ul
+                          className={`drop-down--tbl shadow-light
+              ${openDropdownId === item.id && showDropdown ? "active" : ""}`}
+                          // onMouseLeave={() => setShowDropdown(false)}
                         >
-                          حذف
-                        </li>
-                      </ul>
-                    </td>
-                  </tr>
-                ))
-              : null}
-          </tbody>
-        </PropertyTable>
-
-        {isOpenDiaog && (
-          <PropertyDialog
-            isOpen={isOpenDiaog}
-            onClose={() => setIsOpenDialog(false)}
-            property={adDetail}
-            approveHandler={approveHandler}
-            rejectHandler={rejectHandler}
-            deleteHandler={deleteHandler}
+                          <li
+                            className="drop-down__btn"
+                            onClick={() => {
+                              setIsOpenChangeDialog(true);
+                              setUserRole(item.role);
+                              setShowDropdown(false);
+                            }}
+                          >
+                            {item.role === "user"
+                              ? "تغییر به مدیر"
+                              : "تغییر به کاربر"}
+                          </li>
+                          <li
+                            className="drop-down__btn"
+                            onClick={() => {
+                              setIsOpenDeleteModal(true);
+                              setShowDropdown(false);
+                            }}
+                          >
+                            حذف
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                  ))
+                : null}
+            </tbody>
+          </PropertyTable>
+        ) : (
+          <EmptyList
+            src={"/images/empty-add-ad.png"}
+            title="شما هنوز آگهی‌ای ثبت نکردید!"
+            noBtn={true}
           />
         )}
-
-        {/* <EmptyList
-          src={"/images/empty-add-ad.png"}
-          title="شما هنوز آگهی‌ای ثبت نکردید!"
-        /> */}
         {isOpenDeleteModal && (
           <DeleteModal
             isOpen={isOpenDeleteModal}
             onClose={() => setIsOpenDeleteModal(false)}
-            title="حذف ملک"
-            question="آیا از حذف این ملک اطمینان دارید؟ این عملیات قابل بازگشت نیست."
+            title="حذف کاربر"
+            question="آیا از حذف این کاربر اطمینان دارید؟ این عملیات قابل بازگشت نیست."
             property={propertyDetail}
-            onConfirm={() => deleteProperty(propertyDetail.id)}
+            onConfirm={() => deleteUser(openDropdownId)}
+          />
+        )}
+        {isOpenChangeDialog && (
+          <DeleteModal
+            isOpen={isOpenChangeDialog}
+            onClose={() => setIsOpenChangeDialog(false)}
+            title="تغییر نقش"
+            question="آیا از تغییر نقش این کاربر اطمینان دارید؟ این عملیات قابل بازگشت نیست."
+            onConfirm={() => changeUserRoleHandler(openDropdownId, userRole)}
+            type="modify"
           />
         )}
       </Content>
