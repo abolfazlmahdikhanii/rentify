@@ -15,12 +15,12 @@ export const timeFormat = (time) => {
   const sec = time % 60;
   return `${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`;
 };
-export const getDate = (date) => {
+export const getDate = (date, monthType) => {
   const d = new Date(date);
 
   return new Intl.DateTimeFormat("fa", {
     year: "numeric",
-    month: "2-digit",
+    month: monthType === "txt" ? "short" : "2-digit",
     day: "2-digit",
   }).format(d);
 };
