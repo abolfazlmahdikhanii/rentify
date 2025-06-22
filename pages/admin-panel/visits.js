@@ -16,12 +16,16 @@ const Visits = () => {
   const { data, isLoading, mutate } = useSWR("visits", fetcher);
   const [page, setPage] = useState(1);
   const [newVisits, setNewVisits] = useState([]);
-console.log(data);
+  console.log(data);
   return (
     <DashboardLayout title="بازدیدها" role="admin">
       <Content type="tbl">
         {data?.length ? (
-          <VisitCard />
+          <>
+            {data.map((visit) => (
+              <VisitCard key={visit.id} {...visit} />
+            ))}
+          </>
         ) : (
           <EmptyList
             src={"/images/empty-add-ad.png"}
