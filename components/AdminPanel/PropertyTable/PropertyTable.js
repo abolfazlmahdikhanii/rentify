@@ -43,7 +43,7 @@ export function PropertyTable({
 
   return (
     <div className={styles.propertyTableContainer}>
-      <div className={styles.tbl}>
+
         <table className={styles.propertyTable}>
           <thead>
             <tr>
@@ -54,7 +54,7 @@ export function PropertyTable({
           </thead>
           {children}
         </table>
-      </div>
+      
 
       <div className={styles.tablePagination}>
         <div className={styles.paginationInfo}>
