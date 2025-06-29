@@ -273,56 +273,76 @@ const PropertyDialog = ({
         {/* Footer Actions */}
         <div className={styles.footer}>
           <div className={styles.footerActions}>
-            {user.role === "admin" ? (
+            {property.status === "pending" && (
               <>
-                {property.status === "pending" && (
-                  <>
-                    <button
-                      onClick={() => approveHandler(property?.id)}
-                      disabled={isLoading !== null}
-                      className={`${styles.btn} ${styles.btnApprove}`}
-                    >
-                      {isLoading === "approve" ? (
-                        "در حال تایید..."
-                      ) : (
-                        <>
-                          <CheckCircle className={styles.iconSmall} />
-                          تایید
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => rejectHandler(property?.id, reason)}
-                      disabled={isLoading !== null}
-                      className={`${styles.btn} ${styles.btnReject}`}
-                    >
-                      {isLoading === "reject" ? (
-                        "در حال رد..."
-                      ) : (
-                        <>
-                          <XCircle className={styles.iconSmall} />
-                          رد
-                        </>
-                      )}
-                    </button>
-                  </>
-                )}
-                {property.status !== "pending" && (
-                  <button
-                    className={`${styles.btn} ${styles.btnReject}`}
-                    onClick={() => deleteHandler(property)}
-                  >
-                    <Trash2 className={styles.iconSmall} />
-                    حذف
-                  </button>
-                )}
+                <button
+                  onClick={() => approveHandler(property?.id)}
+                  disabled={isLoading !== null}
+                  className={`${styles.btn} ${styles.btnApprove}`}
+                >
+                  {isLoading === "approve" ? (
+                    "در حال تایید..."
+                  ) : (
+                    <>
+                      <CheckCircle className={styles.iconSmall} />
+                      تایید
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => rejectHandler(property?.id, reason)}
+                  disabled={isLoading !== null}
+                  className={`${styles.btn} ${styles.btnReject}`}
+                >
+                  {isLoading === "reject" ? (
+                    "در حال رد..."
+                  ) : (
+                    <>
+                      <XCircle className={styles.iconSmall} />
+                      رد
+                    </>
+                  )}
+                </button>
               </>
-            ) : (
-              <button className={`${styles.btn} ${styles.btnReject}`}>
-                <Trash2 className={styles.iconSmall} />
-                حذف
-              </button>
             )}
+
+            {/* Edit button - shown only to owner for non-pending properties */}
+            {property.status !== "pending" &&
+              property?.user_id === user?.id && (
+                <button
+                  onClick={() => editHandler(property)}
+                  disabled={isLoading === "edit"}
+                  className={`${styles.btn} ${styles.btnEdit}`}
+                >
+                  {isLoading === "edit" ? (
+                    "در حال ویرایش..."
+                  ) : (
+                    <>
+                      <Edit className={styles.iconSmall} />
+                      ویرایش
+                    </>
+                  )}
+                </button>
+              )}
+
+            {/* Delete button - shown to owner or admin for non-pending properties */}
+            {property.status !== "pending" &&
+              (property?.user_id === user?.id || user?.role === "admin") && (
+                <button
+                  onClick={() => deleteHandler(property)}
+                  disabled={isLoading === "delete"}
+                  className={`${styles.btn} ${styles.btnReject}`}
+                >
+                  {isLoading === "delete" ? (
+                    "در حال حذف..."
+                  ) : (
+                    <>
+                      <Trash2 className={styles.iconSmall} />
+                      حذف
+                    </>
+                  )}
+                </button>
+              )}
           </div>
         </div>
       </div>
