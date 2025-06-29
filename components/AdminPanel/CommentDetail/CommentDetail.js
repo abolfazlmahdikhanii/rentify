@@ -1,18 +1,41 @@
-// components/Modal/Modal.jsx
 import { useState } from "react";
 import styles from "./commentDetail.module.css";
-import { Check, CircleCheckBig, LucideEllipsis, XCircle } from "lucide-react";
+import {
+  Check,
+  CircleCheckBig,
+  LucideEllipsis,
+  Trash,
+  XCircle,
+} from "lucide-react";
+import { getDate, getStatusText } from "@/helper/helper";
 
-const CommentDetail = ({ isOpen, onClose }) => {
-  const [newComment, setNewComment] = useState("");
-  const [isMore, setIsMore] = useState(false);
+const CommentDetail = ({
+  isOpen,
+  onClose,
+  comment,
+  setIsReply,
+  setCommentId,
+  setIsOpenDeleteModal,
+  onApprove,
+  onReject,
+  onUpdate,
+}) => {
+  const [newComment, setNewComment] = useState(comment || {});
+  // Track which reply's menu is open using its ID
+  const [openMenuId, setOpenMenuId] = useState(null);
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle comment submission
-    console.log("New comment:", newComment);
-    setNewComment("");
+  const handleMenuToggle = (replyId) => {
+    setOpenMenuId(openMenuId === replyId ? null : replyId);
+  };
+
+  const handleAction = (action, replyId) => {
+    // Close the menu after action
+    setOpenMenuId(null);
+    // Execute the action (approve/reject
+    action(replyId);
+
+  
   };
 
   return (
@@ -39,69 +62,118 @@ const CommentDetail = ({ isOpen, onClose }) => {
           <div className={styles.commentItem}>
             <div className={styles.commentHeader}>
               <div className={styles.userInfo}>
-                <span className={styles.userName}>رضا محمدی</span>
-
-                <span className={styles.timestamp}>۱۴۰۲/۰۲/۱۵</span>
+                <span className={styles.userName}>
+                  {newComment.name} {newComment.last_name}
+                </span>
+                <span className={styles.timestamp}>
+                  {getDate(
+                    newComment.updated_at
+                      ? newComment.updated_at
+                      : newComment.created_at
+                  )}
+                </span>
               </div>
               <div className={styles.commentActions}>
-                <button className={styles.actionButton}>تائید شده</button>
+                <p className={`status status__${newComment.status}`}>
+                  {getStatusText(newComment.status)}
+                </p>
               </div>
             </div>
-            <div className={styles.commentContent}>
-              این ملک بسیار زیبا و مناسب است. آیا امکان بازدید حضوری وجود دارد؟
-            </div>
+            <div className={styles.commentContent}>{newComment.content}</div>
             <div className={styles.commentFooter}>
-              <span className={styles.location}>ملک: آپارتمان ۱۲۰ متری</span>
+              <span className={styles.location}>
+                ملک: {newComment.property_title}
+              </span>
             </div>
           </div>
 
           {/* Replies Section */}
           <div className={styles.repliesSection}>
             <div className={styles.repliesHeader}>
-              <span className={styles.repliesCount}>پاسخ‌ها (۲)</span>
+              <span className={styles.repliesCount}>
+                پاسخ‌ها ({newComment.replies?.length || 0})
+              </span>
             </div>
 
-            <div className={styles.replyItem}>
-              <div className={styles.replyHeader}>
-                <div className={styles.userInfo}>
-                  <span className={styles.userName}>مدیر سایت</span>
-                  <span className={styles.timestamp}>۱۴۰۲/۰۲/۱۶</span>
-                </div>
-                <div className={styles.replyActions}>
-                  <button className={styles.actionButton}>تائید شده</button>
-                  <button
-                    className={styles.moreButton}
-                    onClick={() => setIsMore((prev) => !prev)}
-                  >
-                    <LucideEllipsis size={17} />
-                  </button>
-                  {isMore && (
-                    <div
-                      className={styles.dropdownMenu}
-                      onBlur={() => setIsMore(false)}
-                      onMouseLeave={() => setIsMore(false)}
-                    >
-                      <div className={styles.dropdownMenuItem}>
-                        <CircleCheckBig size={14} /> تائید کردن
-                      </div>
-                      <div className={styles.dropdownMenuItem}>
-                        <XCircle size={14} /> رد کردن
-                      </div>
+            {newComment.replies?.map((item) => (
+              <div className={styles.replyItem} key={item.id}>
+                <div className={styles.replyHeader}>
+                  <div className={styles.userInfo}>
+                    <span className={styles.userName}>
+                      {item.name} {item.last_name}
+                    </span>
+                    <span className={styles.timestamp}>
+                      {getDate(
+                        item.updated_at ? item.updated_at : item.created_at
+                      )}
+                    </span>
+                  </div>
+                  <div className={styles.replyActions}>
+                    <p className={`status status__${item.status}`}>
+                      {getStatusText(item.status)}
+                    </p>
+                    <div className={styles.menuContainer}>
+                      <button
+                        className={styles.moreButton}
+                        onClick={() => handleMenuToggle(item.id)}
+                      >
+                        <LucideEllipsis size={17} />
+                      </button>
+                      {openMenuId === item.id && (
+                        <div
+                          className={styles.dropdownMenu}
+                          onMouseLeave={() => setOpenMenuId(null)}
+                        >
+                          {item.status !== "approved" && (
+                            <div
+                              className={styles.dropdownMenuItem}
+                              onClick={() => handleAction(onApprove, item.id)}
+                            >
+                              <CircleCheckBig size={14} /> تائید کردن
+                            </div>
+                          )}
+                          {item.status !== "rejected" && (
+                            <div
+                              className={styles.dropdownMenuItem}
+                              onClick={() => handleAction(onReject, item.id)}
+                            >
+                              <XCircle size={14} /> رد کردن
+                            </div>
+                          )}
+                          <div
+                            className={styles.dropdownMenuItem}
+                            onClick={() => {
+                              setOpenMenuId(null);
+                              
+                              setIsOpenDeleteModal(true);
+                              setCommentId(item.id);
+                              onClose()
+                            }}
+                          >
+                            <Trash size={14} /> حذف
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
+                <div className={styles.replyContent}>{item.content}</div>
               </div>
-              <div className={styles.replyContent}>
-                بله، حتماً لطفاً با شماره تماس موجود در آگهی تماس بگیرید.
-              </div>
-            </div>
+            ))}
           </div>
-
-        
         </div>
-          <div className={styles.footer}>
-            <button className={`${styles.addReplyButton}`}> پاسخ دادن</button>
-          </div>
+        <div className={styles.footer}>
+          <button
+            className={`${styles.addReplyButton}`}
+            onClick={() => {
+              setIsReply(true);
+              setCommentId(comment.id);
+              onClose();
+            }}
+          >
+            پاسخ دادن
+          </button>
+        </div>
       </div>
     </div>
   );
