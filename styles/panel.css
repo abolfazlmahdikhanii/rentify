@@ -24,7 +24,8 @@
   font-size: 1.4rem;
   color: #7e8288;
 }
-.form-card {
+.form-card,
+.form-card__admin {
   background-color: #fff;
   border-radius: 1.6rem;
 
@@ -34,10 +35,13 @@
   -o-border-radius: 1.6rem;
   position: relative;
 }
-.form-card__main{
-    padding: 3rem 3rem 6rem 3rem;
+.form-card__admin {
+  background-color: transparent;
 }
-.form-card__tbl{
+.form-card__main {
+  padding: 3rem 3rem 6rem 3rem;
+}
+.form-card__tbl {
   padding: 3rem 3rem 0 3rem;
 }
 .compare-footer {
@@ -327,10 +331,10 @@
 .panel-main {
   margin-top: 4rem;
 }
-.panel-charts{
+.panel-charts {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 /* Responsive styles */
