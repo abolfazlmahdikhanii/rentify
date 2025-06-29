@@ -30,7 +30,7 @@ const AdminSideBar = ({isActiveHandler}) => {
             clipRule="evenodd"
           ></path>
         </svg>
-        <span>ویرایش اطلاعات</span>
+        <span>پیشخوان</span>
       </Link>
       <Link
         href="/admin-panel/user-ad"
@@ -121,6 +121,40 @@ const AdminSideBar = ({isActiveHandler}) => {
           ></path>
         </svg>
         <span>بازدید ها</span>
+      </Link>
+      <Link
+        href="/admin-panel/comments"
+        className={`${styles.navItem} ${
+          isActiveHandler("comments") ? styles.active : ""
+        }`}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="m8 14.61-6.717 6.718 1.414 1.414 6.717-6.717z"
+            clipRule="evenodd"
+          ></path>
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M8.06 15.964v3.95h2v-4.95a1 1 0 0 0-1-1H4.112v2zM16.025 9.414l6.718-6.718-1.415-1.414L14.611 8z"
+            clipRule="evenodd"
+          ></path>
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M15.964 8.06V4.11h-2v4.95a1 1 0 0 0 1 1h4.95v-2z"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+        <span>نظرات</span>
       </Link>
       <a href="#" className={`${styles.navItem} ${styles.logout}`}>
         <svg
