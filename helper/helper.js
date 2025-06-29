@@ -24,6 +24,32 @@ export const getDate = (date, monthType) => {
     day: "2-digit",
   }).format(d);
 };
+export const getDateRelative = (date) => {
+  const d = new Date(date);
+  const now = Date.now();
+  const diff = d.getTime() - now;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const month = Math.floor(days / 30);
+  const year = Math.floor(month / 12);
+
+  const rtf = new Intl.RelativeTimeFormat("fa", {
+    numeric: "auto",
+  });
+
+  // If more than 365 days (1 year), format by years
+  if (Math.abs(days) > 365) {
+    return rtf.format(year, "year");
+  }
+  // If more than 31 days, format by months
+  else if (Math.abs(days) > 31) {
+    return rtf.format(month, "month");
+  }
+  // Otherwise, format by days
+  else {
+    return rtf.format(days, "day");
+  }
+};
 export const getStatusText = (status) => {
   switch (status) {
     case "pending":
