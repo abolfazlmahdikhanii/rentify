@@ -1,8 +1,11 @@
 .title {
   display: inline-block;
-  margin-bottom: 4rem ;
+ 
   padding: 1.7rem 0;
   font-size: 2rem;
   font-weight: bold;
   border-bottom: 3px solid var(--primary);
+}
+.titleMb4{
+   margin-bottom: 4rem ;
 }
