@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./commentDetail.module.css";
 import {
   Check,
@@ -23,6 +23,7 @@ const CommentDetail = ({
   const [newComment, setNewComment] = useState(comment || {});
   // Track which reply's menu is open using its ID
   const [openMenuId, setOpenMenuId] = useState(null);
+  
   if (!isOpen) return null;
 
   const handleMenuToggle = (replyId) => {
@@ -33,9 +34,7 @@ const CommentDetail = ({
     // Close the menu after action
     setOpenMenuId(null);
     // Execute the action (approve/reject
-    action(replyId);
-
-  
+     action(replyId);
   };
 
   return (
@@ -144,10 +143,10 @@ const CommentDetail = ({
                             className={styles.dropdownMenuItem}
                             onClick={() => {
                               setOpenMenuId(null);
-                              
+
                               setIsOpenDeleteModal(true);
                               setCommentId(item.id);
-                              onClose()
+                              onClose();
                             }}
                           >
                             <Trash size={14} /> حذف
