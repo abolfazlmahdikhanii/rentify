@@ -48,7 +48,7 @@ export default function VisitCard({
           <div className={styles.propertyDetails}>
             <div className={styles.propertyImage}>
               <img
-                src={`${image}` || "/images/empty-image.jpg"}
+                src={image || "/images/empty-image.jpg"}
                 alt="Property Image"
               />
             </div>
