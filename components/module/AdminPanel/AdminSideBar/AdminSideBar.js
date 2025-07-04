@@ -11,25 +11,19 @@ const AdminSideBar = ({isActiveHandler}) => {
         }`}
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-4 2a4 4 0 1 1 8 0 4 4 0 0 1-8 0M12 16.5a6 6 0 0 0-5.198 3l-1.731-1a8 8 0 0 1 6.929-4 8 8 0 0 1 6.93 4l-1.732 1a6 6 0 0 0-5.198-3"
-            clipRule="evenodd"
-          ></path>
-        </svg>
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M1 2.5a1 1 0 0 1 1-1h8.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm2 1v6h6.5v-6zM1 13.5a1 1 0 0 1 1-1h8.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm2 1v6h6.5v-6zM12.5 2.5a1 1 0 0 1 1-1H22a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1zm2 1v6H21v-6zM12.5 13.5a1 1 0 0 1 1-1H22a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1zm2 1v6H21v-6z"
+      clipRule="evenodd"
+    ></path>
+  </svg>
         <span>پیشخوان</span>
       </Link>
       <Link
@@ -38,35 +32,7 @@ const AdminSideBar = ({isActiveHandler}) => {
           isActiveHandler("user-ad") ? styles.active : ""
         }`}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="20"
-          fill="none"
-          viewBox="0 0 22 20"
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M18.532 3.437c-1.882-1.825-4.89-1.913-6.88-.257a1 1 0 0 1-.652.232 1 1 0 0 1-.652-.232c-1.99-1.656-4.998-1.568-6.88.257a4.74 4.74 0 0 0-.264 6.588q.037.042.07.087L11 17.607l7.727-7.495q.03-.045.069-.087a4.74 4.74 0 0 0-.264-6.588m1.891 7.763A6.74 6.74 0 0 0 19.924 2C17.493-.357 13.738-.629 11 1.177 8.262-.63 4.508-.357 2.076 2.001a6.74 6.74 0 0 0-.5 9.199 1 1 0 0 0 .17.218l8.558 8.3a1 1 0 0 0 1.392 0l8.557-8.3a1 1 0 0 0 .17-.218"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M17 7a2 2 0 0 0-2-2V3a4 4 0 0 1 4 4z"
-            clipRule="evenodd"
-          ></path>
-        </svg>
-        <span>آگهی های کاربران</span>
-      </Link>
-      <Link
-        href="/admin-panel/users"
-        className={`${styles.navItem} ${
-          isActiveHandler("users") ? styles.active : ""
-        }`}
-      >
-        <svg
+       <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -86,7 +52,69 @@ const AdminSideBar = ({isActiveHandler}) => {
             clipRule="evenodd"
           ></path>
         </svg>
+        <span>آگهی ها</span>
+      </Link>
+      <Link
+        href="/admin-panel/users"
+        className={`${styles.navItem} ${
+          isActiveHandler("users") ? styles.active : ""
+        }`}
+      >
+       <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M15.161 5.563a2.706 2.706 0 0 1 0 5.411v2a4.706 4.706 0 0 0 0-9.411z"
+      clipRule="evenodd"
+    ></path>
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M15.162 12.974a5.59 5.59 0 0 1 5.588 5.589h2a7.59 7.59 0 0 0-7.588-7.589zM9.25 5.563a2.938 2.938 0 1 1 0 5.875 2.938 2.938 0 0 1 0-5.876M14.188 8.5a4.938 4.938 0 1 0-9.876 0 4.938 4.938 0 0 0 9.875 0"
+      clipRule="evenodd"
+    ></path>
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M9.25 13.438a6 6 0 0 1 6 6h2a8 8 0 1 0-16 0h2a6 6 0 0 1 6-6"
+      clipRule="evenodd"
+    ></path>
+  </svg>
         <span>کاربران</span>
+      </Link>
+        <Link
+        href="/admin-panel/comments"
+        className={`${styles.navItem} ${
+          isActiveHandler("comments") ? styles.active : ""
+        }`}
+      >
+         <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M22 3.75a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h5.086l3.207 3.207a1 1 0 0 0 1.414 0l3.207-3.207H21a1 1 0 0 0 1-1zm-2 1v11h-4.5a1 1 0 0 0-.707.293L12 18.836l-2.793-2.793a1 1 0 0 0-.707-.293H4v-11z"
+      clipRule="evenodd"
+    ></path>
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M15.5 8.75h-7v-2h7zM15.5 13.25h-7v-2h7z"
+      clipRule="evenodd"
+    ></path>
+  </svg>
+        <span>نظرات</span>
       </Link>
       <Link
         href="/admin-panel/visits"
@@ -95,67 +123,28 @@ const AdminSideBar = ({isActiveHandler}) => {
         }`}
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="m8 14.61-6.717 6.718 1.414 1.414 6.717-6.717z"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M8.06 15.964v3.95h2v-4.95a1 1 0 0 0-1-1H4.112v2zM16.025 9.414l6.718-6.718-1.415-1.414L14.611 8z"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M15.964 8.06V4.11h-2v4.95a1 1 0 0 0 1 1h4.95v-2z"
-            clipRule="evenodd"
-          ></path>
-        </svg>
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M1 7a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3v8a1 1 0 0 1-.293.707l-6 6A1 1 0 0 1 16 22H4a3 3 0 0 1-3-3zm3-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h11.586L21 14.586V7a1 1 0 0 0-1-1z"
+      clipRule="evenodd"
+    ></path>
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M15 17a3 3 0 0 1 3-3h4a1 1 0 0 1 .707 1.707l-6 6A1 1 0 0 1 15 21zm3-1a1 1 0 0 0-1 1v1.586L19.586 16zM6 3v3.5H4V3zM5.25 9.75h2.5v2h-2.5zM5.25 13.75h2.5v2h-2.5zM11.75 9.75h2.5v2h-2.5zM13 3v3.5h-2V3zM20 3v3.5h-2V3z"
+      clipRule="evenodd"
+    ></path>
+  </svg>
         <span>بازدید ها</span>
       </Link>
-      <Link
-        href="/admin-panel/comments"
-        className={`${styles.navItem} ${
-          isActiveHandler("comments") ? styles.active : ""
-        }`}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="m8 14.61-6.717 6.718 1.414 1.414 6.717-6.717z"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M8.06 15.964v3.95h2v-4.95a1 1 0 0 0-1-1H4.112v2zM16.025 9.414l6.718-6.718-1.415-1.414L14.611 8z"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M15.964 8.06V4.11h-2v4.95a1 1 0 0 0 1 1h4.95v-2z"
-            clipRule="evenodd"
-          ></path>
-        </svg>
-        <span>نظرات</span>
-      </Link>
+    
       <a href="#" className={`${styles.navItem} ${styles.logout}`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
