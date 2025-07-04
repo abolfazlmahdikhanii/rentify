@@ -355,6 +355,13 @@
   background: #10b981;
   color: white;
 }
+.btnEdit {
+  background: var(--primary);
+  color: white;
+}
+.btnEdit:hover{
+  background: var(--dark-primary-1);
+}
 
 .btnApprove:hover {
   background: #059669;

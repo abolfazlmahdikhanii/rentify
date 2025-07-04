@@ -36,6 +36,8 @@ const PropertyDialog = ({
   approveHandler,
   rejectHandler,
   deleteHandler,
+   setEditingProperty
+
 }) => {
   const { user } = useContext(AuthContext);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -310,7 +312,7 @@ const PropertyDialog = ({
             {property.status !== "pending" &&
               property?.user_id === user?.id && (
                 <button
-                  onClick={() => editHandler(property)}
+                  onClick={() => setEditingProperty(property)}
                   disabled={isLoading === "edit"}
                   className={`${styles.btn} ${styles.btnEdit}`}
                 >
