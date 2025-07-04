@@ -25,7 +25,7 @@ const LineChart = ({ series, categories, title }) => {
       show: false,
     },
     xaxis: {
-      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      categories: categories || [],
       axisBorder: {
         show: false,
       },
@@ -45,7 +45,7 @@ const LineChart = ({ series, categories, title }) => {
     },
     colors: ["#9CA3AF"],
     tooltip: {
-      enabled: false,
+      enabled: true,
     },
     fill: {
       type: "gradient",
