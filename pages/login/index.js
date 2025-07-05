@@ -180,7 +180,7 @@ export default function LoginPage() {
           setOtpValue("");
           toast.error("کد تایید منقضی شده است", toastOption);
         }
-        else if(response.ok){
+         if(response.ok){
           return response.json();
         }
       })
