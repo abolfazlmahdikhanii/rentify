@@ -1,16 +1,31 @@
 import React, { useEffect, useId, useRef, useState } from "react";
+import { X } from "lucide-react";
 import styles from "./Uploader.module.css";
 
-const Uploader = ({onFileSelect}) => {
+const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   const id = useId();
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
 
+  // Initialize with existing image if provided
+  useEffect(() => {
+    if (existingImage) {
+      // Handle both URL strings and file objects
+      const url = typeof existingImage === 'string' 
+        ? existingImage 
+        : existingImage.url || (existingImage instanceof File ? URL.createObjectURL(existingImage) : null);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [existingImage]);
+
+  // Clean up object URLs
   useEffect(() => {
     return () => {
-      if (previewUrl) {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
     };
@@ -29,6 +44,11 @@ const Uploader = ({onFileSelect}) => {
   };
 
   const validateFile = (file) => {
+    if (!file.type.startsWith('image/')) {
+      setError("Please upload an image file");
+      return false;
+    }
+
     if (file.size > 2 * 1024 * 1024) {
       setError(`File size exceeds ${2}MB limit.`);
       return false;
@@ -58,7 +78,8 @@ const Uploader = ({onFileSelect}) => {
 
   const processFile = (file) => {
     if (validateFile(file)) {
-      if (previewUrl) {
+      // Clean up previous preview URL if it was a blob
+      if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
 
@@ -77,10 +98,33 @@ const Uploader = ({onFileSelect}) => {
     }
   };
 
+  const handleRemove = (e) => {
+    e.stopPropagation();
+    
+    // Clean up blob URL if it exists
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    
+    setPreviewUrl(null);
+    setError(null);
+    
+    if (onRemove) {
+      onRemove();
+    }
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div
-        className={`${styles.dropzone} ${isDragging ? styles.dragging : ""}`}
+        className={`${styles.dropzone} ${isDragging ? styles.dragging : ""} ${
+          previewUrl ? styles.hasPreview : ""
+        }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -89,16 +133,20 @@ const Uploader = ({onFileSelect}) => {
         {previewUrl ? (
           <div className={styles.previewContainer}>
             <img
-              src={previewUrl || "/placeholder.svg"}
+              src={previewUrl}
               alt="Preview"
               className={styles.preview}
+              onError={(e) => {
+                e.target.src = '/placeholder.svg'; // Fallback if image fails to load
+              }}
             />
             <div className={styles.changeOverlay}>
-              <span>Click to change</span>
+              <span>برای تغییر کلیک کنید</span>
             </div>
+           
           </div>
         ) : (
-          <div className={styles.iconContainer}>
+         <div className={styles.iconContainer}>
             <div className={styles.imageIcon}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,10 +191,11 @@ const Uploader = ({onFileSelect}) => {
         )}
         <input
           type="file"
+          id={id}
           ref={fileInputRef}
           className={styles.fileInput}
           onChange={handleFileChange}
-          accept={"*/image"}
+          accept="image/*"
         />
       </div>
       {error && <p className={styles.error}>{error}</p>}
