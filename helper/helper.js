@@ -62,6 +62,20 @@ export const getStatusText = (status) => {
       return status;
   }
 };
+export const getTypeText = (type) => {
+  const newType=type.toString().toLowerCase()
+  console.log(newType);
+  switch (newType) {
+    case "villa":
+      return "ویلا";
+    case "house":
+      return "خانه";
+    case "apartment":
+      return "آپارتمان";
+    default:
+      return newType;
+  }
+};
 export const toastOption = {
   className: "custom-toast",
   delay: 300,
