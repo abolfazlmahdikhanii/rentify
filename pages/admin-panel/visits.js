@@ -1,10 +1,12 @@
 import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
 import VisitCard from "@/components/AdminPanel/VisitCard/VisitCard";
+import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
+import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { getCookie } from "cookies-next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 const fetcher = () =>
@@ -16,20 +18,64 @@ const Visits = () => {
   const { data, isLoading, mutate } = useSWR("visits", fetcher);
   const [page, setPage] = useState(1);
   const [newVisits, setNewVisits] = useState([]);
-  console.log(data);
+  const [tabActive, setTabActive] = useState("all");
+  useEffect(() => {
+    if (data) {
+      filterContent("all");
+    }
+  }, [data]);
+  const filterContent = (filterType) => {
+    if (!data) return;
+
+    if (filterType === "all") {
+      setNewVisits(data);
+    } else {
+      setNewVisits(data.filter((item) => item.status === filterType));
+    }
+  };
   return (
     <DashboardLayout title="بازدیدها" role="admin">
+      <TabPanel>
+        <TabPanelItem
+          title="همه بازدید ها"
+          value="all"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="تایید شده"
+          value="approved"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="در حال بررسی"
+          value="pending"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="رد شده"
+          value="rejected"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+      </TabPanel>
       <Content type="tbl">
-        {data?.length ? (
+        {newVisits?.length ? (
           <>
-            {data.map((visit) => (
+            {newVisits.map((visit) => (
               <VisitCard key={visit.id} {...visit} />
             ))}
           </>
         ) : (
           <EmptyList
             src={"/images/empty-add-ad.png"}
-            title="شما هنوز آگهی‌ای ثبت نکردید!"
+            title=" هنوز بازدیدی ثبت نشده!"
             noBtn={true}
           />
         )}
