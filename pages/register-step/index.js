@@ -223,7 +223,7 @@ export default function RegisterStep() {
     try {
       setIsLoading(true);
       // Transform data to match backend expectations
-      console.log(data.rahnPrice);
+      
       const backendData = {
         houseType: data.houseType,
         title: data.title || fillTitle(),
