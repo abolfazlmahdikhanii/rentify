@@ -44,6 +44,10 @@ const ColumnChart = ({ series, categories, colors, title, loading }) => {
         // colors: colors,
       },
     },
+     stroke: {
+      curve: "smooth",
+      width: 2,
+    },
     dataLabels: {
       enabled: false,
     },
@@ -67,9 +71,18 @@ const ColumnChart = ({ series, categories, colors, title, loading }) => {
         },
       },
     },
-    fill: {
-      opacity: 1,
-      colors: colors,
+       fill: {
+      type: "gradient",
+      gradient: {
+        shade: "light",
+        type: "vertical",
+        shadeIntensity: 0.1,
+        gradientToColors: colors,
+        inverseColors: false,
+        opacityFrom: 0.6,
+        opacityTo: 0,
+        stops: [0, 100],
+      },
     },
     yaxis: {
       show: false,
@@ -132,13 +145,11 @@ const ColumnChart = ({ series, categories, colors, title, loading }) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h3 className={styles.title}>
-          {title || "Client Acquisition by Month"}
+          {title }
         </h3>
         <div className={styles.metrics}>
-          <span className={styles.mainMetric}>+8%</span>
-          <span className={styles.subMetric}>
-            This Year <span className={styles.positive}>+8%</span>
-          </span>
+          <span className={styles.mainMetric}>+{series[0].data.reduce((prev, curr) => prev + curr, 0)}</span>
+         
         </div>
       </div>
       <div className={styles.chartContainer}>

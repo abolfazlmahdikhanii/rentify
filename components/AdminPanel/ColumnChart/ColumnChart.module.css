@@ -14,17 +14,18 @@
 }
 
 .title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #374151;
-  margin: 0 0 8px 0;
+  margin: .5rem 0 1.7rem 0;
   line-height: 1.2;
+
 }
 
 .metrics {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
 }
 
 .mainMetric {
