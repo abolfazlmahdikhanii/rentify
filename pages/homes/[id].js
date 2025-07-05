@@ -10,14 +10,15 @@ import PayService from "@/components/templates/HomeDetail/PayService/PayService"
 import Offer from "@/components/templates/HomeDetail/Offer/Offer";
 import ModalVisitRequest from "@/components/templates/HomeDetail/ModalVisitRequest/ModalVisitRequest";
 import { notFound } from "next/navigation";
+import CommentWrapper from "@/components/templates/HomeDetail/Comment/CommentWrapper";
 const HomePageDetail = ({ houses }) => {
   const { query } = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
   return (
     <div className="detail-bg">
       <div className="container">
-        <Slider />
+        <Slider images={houses[0]?.images} />
         <section className={styles.detailGrid}>
           {/* info */}
           <div className={styles.detailInfo}>
@@ -29,13 +30,17 @@ const HomePageDetail = ({ houses }) => {
             />
             <PayService />
             <Offer />
+            <CommentWrapper comments={houses[0]?.comments}/>
           </div>
 
           {/* call */}
           <div className="sticky">
             <VisitBox
-              authorName={houses?.author}
+              authorName={houses[0]?.author}
+              authorEmail={houses[0]?.author_email}
+              authorPhone={houses[0]?.contact_phone}
               onVisitReq={() => setIsModalOpen(true)}
+              isOwner={houses[0]?.isAuthor}
             />
           </div>
         </section>
@@ -50,24 +55,15 @@ const HomePageDetail = ({ houses }) => {
   );
 };
 
-export async function getStaticPaths() {
-  const res = await fetch("http://localhost:5000/api/properties");
-  const data = await res.json();
-
-  const path = data.data.splice(0, 8).map((house) => {
-    return {
-      params: { id: house.id.toString() },
-    };
-  });
-  return {
-    paths: path,
-    fallback: "blocking",
-  };
-}
-
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   const { params } = context;
-  const res = await fetch(`http://localhost:5000/api/properties/${params.id}`);
+  const cookies = context.req.cookies || {};
+  const token = cookies.token;
+
+  const res = await fetch(`http://localhost:5000/api/properties/${params.id}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (res.status !== 200) {
     return {
       notFound: true,
