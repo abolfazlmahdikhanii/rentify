@@ -28,6 +28,15 @@
   color: #353739;
   font-size: 1.8rem;
 }
+.btnMore {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 1.3rem;
+  margin-top: 35px;
+  color: var(--light-primary-1);
+  cursor: pointer;
+}
 .sectionImg {
   width: 100%;
   height: 48.8rem;
@@ -161,5 +170,15 @@
 }
 .disContent {
   color: #353739;
-  line-height: 1.8;
+  line-height: 2;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+.disContent.expend {
+  -webkit-line-clamp: unset;
+  display: block;
 }

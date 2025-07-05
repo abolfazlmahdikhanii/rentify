@@ -7,10 +7,12 @@ import Title from "@/components/module/Title/Title";
 import { useRouter } from "next/router";
 import LocationInfo from "../LocationInfo/LocationInfo";
 import MapLocation from "@/components/module/Map/MapLocation";
+import { ChevronLeft } from "lucide-react";
 const GeneralInfo = ({ data, locationDetail, equipment }) => {
   const [tabActive, setTabActive] = useState("main");
   const [locationTabActive, setLocationTabActive] = useState("sports");
   const [isMap, setIsMap] = useState(false);
+  const [isMoreContent, setIsMoreContent] = useState(false);
   const [sections, setSections] = useState([
     { id: "main" },
     { id: "equipment" },
@@ -29,7 +31,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
         });
       },
       {
-        threshold: 1, // Section becomes active when 50% visible
+        threshold: 0.6, // Section becomes active when 50% visible
       }
     );
 
@@ -128,7 +130,19 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
       <section className={styles.section} id="description">
         <Title title="توضیحات" />
         <div>
-          <p className={styles.disContent}>{data && data?.description}</p>
+          <p
+            className={`${styles.disContent} ${
+              isMoreContent ? styles.expend : ""
+            }`}
+          >
+            {data && data?.description}
+          </p>
+          <p
+            className={styles.btnMore}
+            onClick={() => setIsMoreContent((prev) => !prev)}
+          >
+            {!isMoreContent ? "مشاهده بیشتر" : "بستن"} <ChevronLeft size={15} />
+          </p>
         </div>
       </section>
       <section className={styles.section} id="floor-map">
