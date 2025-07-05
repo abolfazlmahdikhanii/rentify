@@ -1,14 +1,18 @@
 import PropertyDialog from "@/components/AdminPanel/PropertyDialog/PropertyDialog";
 import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
+import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
+import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
+import EditPropertyModal from "@/components/module/EditProperty/EditPropertyModal";
 import Home from "@/components/module/Home/Home";
 import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
+import { AuthContext } from "@/context/AuthContext";
 import { getDate, toastOption } from "@/helper/helper";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
@@ -20,13 +24,21 @@ const fetcher = () =>
   }).then((res) => res.json());
 const MyAdvertisement = () => {
   const { data, isLoading, mutate } = useSWR("admin-ad", fetcher);
-
+  const {user}=useContext(AuthContext)
+  const [tabActive, setTabActive] = useState("all");
   const [newAd, setNewAd] = useState([]);
   const [adDetail, setAdDetail] = useState(null);
   const [isOpenDiaog, setIsOpenDialog] = useState(false);
   const [propertyDetail, setPropertyDetail] = useState(null);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [filterAd, setFilterAd] = useState([]);
+  const [editingProperty, setEditingProperty] = useState(null);
 
+  useEffect(() => {
+    if (data?.data) {
+      filterContent("all");
+    }
+  }, [data]);
   const approveHandler = (id) => {
     fetch(`http://localhost:5000/api/properties/${id}/approve`, {
       method: "PATCH",
@@ -87,18 +99,67 @@ const MyAdvertisement = () => {
         toast.error("خطا در حذف ملک", toastOption);
       });
   };
+
+  const filterContent = (filterType) => {
+    if (!data?.data) return;
+
+    if (filterType === "all") {
+      setFilterAd(data.data);
+    }else if(filterType==="me"){
+      setFilterAd(data.data.filter((item) => item.user_id ===user?.id));
+    } else {
+      setFilterAd(data.data.filter((item) => item.status === filterType));
+    }
+  };
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده" role="admin">
+      <TabPanel>
+        <TabPanelItem
+          title="همه آگهی ها"
+          value="all"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="آگهی‌های من"
+          value="me"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="تایید شده"
+          value="approved"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="در حال بررسی"
+          value="pending"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="رد شده"
+          value="rejected"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+      </TabPanel>
       <Content type="tbl">
-        {data?.data?.length ? (
+        {filterAd.length ? (
           <PropertyTable
             showData={true}
             cols={["ملک", "آدرس", "ثبت کننده", "تاریخ ثبت", "وضعیت", "عملیات"]}
-            data={data?.data}
+            data={filterAd}
             setNewData={setNewAd}
           >
             <tbody className="tbody">
-              {data?.data?.length > 0
+              {filterAd.length > 0
                 ? newAd.map((item) => (
                     <tr key={item.id}>
                       <td>
@@ -143,7 +204,8 @@ const MyAdvertisement = () => {
         ) : (
           <EmptyList
             src={"/images/empty-add-ad.png"}
-            title="شما هنوز آگهی‌ای ثبت نکردید!"
+            title=" هنوز آگهی‌ای ثبت نشده!"
+            noBtn={true}
           />
         )}
         {isOpenDiaog && (
@@ -154,6 +216,7 @@ const MyAdvertisement = () => {
             approveHandler={approveHandler}
             rejectHandler={rejectHandler}
             deleteHandler={deleteHandler}
+            setEditingProperty={setEditingProperty}
           />
         )}
 
@@ -168,6 +231,22 @@ const MyAdvertisement = () => {
           />
         )}
       </Content>
+      {editingProperty && (
+        <EditPropertyModal
+        isOpen={editingProperty?true:false}
+          propertyData={editingProperty}
+          onClose={() => setEditingProperty(null)}
+          onSuccess={mutate}
+          onUpdate={(updatedProperty) => {
+            // Update your properties list
+            setProperties(
+              properties.map((p) =>
+                p.id === updatedProperty.id ? updatedProperty : p
+              )
+            );
+          }}
+        />
+      )}
     </DashboardLayout>
   );
 };
