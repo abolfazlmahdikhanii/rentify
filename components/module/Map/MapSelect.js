@@ -83,17 +83,58 @@ const MapSelect = ({ position, setPosition, isEnable = true }) => {
   }, []);
 
   // Update marker position when prop changes
-  useEffect(() => {
-    if (initialized && marker.current && position) {
-      marker.current.setLngLat([position[0], position[1]]);
-      if (map.current) {
-        map.current.flyTo({
-          center: [position[0], position[1]],
-          essential: true,
-        });
-      }
+ useEffect(() => {
+  if (!initialized || !marker.current) return;
+
+  // Validate position format and values
+  const validatePosition = (pos) => {
+    return (
+      Array.isArray(pos) &&
+      pos.length === 2 &&
+      typeof pos[0] === 'number' &&
+      typeof pos[1] === 'number' &&
+      !isNaN(pos[0]) &&
+      !isNaN(pos[1]) &&
+      pos[0] >= -180 &&
+      pos[0] <= 180 &&
+      pos[1] >= -90 &&
+      pos[1] <= 90
+    );
+  };
+
+  // Use default Tehran coordinates if position is invalid
+  const safePosition = validatePosition(position) 
+    ? position 
+    : [51.3890, 35.6892]; // [lng, lat] of Tehran
+
+  try {
+    // Set marker position
+    marker.current.setLngLat(safePosition);
+    
+    // Fly to position if map is available
+    if (map.current) {
+      map.current.flyTo({
+        center: safePosition,
+        essential: true,
+         // Optional: Set appropriate zoom level
+      });
     }
-  }, [position, initialized]);
+  } catch (error) {
+    console.error('Error updating map position:', error);
+    
+    // Fallback to default position if error occurs
+    if (marker.current) {
+      marker.current.setLngLat([51.3890, 35.6892]);
+    }
+    if (map.current) {
+      map.current.flyTo({
+        center: [51.3890, 35.6892],
+        essential: true,
+      
+      });
+    }
+  }
+}, [position, initialized]);
 
   // Update map interactivity when isEnable changes
   useEffect(() => {
