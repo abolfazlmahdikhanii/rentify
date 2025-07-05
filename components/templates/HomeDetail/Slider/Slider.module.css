@@ -23,7 +23,7 @@
   display: none;
 }
 .sliderImg {
-  min-width: 33.3%;
+  /* min-width: 33.3%; */
   height: 100%;
   overflow: hidden;
 }
