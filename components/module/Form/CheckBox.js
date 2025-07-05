@@ -1,7 +1,8 @@
 import React, { useId } from "react";
 
-const CheckBox = ({ title, val, setVal,onChange }) => {
+const CheckBox = ({ title, val, setVal,onChange,checked }) => {
   const id = useId();
+  // console.log(val);
   return (
     <div className={"checkboxGroup"}>
       <input
@@ -9,6 +10,7 @@ const CheckBox = ({ title, val, setVal,onChange }) => {
         id={`negotiable-${id}`}
         className={"checkbox"}
         value={val}
+        checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
       <label htmlFor={`negotiable-${id}`} className={"checkboxLabel"}>
