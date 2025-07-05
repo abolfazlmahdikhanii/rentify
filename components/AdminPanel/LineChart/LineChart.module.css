@@ -16,17 +16,18 @@
 }
 
 .title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #374151;
-  margin: 0 0 8px 0;
+  margin: .5rem 0 1.7rem 0;
   line-height: 1.2;
+
 }
 
 .metrics {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
 }
 
 .mainMetric {
@@ -55,6 +56,9 @@
 /* Override ApexCharts styles if needed */
 .container :global(.apexcharts-canvas) {
   font-family: inherit;
+}
+.container :global(.apexcharts-xaxistooltip-text) {
+  font-family: inherit !important;
 }
 
 .container :global(.apexcharts-xaxis-texts-g text) {
