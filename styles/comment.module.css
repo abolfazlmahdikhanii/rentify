@@ -1,0 +1,36 @@
+.replyCountButton {
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.4rem;
+}
+
+
+
+
+.replyCount {
+  display: flex;
+  align-items: center;
+  
+  gap: 6px;
+  color: #059669;
+  font-weight: 500;
+  background: #d1fae5;
+  padding: 6px 12px;
+  border-radius: 6px;
+  width: fit-content;
+  user-select: none;
+  transition: all 0.2s ease;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+}
+
+.noReplies {
+  color: #9ca3af;
+  font-size: 16px;
+}
