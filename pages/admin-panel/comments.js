@@ -21,6 +21,10 @@ import useSWR from "swr";
 import styles from "../../styles/comment.module.css";
 import CommentDetail from "@/components/AdminPanel/CommentDetail/CommentDetail";
 import CommentModal from "@/components/templates/HomeDetail/Comment/CommentModal";
+import Tab from "@/components/module/Tab/Tab";
+import TabItem from "@/components/module/Tab/TabItem";
+import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
+import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 const fetcher = () =>
   fetch("http://localhost:5000/api/comments/admin", {
     method: "GET",
@@ -37,14 +41,32 @@ const Comments = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isReply, setIsReply] = useState(false);
   const [commentId, setCommentId] = useState(null);
+  const [filterComment, setFilterComment] = useState([]);
+  const [tabActive, setTabActive] = useState("all");
 
-  const updateSelectedComment = async (id) => {
+  useEffect(() => {
+    if (data) {
+      filterContent("all");
+    }
+  }, [data]);
+  const filterContent = (filterType) => {
+    if (!data) return;
+
+    if (filterType === "all") {
+      setFilterComment(data);
+    } else {
+      setFilterComment(data.filter((item) => item.status === filterType));
+    }
+  };
+  const updateSelectedComment = (id, status) => {
     if (!selectedComment) return;
-    await mutate();
-    // .then((res) => res.json())
+    const newSelected = { ...selectedComment };
+    const newArr = newSelected;
 
-    const newItem = data.find((item) => item.id == id);
-    return newItem;
+    const findItem = newArr.replies?.find((item) => item.id === id);
+
+    findItem.status = status;
+    setSelectedComment(newArr);
   };
 
   const handleAddReply = (replyContent) => {
@@ -97,6 +119,7 @@ const Comments = () => {
       })
       .then((data) => {
         mutate();
+        updateSelectedComment(id, "approved");
       })
       .catch((err) => {
         toast.error("تایید کامنت با مشکل مواجه شد", toastOption);
@@ -119,9 +142,11 @@ const Comments = () => {
       })
       .then((data) => {
         mutate();
+        updateSelectedComment(id, "rejected");
       })
       .catch((err) => {
         toast.error("رد کامنت با مشکل مواجه شد", toastOption);
+        console.log(err);
       });
   };
   const handleDelete = (commentId) => {
@@ -142,7 +167,7 @@ const Comments = () => {
       .then((data) => {
         mutate();
         setIsOpenDeleteModal(false);
-        updateSelectedComment(commentId);
+        // updateSelectedComment(commentId);
       })
       .catch((err) => {
         toast.error("حذف کامنت با مشکل مواجه شد", toastOption);
@@ -151,16 +176,46 @@ const Comments = () => {
   };
   return (
     <DashboardLayout title="نظرات" role="admin">
+      <TabPanel>
+        <TabPanelItem
+          title="همه نظرات"
+          value="all"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="تایید شده"
+          value="approved"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="در حال بررسی"
+          value="pending"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+        <TabPanelItem
+          title="رد شده"
+          value="rejected"
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          action={(val) => filterContent(val)}
+        />
+      </TabPanel>
       <Content type="tbl">
-        {data?.length ? (
+        {filterComment.length ? (
           <PropertyTable
             showData={true}
             cols={[" نویسنده", "ملک", "وضعیت", "پاسخ ها", "عملیات"]}
-            data={data}
+            data={filterComment}
             setNewData={setNewComment}
           >
             <tbody className="tbody">
-              {data?.length > 0
+              {filterComment.length > 0
                 ? newComment.map((item) => (
                     <tr key={item.id}>
                       <td>
@@ -270,7 +325,7 @@ const Comments = () => {
         ) : (
           <EmptyList
             src={"/images/empty-add-ad.png"}
-            title="شما هنوز کامنتی ثبت نکردید!"
+            title=" هنوز کامنتی ثبت نشده!"
             noBtn={true}
           />
         )}
