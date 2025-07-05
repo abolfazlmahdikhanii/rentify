@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "../../../../styles/Detail.module.css";
+import { Heart } from "lucide-react";
+import { getDateRelative } from "@/helper/helper";
+import { AuthContext } from "@/context/AuthContext";
 const TitleInfo = ({ data }) => {
+  const { user } = useContext(AuthContext);
   return (
     <div className={styles.detailInfo__Title}>
       <div className={styles.detailTitle}>
@@ -28,20 +32,15 @@ const TitleInfo = ({ data }) => {
               ></path>
             </svg>
           </button>
-          <button className="btn">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="19"
-              fill="none"
-              viewBox="0 0 20 19"
-            >
-              <path
-                fill="#ED2E2E"
-                d="m10 18.35-1.45-1.32C3.4 12.36 0 9.27 0 5.5 0 2.41 2.42 0 5.5 0 7.24 0 8.91.81 10 2.08 11.09.81 12.76 0 14.5 0 17.58 0 20 2.41 20 5.5c0 3.77-3.4 6.86-8.55 11.53z"
-              ></path>
-            </svg>
-          </button>
+          {user?.role !== "admin" && (
+            <button className="btn">
+              <Heart
+                size={22}
+                fill={data?.isFavorite ? "#f00" : "#fff"}
+                stroke={data?.isFavorite ? "#f00" : "#000"}
+              />
+            </button>
+          )}
         </div>
       </div>
       <div className={styles.detailDate}>
@@ -66,7 +65,7 @@ const TitleInfo = ({ data }) => {
               clipRule="evenodd"
             ></path>
           </svg>
-          {data?.location?.address}
+          {data?.location?.address || data?.locationHouse}
         </p>
         <p className={styles.detailDate__sub}>
           <svg
@@ -89,7 +88,7 @@ const TitleInfo = ({ data }) => {
               clipRule="evenodd"
             ></path>
           </svg>
-          ۱۱ روز بیش
+          {getDateRelative(data?.created_at)}
         </p>
       </div>
       <div className={styles.detailPrice}>
@@ -126,7 +125,7 @@ const TitleInfo = ({ data }) => {
         <p className={styles.detailPrice__text}>
           اجاره
           <span>
-           {data?.ejare_price.toLocaleString()}
+            {data?.ejare_price.toLocaleString()}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -155,7 +154,9 @@ const TitleInfo = ({ data }) => {
         </p>
       </div>
       <div className={styles.detailReport}>
-        <p className={styles.detailReport__text}>شناسه آگهی: ۵۴۳۶</p>
+        <p className={styles.detailReport__text}>
+          شناسه آگهی: RNT-{data?.id.toString().padStart(3, 0)}
+        </p>
         <p className={styles.detailReport__text}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
