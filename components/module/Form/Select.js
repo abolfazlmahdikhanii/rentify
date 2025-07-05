@@ -11,15 +11,16 @@ const Select = ({
   required = false,
   defaultValue = "",
   onChange,
+  val,
   ...rest
 }) => {
   return (
-    <div className="selectContainer">
+    <div className="inputContainer">
       {label && <div className="inputLabel">{label}</div>}
-      <div className={size === "md" ? "inputWrapper" : "inputWrapper2"}>
+      <div className={`inputWrapper inputWrapper_${size}`}>
         <select
           className={`selectForm ${error ? "selectError" : ""}`}
-          defaultValue={defaultValue}
+          value={val || defaultValue || ""}
           // {...(register
           //   ? register(name, {
           //       required: required && "لطفا این فیلد را انتخاب کنید",
