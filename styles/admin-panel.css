@@ -100,45 +100,41 @@
 } */
 .drop-down--tbl {
   position: absolute;
-  width: 120px;
-  background-color: white;
-  display: flex;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 5px;
+  z-index: 1001;
+  min-width: 130px;
+  top: 80%;
+  left: 25px;
+  /* display: flex; */
   flex-direction: column;
-  backdrop-filter: blur(56px);
-  opacity: 0;
-  visibility: hidden;
-  z-index: 10;
-  padding: 5px 5px;
-
-  border-radius: 10px;
-  left: 55px;
-
-  top: 2px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /*shadow-lgshadow-gray-300/40*/
-  border: 1px solid #ccc;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
+  gap: 3px;
+  display: none;
 }
 
 .drop-down--tbl.active {
-  opacity: 1;
-  visibility: visible;
+ display: flex;
 }
 
 .drop-down__btn {
   display: flex;
   align-items: center;
-  gap: 16px; /* gap-4 (assuming 1 unit = 4px) */
-  transition: all 300ms;
+  gap: 16px;
+  /*gap-4(assuming1unit=4px)*/transition: all 300ms;
   cursor: pointer;
-  color: #3f3f46; /* text-zinc-700 */
-  padding:11px 10px; /* px-3 py-3 (assuming 1 unit = 4px) */
-  
-  font-size: 14px;
-  &:not(:last-child){
+  color: #3f3f46;
+  /*text-zinc-700*/padding:8px 10px;
+  /*px-3py-3(assuming1unit=4px)*/transition:all .3s ;
+  font-size: 12px;
+  &:not(:last-child)
+{
     border-bottom: 1px solid #efefef;
+  }
+  &:hover{
+    background-color: #f2f2f2;
   }
 }
