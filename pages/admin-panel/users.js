@@ -21,18 +21,16 @@ const fetcher = () =>
   }).then((res) => res.json());
 const Users = () => {
   const { data, isLoading, mutate } = useSWR("users", fetcher);
-  const [page, setPage] = useState(1);
+  
   const [newUsers, setNewUsers] = useState([]);
-  const [adDetail, setAdDetail] = useState(null);
+
   const [isOpenChangeDialog, setIsOpenChangeDialog] = useState(false);
   const [propertyDetail, setPropertyDetail] = useState(null);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [userRole, setUserRole] = useState("user");
-  const pageHandler = (page) => {
-    setPage(page);
-  };
+ 
 
   const deleteUser = (id) => {
     fetch(`http://localhost:5000/api/auth/admin/users/${id}`, {
@@ -107,12 +105,7 @@ const Users = () => {
                     <tr key={item.id}>
                       <td>
                         <img
-                          // src={
-                          //   item.images.length > 0
-                          //     ? item.images[0]?.url
-                          //     : "/images/empty-image.jpg"
-                          // }
-                          src={"/images/empty-image.jpg"}
+                          src={"/images/profile.png"}
                           alt="house"
                           className="tbl-img"
                         />
@@ -173,7 +166,7 @@ const Users = () => {
         ) : (
           <EmptyList
             src={"/images/empty-add-ad.png"}
-            title="شما هنوز آگهی‌ای ثبت نکردید!"
+            title=" هنوز کاربری ثبت نشده!"
             noBtn={true}
           />
         )}
