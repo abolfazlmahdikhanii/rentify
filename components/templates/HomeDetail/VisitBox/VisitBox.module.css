@@ -40,6 +40,12 @@
   .profileInfo p {
     font-size: 16px;
     color: #7e8288;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    direction: ltr;
+    margin-top: 4px;
   }
   
   .profileButtons {
