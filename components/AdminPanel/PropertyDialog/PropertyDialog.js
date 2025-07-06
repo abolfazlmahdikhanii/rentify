@@ -28,6 +28,7 @@ import {
 import { getDate, getStatusText } from "@/helper/helper";
 import { AuthContext } from "@/context/AuthContext";
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
+import ImageGallery from "./ImageGallery";
 
 const PropertyDialog = ({
   isOpen,
@@ -36,15 +37,14 @@ const PropertyDialog = ({
   approveHandler,
   rejectHandler,
   deleteHandler,
-   setEditingProperty
-
+  setEditingProperty,
 }) => {
   const { user } = useContext(AuthContext);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(null);
   const [reason, setReason] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+  console.log(property);
   return (
     <>
       {/* Backdrop */}
@@ -78,44 +78,7 @@ const PropertyDialog = ({
         <div className={styles.content}>
           <div className={styles.section}>
             {/* Image Gallery */}
-            <div className={styles.imageGallery}>
-              <div className={styles.mainImage}>
-                <img
-                  src={
-                    property?.images[currentImageIndex]?.url ||
-                    "/images/empty-image.jpg"
-                  }
-                  alt={`تصویر ملک ${currentImageIndex + 1}`}
-                  className={styles.propertyImage}
-                />
-                {property?.images?.length > 1 ? (
-                  <div className={styles.imageCounter}>
-                    {currentImageIndex + 1} / {property?.images?.length}
-                  </div>
-                ) : null}
-              </div>
-              {property?.images.length > 1 ? (
-                <div className={styles.thumbnails}>
-                  {property?.images?.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`${styles.thumbnail} ${
-                        currentImageIndex === index
-                          ? styles.thumbnailActive
-                          : ""
-                      }`}
-                    >
-                      <img
-                        src={image.url || "/images/empty-image.jpg"}
-                        alt={`تصویر کوچک ${index + 1}`}
-                        className={styles.thumbnailImage}
-                      />
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
+            <ImageGallery property={property} />
 
             {/* Property Information */}
             <div className={styles.card}>
@@ -177,7 +140,7 @@ const PropertyDialog = ({
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.amenitiesGrid}>
-                  {property.equipment.map((amenity) => {
+                  {property?.equipment?.map((amenity) => {
                     return (
                       <div key={amenity.id} className={styles.amenityItem}>
                         <span
