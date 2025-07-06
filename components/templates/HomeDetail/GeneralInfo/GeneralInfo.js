@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./GenralInfo.module.css";
-import db from "../../../../data/db.json";
+
 import Tab from "@/components/module/Tab/Tab";
 import TabItem from "@/components/module/Tab/TabItem";
 import Title from "@/components/module/Title/Title";
