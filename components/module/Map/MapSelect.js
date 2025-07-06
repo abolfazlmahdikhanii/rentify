@@ -3,12 +3,12 @@ import React, { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-const MapSelect = ({ position, setPosition, isEnable = true }) => {
+const MapSelect = ({ position, setPosition, isEnable = true,isVisit=false }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const marker = useRef(null);
   const [initialized, setInitialized] = useState(false);
-
+console.log(position);
   useEffect(() => {
     if (map.current) return; // initialize map only once
 
@@ -161,7 +161,7 @@ const MapSelect = ({ position, setPosition, isEnable = true }) => {
     <div
       ref={mapContainer}
       className="map-box-2"
-      style={isEnable ? {width:"100%", height: "400px" ,borderRadius:"8px"} : null}
+      style={isEnable||isVisit ? {width:"100%", height: "400px" ,borderRadius:"8px",} : null}
     />
   );
 };
