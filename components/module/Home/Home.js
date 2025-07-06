@@ -5,7 +5,8 @@ import Image from "next/image";
 import { getCookie } from "cookies-next";
 import useSWR from "swr";
 import { toast } from "react-toastify";
-import { toastOption } from "@/helper/helper";
+import { calculateTimeRemaining, toastOption } from "@/helper/helper";
+import { Clock, Eye, Map, MoreVertical, X } from "lucide-react";
 
 const Home = ({
   type,
@@ -26,9 +27,34 @@ const Home = ({
   is_favorite,
   getFav,
   status,
+  visit_date: visitDate,
+  visit_time: visitTime,
+  isMyVisit = false,
+  latitude,
+  longitude,
+  onShowMap,
+  onCancel,
+  onDetail
 }) => {
   const [isFav, setIsFav] = useState(is_favorite);
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
 
+  useEffect(() => {
+    if (isMyVisit) {
+      if (status === "approved" && visitDate && visitTime) {
+        const updateTime = () => {
+          const remaining = calculateTimeRemaining(visitDate, visitTime);
+          setTimeRemaining(remaining);
+        };
+
+        updateTime();
+        const interval = setInterval(updateTime, 60000); // Update every minute
+
+        return () => clearInterval(interval);
+      }
+    }
+  }, [status, visitDate, visitTime]);
   let typeColor = null;
   let typeName = null;
 
@@ -56,10 +82,7 @@ const Home = ({
         setIsFav(true);
         toast.success("با موفقیت به عللاقه مندی ها اضافه شد", toastOption);
       } else if (res.status == 401) {
-        toast.error(
-          "برای افزودن به موردعلاقه ها  ثبت نام کنید",
-          toastOption
-        );
+        toast.error("برای افزودن به موردعلاقه ها  ثبت نام کنید", toastOption);
       }
     });
   };
@@ -77,7 +100,16 @@ const Home = ({
       if (getFav) getFav();
     });
   };
-
+  const handleMenuClick = (e) => {
+    e.stopPropagation();
+    setShowMenu(!showMenu);
+  };
+  const handleCancelClick = (e) => {
+    e.stopPropagation();
+    // onCancelVisit?.(property.id)
+    onCancel(id);
+    setShowMenu(false);
+  };
   return (
     <div
       className={`${styles.cardParents} ${
@@ -131,8 +163,53 @@ const Home = ({
             {status === "approved" && <StatusBadge status="approved" />}
           </>
         )}
+        {isMyVisit && (
+          <>
+            {status === "pending" && (
+              <StatusBadge status="pending" pos="left" />
+            )}
+            {status === "rejected" && (
+              <StatusBadge status="rejected" pos="left" />
+            )}
+            {status === "approved" && (
+              <StatusBadge status="approved" pos="left" />
+            )}
+            {timeRemaining && status === "approved" && (
+              <span className={styles.timeRemaining}>
+                <Clock className={styles.timeIcon} />
+                {timeRemaining}
+              </span>
+            )}
+            {status === "pending" && (
+              <div className={styles.menuContainer}>
+                <button
+                  className={styles.menuBtn}
+                  onClick={handleMenuClick}
+                  aria-label="گزینه‌های بیشتر"
+                >
+                  <MoreVertical className={styles.menuIcon} />
+                </button>
+
+                {showMenu && (
+                  <div
+                    className={styles.dropdownMenu}
+                    onMouseOut={() => setShowMenu(false)}
+                  >
+                    <button
+                      className={styles.menuItem}
+                      onClick={handleCancelClick}
+                    >
+                      <X className={styles.menuItemIcon} />
+                      لغو بازدید
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
       </div>
-      <Link href={`homes/${id}`} className={`${styles.card} `}>
+      <Link href={`/homes/${id}`} className={`${styles.card} `}>
         <div className={styles.cardInfo}>
           <div className={styles.cardInfo__row}>
             <div className={`${styles.cardInfo__type} ${typeColor}`}>
@@ -227,8 +304,38 @@ const Home = ({
               </div>
             </div>
           </div>
+          {/* btn */}
         </div>
       </Link>
+      {isMyVisit && (
+        <div className={styles.actions}>
+          {latitude && longitude && (
+            <button
+              className={styles.mapBtn}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onShowMap([longitude, latitude]);
+              }}
+            >
+              <Map className={styles.mapIcon} />
+              نقشه
+            </button>
+          )}
+          <button className={styles.secondaryBtn}>
+            <Eye className={styles.eyeIcon} />
+            جزئیات
+          </button>
+        </div>
+      )}
+      {isMyAd&&
+        <div className={styles.actions}>
+          <button className={styles.secondaryBtn} onClick={onDetail}>
+            <Eye className={styles.eyeIcon} />
+            جزئیات
+          </button>
+        </div>
+      }
       {(isMyAd || isMyCompare) && (
         <button className={styles.removeBtn} onClick={remove}>
           <svg
@@ -258,7 +365,7 @@ const Home = ({
     </div>
   );
 };
-const StatusBadge = ({ status }) => {
+const StatusBadge = ({ status, pos = "right" }) => {
   // Define status configurations
   const statusConfig = {
     pending: {
@@ -276,13 +383,22 @@ const StatusBadge = ({ status }) => {
       iconColor: "#F44336",
       bgClass: "status__rejected",
     },
+    cancelled: {
+      text: "لغو شده",
+      iconColor: "#F44336",
+      bgClass: "status__rejected",
+    },
   };
 
   // Get current status config or default to pending
   const currentStatus = statusConfig[status] || statusConfig.pending;
 
   return (
-    <div className={`status-home ${currentStatus.bgClass}`}>
+    <div
+      className={`status-home ${
+        pos === "right" ? "status-home__right" : "status-home__left"
+      } ${currentStatus.bgClass}`}
+    >
       {currentStatus.text}
       <svg
         xmlns="http://www.w3.org/2000/svg"
