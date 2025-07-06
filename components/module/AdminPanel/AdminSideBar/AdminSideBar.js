@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "../../SideBar/SideBar.module.css"
 import Link from "next/link";
+import { AuthContext } from "@/context/AuthContext";
 const AdminSideBar = ({isActiveHandler}) => {
+  const {logoutHandler}=useContext(AuthContext)
   return (
     <nav className={styles.navigation}>
       <Link
@@ -145,7 +147,7 @@ const AdminSideBar = ({isActiveHandler}) => {
         <span>بازدید ها</span>
       </Link>
     
-      <a href="#" className={`${styles.navItem} ${styles.logout}`}>
+      <p className={`${styles.navItem} ${styles.logout}`} onClick={logoutHandler}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -167,7 +169,7 @@ const AdminSideBar = ({isActiveHandler}) => {
           ></path>
         </svg>
         <span>خروج از حساب کاربری</span>
-      </a>
+      </p>
     </nav>
   );
 };
