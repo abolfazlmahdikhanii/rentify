@@ -81,7 +81,7 @@ const Pagination = ({
       </button> */}
 
       <ul className={styles.pageList}>
-        {pageNumbers.map((page, index) => (
+        {pageNumbers.length>1&&pageNumbers.map((page, index) => (
           <li key={index} className={styles.pageItem}>
             {page === "..." ? (
               <span className={styles.ellipsis}>...</span>
