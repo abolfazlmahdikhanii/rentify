@@ -89,6 +89,34 @@ const UserSideBar = ({isActiveHandler}) => {
         <span>آگهی‌های من</span>
       </Link>
       <Link
+        href="/user-panel/visits"
+        className={`${styles.navItem} ${
+          isActiveHandler("visits") ? styles.active : ""
+        }`}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M19.55 3.165A1 1 0 0 1 20 4v14a1 1 0 0 1-1.275.962l-14-4A1 1 0 0 1 4 14v-4a1 1 0 0 1 .606-.92l14-6a1 1 0 0 1 .944.085M6 10.66v2.587l12 3.428V5.517z"
+            clipRule="evenodd"
+          ></path>
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M1 10.5a2.5 2.5 0 0 1 5 0v3a2.5 2.5 0 0 1-5 0zm2.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 1 0v-3a.5.5 0 0 0-.5-.5M18 3.5a2.5 2.5 0 0 1 5 0v15a2.5 2.5 0 0 1-5 0zm2.5-.5a.5.5 0 0 0-.5.5v15a.5.5 0 0 0 1 0v-15a.5.5 0 0 0-.5-.5M7.5 18v-3h2v3a1 1 0 0 0 1 1H12a1 1 0 0 0 1-1v-1.5h2V18a3 3 0 0 1-3 3h-1.5a3 3 0 0 1-3-3"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+        <span>بازدید های من</span>
+      </Link>
+      <Link
         href="/user-panel/compare"
         className={`${styles.navItem} ${
           isActiveHandler("compare") ? styles.active : ""
@@ -122,7 +150,7 @@ const UserSideBar = ({isActiveHandler}) => {
         </svg>
         <span>مقایسه املاک</span>
       </Link>
-      <a href="#" className={`${styles.navItem} ${styles.logout}`}>
+      <p className={`${styles.navItem} ${styles.logout}`}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -144,7 +172,7 @@ const UserSideBar = ({isActiveHandler}) => {
           ></path>
         </svg>
         <span>خروج از حساب کاربری</span>
-      </a>
+      </p>
     </nav>
   );
 };
