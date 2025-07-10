@@ -1,0 +1,353 @@
+/* components/Modal/Modal.module.css */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #374151;
+  background-color: #f3f4f6;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.commentItem {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+
+  padding: 16px;
+  margin-bottom: 2.3rem;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.userName {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.userEmail {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.timestamp {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.commentActions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionButton {
+  background: #10b981;
+  color: white;
+  font: inherit;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.commentContent {
+  color: #374151;
+  line-height: 1.6;
+  margin: 18px 0;
+  font-size: 14px;
+  border: 1px solid #e0e7ff;
+  padding: 1.5rem 1.2rem;
+  border-radius: 0.8rem;
+  -webkit-border-radius: 0.8rem;
+  -moz-border-radius: 0.8rem;
+  -ms-border-radius: 0.8rem;
+  -o-border-radius: 0.8rem;
+}
+
+.commentFooter {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.repliesSection {
+  margin-top: 1.2rem;
+}
+
+.repliesHeader {
+  margin-bottom: 2rem;
+}
+
+.repliesCount {
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.replyItem {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.replyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.replyActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.moreButton {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+
+.moreButton:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.replyContent {
+  color: #374151;
+  line-height: 1.6;
+  font-size: 14px;
+  padding: 1.2rem 0.5rem 0 0.5rem;
+}
+
+.replyForm {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.submitButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submitButton:hover {
+  background: #2563eb;
+}
+
+.cancelButton {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.dropdownMenu {
+  position: absolute;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 5px;
+  z-index: 1001;
+  min-width: 130px;
+  top: 1.8rem;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dropdownMenuItem {
+  padding: 8px 6px;
+  color: #111827;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  -webkit-transition: background-color 0.2s ease;
+  -moz-transition: background-color 0.2s ease;
+  -ms-transition: background-color 0.2s ease;
+  -o-transition: background-color 0.2s ease;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+.dropdownMenuItem:hover {
+  background-color: #f3f4f6;
+}
+.dropdownMenuItem:not(:last-child) {
+  border-bottom: 1px solid #e5e7eb;
+}
+.addReplyButton {
+  background: var(--primary);
+  color: white;
+  font: inherit;
+  border: none;
+  width: 14rem;
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  margin-top: 8px;
+  
+}
+.addReplyButton:hover{
+    background: var(--dark-primary-1);
+  }
+.footer{
+    padding:0 20px 17px 20px;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal {
+    margin: 10px;
+    max-height: 90vh;
+  }
+
+  .header {
+    padding: 16px 20px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .submitButton,
+  .cancelButton {
+    width: 100%;
+  }
+}
