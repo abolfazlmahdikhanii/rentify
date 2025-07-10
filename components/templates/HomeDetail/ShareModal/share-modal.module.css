@@ -1,0 +1,185 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 10px;
+
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: modalEnter 0.2s ease-out;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 15px 0 15px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+
+}
+
+.title {
+  
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.closeButton:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.content {
+  padding: 15px;
+
+}
+
+.linkSection {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 1.2rem;
+  
+}
+
+.linkContainer {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.linkInput {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  background-color: #f9fafb;
+  color: #6b7280;
+direction: ltr;
+
+}
+
+.linkInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.copyButton {
+  padding: 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+}
+
+.copyButton:hover {
+  background-color: #2563eb;
+}
+
+.copyButton:active {
+  transform: scale(0.95);
+}
+
+.copiedMessage {
+  display: block;
+  font-size: 1rem;
+  color: #059669;
+  margin: 1.5rem 0;
+  font-weight: 500;
+  text-align: right;
+
+}
+
+.shareSection {
+  margin-top: 20px;
+}
+
+.shareGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.shareButton {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font: inherit;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #374151;
+  justify-content: flex-start;
+}
+
+.shareButton:hover {
+  border-color: var(--share-color);
+  background-color: color-mix(in srgb, var(--share-color) 5%, white);
+  color: var(--share-color);
+}
+
+.shareButton:active {
+  transform: scale(0.98);
+}
+
