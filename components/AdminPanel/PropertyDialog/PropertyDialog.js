@@ -24,6 +24,7 @@ import {
   Waves,
   Trees,
   Shield,
+  Mail,
 } from "lucide-react";
 import { getDate, getStatusText } from "@/helper/helper";
 import { AuthContext } from "@/context/AuthContext";
@@ -44,7 +45,7 @@ const PropertyDialog = ({
   const [isLoading, setIsLoading] = useState(null);
   const [reason, setReason] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  console.log(property);
+
   return (
     <>
       {/* Backdrop */}
@@ -94,11 +95,11 @@ const PropertyDialog = ({
                 <div className={styles.specsGrid}>
                   <div className={styles.specItem}>
                     <Bed className={styles.iconSmall} />
-                    <span>{property?.bedrooms} خوابه</span>
+                    <span>{property?.bedrooms||1} </span>
                   </div>
                   <div className={styles.specItem}>
                     <Bath className={styles.iconSmall} />
-                    <span>{property?.bathrooms} حمام</span>
+                    <span>{property?.bathrooms?1:0} حمام</span>
                   </div>
                   <div className={styles.specItem}>
                     <Ruler className={styles.iconSmall} />
@@ -171,13 +172,18 @@ const PropertyDialog = ({
                   </div>
                   <div className={styles.ownerDetails}>
                     <p className={styles.ownerName}>{property.author}</p>
-                    <div className={styles.ownerContact}>
-                      <Phone className={styles.iconSmall} />
-                      {property.contact_phone}
-                    </div>
-                    <p className={styles.ownerEmail}>
-                      {property?.author_email}
-                    </p>
+                    {property?.contact_phone && (
+                      <div className={styles.ownerContact}>
+                        <Phone className={styles.iconSmall} />
+                        {property.contact_phone}
+                      </div>
+                    )}
+                    {property?.author_email && (
+                       <div className={styles.ownerContact}>
+                        <Mail className={styles.iconSmall} />
+                        {property.author_email}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -209,36 +215,38 @@ const PropertyDialog = ({
                 </div>
               </div>
             </div>
-            <div className={styles.card}>
-              <div className={styles.cardHeader}>
-                <h4 className={styles.cardTitle}>دلیل رد</h4>
-              </div>
-              <div className={styles.cardContent}>
-                <div>
-                  <textarea
-                    className="text-area2"
-                    placeholder="لطفا دلیل رد را بنویسید"
-                    value={
-                      property.status === "rejected"
-                        ? property.rejection_reason
-                        : reason
-                    }
-                    readOnly={property.status === "rejected"}
-                    onChange={(e) =>
-                      property.status !== "rejected" &&
-                      setReason(e.target.value)
-                    }
-                  ></textarea>
+            {user?.role === "admin" && (
+              <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <h4 className={styles.cardTitle}>دلیل رد</h4>
+                </div>
+                <div className={styles.cardContent}>
+                  <div>
+                    <textarea
+                      className="text-area2"
+                      placeholder="لطفا دلیل رد را بنویسید"
+                      value={
+                        property.status === "rejected"
+                          ? property.rejection_reason
+                          : reason
+                      }
+                      readOnly={property.status === "rejected"}
+                      onChange={(e) =>
+                        property.status !== "rejected" &&
+                        setReason(e.target.value)
+                      }
+                    ></textarea>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Footer Actions */}
         <div className={styles.footer}>
           <div className={styles.footerActions}>
-            {property.status === "pending" && (
+            {property.status === "pending" && user.role === "admin" && (
               <>
                 <button
                   onClick={() => approveHandler(property?.id)}
@@ -272,42 +280,40 @@ const PropertyDialog = ({
             )}
 
             {/* Edit button - shown only to owner for non-pending properties */}
-            {property.status !== "pending" &&
-              property?.user_id === user?.id && (
-                <button
-                  onClick={() => setEditingProperty(property)}
-                  disabled={isLoading === "edit"}
-                  className={`${styles.btn} ${styles.btnEdit}`}
-                >
-                  {isLoading === "edit" ? (
-                    "در حال ویرایش..."
-                  ) : (
-                    <>
-                      <Edit className={styles.iconSmall} />
-                      ویرایش
-                    </>
-                  )}
-                </button>
-              )}
+            {property?.user_id === user?.id && (
+              <button
+                onClick={() => setEditingProperty(property)}
+                disabled={isLoading === "edit"}
+                className={`${styles.btn} ${styles.btnEdit}`}
+              >
+                {isLoading === "edit" ? (
+                  "در حال ویرایش..."
+                ) : (
+                  <>
+                    <Edit className={styles.iconSmall} />
+                    ویرایش
+                  </>
+                )}
+              </button>
+            )}
 
             {/* Delete button - shown to owner or admin for non-pending properties */}
-            {property.status !== "pending" &&
-              (property?.user_id === user?.id || user?.role === "admin") && (
-                <button
-                  onClick={() => deleteHandler(property)}
-                  disabled={isLoading === "delete"}
-                  className={`${styles.btn} ${styles.btnReject}`}
-                >
-                  {isLoading === "delete" ? (
-                    "در حال حذف..."
-                  ) : (
-                    <>
-                      <Trash2 className={styles.iconSmall} />
-                      حذف
-                    </>
-                  )}
-                </button>
-              )}
+            {(property?.user_id === user?.id || user?.role === "admin") && (
+              <button
+                onClick={() => deleteHandler(property)}
+                disabled={isLoading === "delete"}
+                className={`${styles.btn} ${styles.btnReject}`}
+              >
+                {isLoading === "delete" ? (
+                  "در حال حذف..."
+                ) : (
+                  <>
+                    <Trash2 className={styles.iconSmall} />
+                    حذف
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
