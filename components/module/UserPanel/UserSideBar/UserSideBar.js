@@ -94,26 +94,26 @@ const UserSideBar = ({isActiveHandler}) => {
           isActiveHandler("visits") ? styles.active : ""
         }`}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M19.55 3.165A1 1 0 0 1 20 4v14a1 1 0 0 1-1.275.962l-14-4A1 1 0 0 1 4 14v-4a1 1 0 0 1 .606-.92l14-6a1 1 0 0 1 .944.085M6 10.66v2.587l12 3.428V5.517z"
-            clipRule="evenodd"
-          ></path>
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M1 10.5a2.5 2.5 0 0 1 5 0v3a2.5 2.5 0 0 1-5 0zm2.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 1 0v-3a.5.5 0 0 0-.5-.5M18 3.5a2.5 2.5 0 0 1 5 0v15a2.5 2.5 0 0 1-5 0zm2.5-.5a.5.5 0 0 0-.5.5v15a.5.5 0 0 0 1 0v-15a.5.5 0 0 0-.5-.5M7.5 18v-3h2v3a1 1 0 0 0 1 1H12a1 1 0 0 0 1-1v-1.5h2V18a3 3 0 0 1-3 3h-1.5a3 3 0 0 1-3-3"
-            clipRule="evenodd"
-          ></path>
-        </svg>
+           <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M1 7a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3v8a1 1 0 0 1-.293.707l-6 6A1 1 0 0 1 16 22H4a3 3 0 0 1-3-3zm3-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h11.586L21 14.586V7a1 1 0 0 0-1-1z"
+      clipRule="evenodd"
+    ></path>
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M15 17a3 3 0 0 1 3-3h4a1 1 0 0 1 .707 1.707l-6 6A1 1 0 0 1 15 21zm3-1a1 1 0 0 0-1 1v1.586L19.586 16zM6 3v3.5H4V3zM5.25 9.75h2.5v2h-2.5zM5.25 13.75h2.5v2h-2.5zM11.75 9.75h2.5v2h-2.5zM13 3v3.5h-2V3zM20 3v3.5h-2V3z"
+      clipRule="evenodd"
+    ></path>
+  </svg>
         <span>بازدید های من</span>
       </Link>
       <Link

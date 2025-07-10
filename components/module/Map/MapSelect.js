@@ -8,7 +8,7 @@ const MapSelect = ({ position, setPosition, isEnable = true,isVisit=false }) => 
   const map = useRef(null);
   const marker = useRef(null);
   const [initialized, setInitialized] = useState(false);
-console.log(position);
+
   useEffect(() => {
     if (map.current) return; // initialize map only once
 
@@ -160,7 +160,7 @@ console.log(position);
   return (
     <div
       ref={mapContainer}
-      className="map-box-2"
+      className={isVisit? "map-box-3" : "map-box-2" }
       style={isEnable||isVisit ? {width:"100%", height: "400px" ,borderRadius:"8px",} : null}
     />
   );

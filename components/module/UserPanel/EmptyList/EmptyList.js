@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./emptyList.module.css";
 import { useRouter } from "next/router";
 
-const EmptyList = ({ title, subtitle, src, type, btnText, href, noBtn=false }) => {
+const EmptyList = ({ title, subtitle, src, type, btnText, href, noBtn=false,isAction=false,action }) => {
   const router = useRouter();
   let icon = null;
   if (type === "add") {
@@ -68,10 +68,14 @@ const EmptyList = ({ title, subtitle, src, type, btnText, href, noBtn=false }) =
           <button
             className={`submit-btn ${styles.emptyBtn}`}
             onClick={() => {
-              if (type === "add") {
+              if (!isAction&&type === "add") {
                 router.push("/register-step");
-              } else if (type === "search") {
+              } else if (!isAction&&type === "search") {
                 router.push("/homes");
+              }
+              else if(isAction){
+                action()
+                router.push("/homes?from=compare");
               }
             }}
           >

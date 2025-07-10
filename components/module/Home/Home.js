@@ -110,6 +110,7 @@ const Home = ({
     onCancel(id);
     setShowMenu(false);
   };
+  console.log(isMyAd);
   return (
     <div
       className={`${styles.cardParents} ${
@@ -371,7 +372,7 @@ const StatusBadge = ({ status, pos = "right" }) => {
     pending: {
       text: "در انتظار تأیید",
       iconColor: "#F4B740",
-      bgClass: "status__pending",
+      bgClass: pos==="left"?"status__pending-3":"status__pending",
     },
     approved: {
       text: "تأیید شده",

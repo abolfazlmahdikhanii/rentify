@@ -22,15 +22,9 @@ const Input = ({
           type={type}
           className={`input ${error ? "inputError" : ""}`}
           placeholder={placeholder}
-          value={val}
+          value={val||""}
           dir="auto"
-          // {...(register
-          //   ? register(name, {
-          //       required: required && "لطفا این فیلد را تکمیل کنید",
-          //       valueAsNumber: type === "number" || valueAsNumber,
-          //       ...rest,
-          //     })
-          //   : {})}
+        
           onChange={(e) => onChange(e.target.value)}
         />
       </div>

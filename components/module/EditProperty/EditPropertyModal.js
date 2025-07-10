@@ -110,7 +110,7 @@ export default function EditPropertyModal({
         unitType: propertyData.unitType,
         floor: propertyData.floor_number,
         totalFloors: propertyData.floors,
-        unitsPerFloor:propertyData.unit_floor,
+        unitsPerFloor: propertyData.unit_floor,
         location: propertyData.house_position,
         isRented: false,
         isReadyForVisit: propertyData.status === "approved",
@@ -298,7 +298,7 @@ export default function EditPropertyModal({
       }
 
       // Handle image upload if there are new images
-     if ( data.images?.length > 0) {
+      if (data.images?.length > 0) {
         await uploadImages(data.images, propertyData.id);
       }
 
@@ -315,25 +315,49 @@ export default function EditPropertyModal({
 
   const uploadImages = async (files, propertyId) => {
     try {
+      // If no files provided, return success (don't throw error)
+      // This handles the case where user doesn't select new images
       if (!files || files.length === 0) {
-        throw new Error("No files provided for upload");
+        console.log("No new images selected for upload");
+        return {
+          success: true,
+          message: "No new images to upload",
+          images: [],
+        };
       }
 
-      const formData = new FormData();
-      files.forEach((file, index) => {
+      // Filter out invalid files and keep only valid File objects
+      const validFiles = files.filter((file, index) => {
         if (!(file instanceof File)) {
           console.warn(
             `Item at index ${index} is not a valid File object:`,
             file
           );
-          return;
+          return false;
         }
+        return true;
+      });
+
+      // If no valid files after filtering, return success
+      if (validFiles.length === 0) {
+        console.log("No valid files found for upload");
+        return {
+          success: true,
+          message: "No valid images to upload",
+          images: [],
+        };
+      }
+
+      const formData = new FormData();
+      validFiles.forEach((file) => {
         formData.append("images", file);
       });
       formData.append("type", "main");
 
-      // Log FormData entries
-      
+      // Log FormData entries for debugging
+      console.log(
+        `Uploading ${validFiles.length} images for property ${propertyId}`
+      );
 
       const response = await fetch(
         `http://localhost:5000/api/properties/${propertyId}/images`,
@@ -347,11 +371,15 @@ export default function EditPropertyModal({
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "Upload failed" }));
         throw new Error(errorData.message || "Image upload failed");
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log("Images uploaded successfully:", result);
+      return result;
     } catch (error) {
       console.error("Image Upload Error:", error);
       throw error;
@@ -362,23 +390,12 @@ export default function EditPropertyModal({
     else if (type === "House") return "خانه";
     else return "ویلا";
   };
-  const formatPrice = (value) => {
-    const digitsOnly = value.replace(/\D/g, "");
-    return digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
 
-  const handleImageSelect = (event) => {
-    const files = Array.from(event.target.files || []);
-    setSelectedImages((prev) => [...prev, ...files]);
-  };
   const fillTitle = () => {
     const title = `${houseTypeToPersian(watch("houseType"))} ${watch(
       "bedrooms"
     )} خوابه در ${watch("city")}`;
     return title;
-  };
-  const removeImage = (index) => {
-    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const renderStep = () => {
@@ -680,35 +697,35 @@ export default function EditPropertyModal({
         return (
           <div className={styles.stepContent}>
             <h3 className={styles.stepTitle}>تجهیزات و امکانات</h3>
-       {equipment ? (
-  <div className={styles.gridForm}>
-    {equipment.map((item) => {
-      // Get current facilities array or empty array if undefined
-      const currentFacilities = watch("facilities") || [];
-      // Check if this item's id exists in the facilities array
-      const isChecked = currentFacilities.includes(item.id);
-      
-      return (
-        <CheckBox
-          key={item.id}
-          title={item.title}  // Using item.name instead of item.title
-          checked={isChecked}
-          onChange={(checked) => {
-            setValue(
-              "facilities",
-              checked
-                ? [...currentFacilities, item.id] // Add id if checked
-                : currentFacilities.filter(id => id !== item.id), // Remove id if unchecked
-              { shouldValidate: true }
-            );
-          }}
-        />
-      );
-    })}
-  </div>
-) : (
-  <div>در حال بارگذاری تجهیزات...</div>
-)}
+            {equipment ? (
+              <div className={styles.gridForm}>
+                {equipment.map((item) => {
+                  // Get current facilities array or empty array if undefined
+                  const currentFacilities = watch("facilities") || [];
+                  // Check if this item's id exists in the facilities array
+                  const isChecked = currentFacilities.includes(item.id);
+
+                  return (
+                    <CheckBox
+                      key={item.id}
+                      title={item.title} // Using item.name instead of item.title
+                      checked={isChecked}
+                      onChange={(checked) => {
+                        setValue(
+                          "facilities",
+                          checked
+                            ? [...currentFacilities, item.id] // Add id if checked
+                            : currentFacilities.filter((id) => id !== item.id), // Remove id if unchecked
+                          { shouldValidate: true }
+                        );
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div>در حال بارگذاری تجهیزات...</div>
+            )}
 
             {errors.facilities && (
               <p role="alert" className="errorMessage">
