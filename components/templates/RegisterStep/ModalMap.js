@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ModalMap.module.css";
-const ModalMap = ({ children, onClose, onConfirm }) => {
+const ModalMap = ({ children, onClose, onConfirm, isConfirm=true,title}) => {
   return (
     <>
       <div className={styles.backDrop}></div>
@@ -8,7 +8,7 @@ const ModalMap = ({ children, onClose, onConfirm }) => {
       <div className={`${styles.container}`} dir="rtl">
         {/* Header with close button */}
         <div className={styles.header}>
-          <h2 className={styles.title}>ثبت موقعیت</h2>
+          <h2 className={styles.title}> {title||"ثبت موقعیت"}</h2>
           <button className={styles.closeButton} onClick={onClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -36,17 +36,24 @@ const ModalMap = ({ children, onClose, onConfirm }) => {
         <div className={styles.content}>{children}</div>
 
         {/* Action buttons */}
-        <div className={styles.actionButtons}>
-          <button className={`btn ${styles.secondaryButton}`} onClick={onClose} type="button">
-            لغو
-          </button>
-          <button
-            className={`btn btn-primary ${styles.btnPrimary}`}
-            onClick={onConfirm} type="button"
-          >
-            ثبت
-          </button>
-        </div>
+        {isConfirm && (
+          <div className={styles.actionButtons}>
+            <button
+              className={`btn ${styles.secondaryButton}`}
+              onClick={onClose}
+              type="button"
+            >
+              لغو
+            </button>
+            <button
+              className={`btn btn-primary ${styles.btnPrimary}`}
+              onClick={onConfirm}
+              type="button"
+            >
+              ثبت
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

@@ -109,3 +109,7 @@
   .requestBtn:hover {
     background-color: var(--dark-primary-2);
   }
+  .requestBtn:disabled{
+    background-color: var(--dark-primary-2);
+    cursor: not-allowed;
+  }

@@ -3,14 +3,14 @@ import styles from "../../../../styles/Detail.module.css";
 import { Heart } from "lucide-react";
 import { getDateRelative } from "@/helper/helper";
 import { AuthContext } from "@/context/AuthContext";
-const TitleInfo = ({ data }) => {
+const TitleInfo = ({ data,onShare }) => {
   const { user } = useContext(AuthContext);
   return (
     <div className={styles.detailInfo__Title}>
       <div className={styles.detailTitle}>
         <h1 className={styles.detailTitle__title}>{data?.title}</h1>
         <div className={styles.detailShare__btn}>
-          <button className="btn">
+          <button className="btn" onClick={onShare}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"

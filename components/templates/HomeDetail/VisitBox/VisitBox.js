@@ -9,6 +9,7 @@ const VisitBox = ({
   authorPhone,
   onVisitReq,
   isOwner,
+  isMyVisit
 }) => {
   const {user}=useContext(AuthContext)
   
@@ -76,8 +77,8 @@ const VisitBox = ({
             </button>
           </div>
           <div className={styles.requestContainer}>
-            <button className={`btn ${styles.requestBtn}`} onClick={onVisitReq}>
-              درخواست بازدید
+            <button className={`btn ${styles.requestBtn}`} onClick={user&&!isMyVisit?onVisitReq:null} disabled={isMyVisit}>
+             {isMyVisit?"درخواست بازدید ارسال شد":"درخواست بازدید"}
             </button>
           </div>
         </>

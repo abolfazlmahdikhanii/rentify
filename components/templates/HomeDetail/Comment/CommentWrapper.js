@@ -3,6 +3,7 @@ import styles from "./comments.module.css";
 import {
   MessageCircle,
   MessageSquareMoreIcon,
+  PackageOpen,
   Reply,
   Settings,
   Share2,
@@ -16,6 +17,7 @@ import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
 import { getCookie } from "cookies-next";
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
+import EmptyItem from "@/components/module/EmptyItem/EmptyItem";
 
 export default function CommentWrapper({ comments }) {
   const { user } = useContext(AuthContext);
@@ -184,7 +186,7 @@ export default function CommentWrapper({ comments }) {
       </div>
 
       <div className={styles.commentsList}>
-        {propertyComment.map((comment) => (
+        {propertyComment.length?propertyComment.map((comment) => (
           <CommentItem
             key={comment.id}
             comment={comment}
@@ -200,7 +202,7 @@ export default function CommentWrapper({ comments }) {
             handleEdit={handleEdit}
             setDeleteComment={setDeleteComment}
           />
-        ))}
+        )):<EmptyItem title="هنوز نظری ثبت نشده است" />}
       </div>
       <CommentModal
         isOpen={isModalOpen}

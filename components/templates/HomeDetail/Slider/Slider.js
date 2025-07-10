@@ -27,23 +27,41 @@ const Slider = ({ images }) => {
   return (
     <div className={styles.sliderContainer}>
       <div className={styles.sliderGrid} ref={sliderRef}>
-        {images.map((slide) => (
-          <div className={styles.sliderImg} style={{minWidth:`${100/images?.length}%`}} key={slide.id}>
+        {images.length>1 ? (
+          images.map((slide) => (
+            <div
+              className={styles.sliderImg}
+              style={{ minWidth: `${100 / images?.length}%` }}
+              key={slide.id}
+            >
+              <img
+                src={slide.image_url}
+                alt="img"
+                className={styles.sliderImg__img}
+                onLoadStart={(e) => {
+                  if (e.target.src !== "/images/empty-image.jpg")
+                    e.currentTarget.src = "/images/empty-image.jpg";
+                }}
+                onError={(e) => {
+                  if (e.target.src !== "/images/empty-image.jpg")
+                    e.currentTarget.src = "/images/empty-image.jpg";
+                }}
+              />
+            </div>
+          ))
+        ) : (
+          <div
+            className={styles.sliderImg}
+            style={{ minWidth: `100%` }}
+          >
             <img
-              src={slide.image_url}
+              src={"/images/empty-image.jpg"}
               alt="img"
               className={styles.sliderImg__img}
-              onLoadStart={(e) => {
-                if (e.target.src !== "/images/empty-image.jpg")
-                  e.currentTarget.src = "/images/empty-image.jpg";
-              }}
-              onError={(e) => {
-                if (e.target.src !== "/images/empty-image.jpg")
-                  e.currentTarget.src = "/images/empty-image.jpg";
-              }}
+             
             />
           </div>
-        ))}
+        )}
       </div>
       {images.length > 3 ? (
         <div className={styles.btnContainer}>

@@ -7,7 +7,7 @@ import { getCookie } from "cookies-next";
 import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
 
-const ModalVisitRequest = ({ onClose, id }) => {
+const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
   const [isOpenTime, setIsOpenTime] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const [date, setDate] = useState("");
@@ -83,6 +83,13 @@ const ModalVisitRequest = ({ onClose, id }) => {
       });
   };
 
+  const getDisableTime = () => {
+    if (!approvedTime || approvedTime.length === 0) return [];
+
+    return approvedTime.map((item) => item.visit_time.slice(0, 5));
+  };
+  const disabledTimes = getDisableTime();
+  console.log(disabledTimes);
   return (
     <>
       <div className="backdrop">
@@ -115,7 +122,11 @@ const ModalVisitRequest = ({ onClose, id }) => {
                 </button>
               </div>
               <div className={styles.modalBody}>
-                <DatePicker selectedDate={date} onSelectedDate={setDate} />
+                <DatePicker
+                  selectedDate={date}
+                  onSelectedDate={setDate}
+                  visitTimes={approvedTime}
+                />
                 {!isOpenTime ? (
                   <div
                     className={styles.modalTime__open}
@@ -150,17 +161,34 @@ const ModalVisitRequest = ({ onClose, id }) => {
                       </h2>
 
                       <div className={styles.timeGrid}>
-                        {timeSlots.map((time) => (
-                          <button
-                            key={time}
-                            className={`${styles.timeButton} ${
-                              selectedTime === time ? styles.selected : ""
-                            }`}
-                            onClick={() => setSelectedTime(time)}
-                          >
-                            {time}
-                          </button>
-                        ))}
+                        {timeSlots.map((time) => {
+                          const isDisabled = disabledTimes.includes(time);
+
+                          return (
+                            <button
+                              key={time}
+                              className={`${styles.timeButton} ${
+                                selectedTime === time ? styles.selected : ""
+                              } ${isDisabled ? styles.disabled : ""}`}
+                              onClick={() =>
+                                !isDisabled && setSelectedTime(time)
+                              }
+                              disabled={isDisabled}
+                              style={
+                                isDisabled
+                                  ? {
+                                      opacity: 0.5,
+                                      cursor: "not-allowed",
+                                      backgroundColor: "#f5f5f5",
+                                      color: "#ccc",
+                                    }
+                                  : {}
+                              }
+                            >
+                              {time}
+                            </button>
+                          );
+                        })}
                       </div>
 
                       <button
