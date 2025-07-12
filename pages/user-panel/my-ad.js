@@ -52,7 +52,7 @@ const MyAdvertisement = () => {
     ? data.data.slice((currentPage - 1) * 9, currentPage * 9)
     : [];
   return (
-    <DashboardLayout title="آگهی‌های ذخیره شده">
+    <DashboardLayout title="آگهی‌های من">
       <Content>
         {data?.data && data?.data.length > 0 ? (
           <>

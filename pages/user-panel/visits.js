@@ -67,9 +67,9 @@ const [selectedVisit, setSelectedVisit] = useState(null);
   const paginationData = data
     ? data.slice((currentPage - 1) * 9, currentPage * 9)
     : [];
-  console.log(data);
+  
   return (
-    <DashboardLayout title="آگهی‌های ذخیره شده">
+    <DashboardLayout title="بازدیدهای من">
       <Content>
         {data && data?.length > 0 ? (
           <>
