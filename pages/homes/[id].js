@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Slider from "@/components/templates/HomeDetail/Slider/Slider";
-import db from "../../data/db.json";
 import styles from "../../styles/Detail.module.css";
 import TitleInfo from "@/components/templates/HomeDetail/TitleInfo/TitleInfo";
 import GeneralInfo from "@/components/templates/HomeDetail/GeneralInfo/GeneralInfo";
@@ -9,12 +8,12 @@ import VisitBox from "@/components/templates/HomeDetail/VisitBox/VisitBox";
 import PayService from "@/components/templates/HomeDetail/PayService/PayService";
 import Offer from "@/components/templates/HomeDetail/Offer/Offer";
 import ModalVisitRequest from "@/components/templates/HomeDetail/ModalVisitRequest/ModalVisitRequest";
-import { notFound } from "next/navigation";
 import CommentWrapper from "@/components/templates/HomeDetail/Comment/CommentWrapper";
+import ShareModal from "@/components/templates/HomeDetail/ShareModal/ShareModal";
 const HomePageDetail = ({ houses }) => {
   const { query } = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+   const [isShowShareModal,setIsShowShareModal]=useState(false)
   return (
     <div className="detail-bg">
       <div className="container">
@@ -22,7 +21,7 @@ const HomePageDetail = ({ houses }) => {
         <section className={styles.detailGrid}>
           {/* info */}
           <div className={styles.detailInfo}>
-            <TitleInfo data={houses[0]} />
+            <TitleInfo data={houses[0]} onShare={()=>setIsShowShareModal(true)}/>
             <GeneralInfo
               data={houses[0]?.details}
               locationDetail={houses[0]?.location}
@@ -41,6 +40,7 @@ const HomePageDetail = ({ houses }) => {
               authorPhone={houses[0]?.contact_phone}
               onVisitReq={() => setIsModalOpen(true)}
               isOwner={houses[0]?.isAuthor}
+              isMyVisit={houses[0]?.isMyVisit}
             />
           </div>
         </section>
@@ -49,8 +49,16 @@ const HomePageDetail = ({ houses }) => {
         <ModalVisitRequest
           onClose={() => setIsModalOpen(false)}
           id={query.id}
+          approvedTime={houses[0].visitTimes}
         />
       )}
+      {
+        isShowShareModal&&<ShareModal
+        isOpen={isShowShareModal}
+        onClose={()=>setIsShowShareModal(false)}
+        title="اشتراک گذاری ملک"
+        />
+      }
     </div>
   );
 };

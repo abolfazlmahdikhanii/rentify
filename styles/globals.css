@@ -293,8 +293,8 @@ input:focus-visible {
 .maplibregl-ctrl-attrib {
   display: none;
 }
-.map-box-2 {
-  margin-top: 4rem;
+.map-box-2,.map-box-3 {
+  
   width: 100%;
   font: inherit;
   height: 18.7rem;
@@ -303,6 +303,12 @@ input:focus-visible {
   -moz-border-radius: 0.8rem;
   -ms-border-radius: 0.8rem;
   -o-border-radius: 0.8rem;
+}
+.map-box-2{
+  margin-top: 4rem;
+}
+.map-box-3{
+  margin-top: 0;
 }
 .marker {
   color: #f65;
@@ -685,4 +691,30 @@ input:focus-visible {
   -moz-border-radius: 1.2rem;
   -ms-border-radius: 1.2rem;
   -o-border-radius: 1.2rem;
+}
+.disabled-date {
+  color: #ccc !important;
+  background-color: #f5f5f5 !important;
+  cursor: not-allowed !important;
+}
+
+.disabled-date:hover {
+  background-color: #f5f5f5 !important;
+}
+.no-comment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.7rem;
+  width: 100%;
+  height: 100%;
+  margin-top: 3rem;
+  color: #73767c;
+  grid-column: 1/4;
+}
+.no-comment__text{
+  font-size: 1.8rem;
+  color: #73767c;
+  text-align: center;
 }

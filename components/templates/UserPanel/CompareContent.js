@@ -60,6 +60,7 @@ const CompareContent = ({ items, homes }) => {
     { id: 10, name: "پارکینگ" },
     { id: 11, name: "جنس کف" },
   ];
+  console.log(homes);
   return (
     <div className="container">
       <div className="property-comparison-container">
@@ -87,7 +88,7 @@ const CompareContent = ({ items, homes }) => {
 
         {showFilters && (
           <div className="filter-options">
-            {filterOptions.map((option) => (
+            {filterOptions?.map((option) => (
               <button
                 key={option.id}
                 className={`filter-button ${option.active ? "active" : ""}`}
@@ -151,9 +152,7 @@ const CompareContent = ({ items, homes }) => {
             متراژ{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">
-              {item.details.main_details?.["مساحت زمین"] || "---"}
-            </div>
+            <div className="spec-value">{item?.building_area || "---"}</div>
           ))}
         </div>
 
@@ -177,9 +176,7 @@ const CompareContent = ({ items, homes }) => {
             اتاق خواب{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">
-              {item.details.main_details?.["خواب"] || "---"}
-            </div>
+            <div className="spec-value">{item?.bedrooms || "---"}</div>
           ))}
         </div>
 
@@ -203,9 +200,7 @@ const CompareContent = ({ items, homes }) => {
             سال ساخت{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">
-              {item.details.main_details?.["سال ساخت"] || "---"}
-            </div>
+            <div className="spec-value">{item?.house_year?`${item?.house_year} سال` : "---"}</div>
           ))}
         </div>
 
@@ -229,9 +224,7 @@ const CompareContent = ({ items, homes }) => {
             سرویس بهداشتی{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">
-              {item.details.main_details?.["سرویس بهداشتی"] || "---"} عدد
-            </div>
+            <div className="spec-value">{item?.bathrooms || "---"} عدد</div>
           ))}
         </div>
 
@@ -254,9 +247,9 @@ const CompareContent = ({ items, homes }) => {
             </svg>
             حمام{" "}
           </div>
-          <div className="spec-value">۱ عدد</div>
-          <div className="spec-value">۲ عدد</div>
-          <div className="spec-value">۱ عدد</div>
+          {homes.map((item) => (
+            <div className="spec-value">{item?.bathrooms || "---"} عدد</div>
+          ))}
         </div>
       </div>
       {isShowModal && (

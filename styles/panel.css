@@ -34,6 +34,7 @@
   -ms-border-radius: 1.6rem;
   -o-border-radius: 1.6rem;
   position: relative;
+  padding:1.5rem 1.5rem 2.5rem 1.5rem;
 }
 .form-card__admin {
   background-color: transparent;
@@ -172,6 +173,7 @@
   grid-template-columns: repeat(3, minmax(25rem, 1fr));
   column-gap: 1.5rem;
   row-gap: 2rem;
+  margin-bottom: 4rem;
 }
 
 .compare-house {

@@ -6,7 +6,6 @@ import { CompareContext } from "@/context/CompareContext";
 import styles from "../../styles/Compare.module.css";
 import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import ModalProperty from "@/components/templates/UserPanel/ModalProperty";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
@@ -29,10 +28,12 @@ const compare = () => {
     compare,
     isShowCompare,
     showCompare,
+    compareHandler
   } = useContext(CompareContext);
   const router = useRouter();
   useEffect(() => {
     toggleCompare();
+    
   }, []);
   const displayedHomes = data?.slice(0, 6) || [];
   return (
@@ -63,6 +64,8 @@ const compare = () => {
                 subtitle="از طریق آیکون «نشان‌کردن» می‌تونید آگهی‌های مورد نظرتون رو در این لیست ذخیره کنید."
                 btnText="جستجو کنید"
                 type="search"
+                isAction={true}
+                action={()=>compareHandler()}
               />
             )}
 

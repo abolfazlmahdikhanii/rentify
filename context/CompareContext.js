@@ -31,10 +31,12 @@ export const CompareProvider = ({ children }) => {
       return newCompare;
     });
   };
+  const compareHandler = () => {
+    setIsCompare(true);
+    saveStorage("isCompare", true);
+  };
   const showCompare = () => {
     setIsShowCompare(true);
-
-   
   };
   const removeFromCompare = (productId) => {
     setCompare((prev) => {
@@ -56,6 +58,7 @@ export const CompareProvider = ({ children }) => {
     // localStorage.removeItem("compare")
     saveStorage("isCompare", false);
   };
+
   return (
     <CompareContext.Provider
       value={{
@@ -66,6 +69,7 @@ export const CompareProvider = ({ children }) => {
         isCompare,
         showCompare,
         isShowCompare,
+        compareHandler,
       }}
     >
       {children}

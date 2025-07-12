@@ -1,6 +1,6 @@
-import ColumnChart from "@/components/AdminPanel/ColumnChart/ColumnChart";
-import { InfoCards } from "@/components/AdminPanel/InfoCard/InfoCard";
-import LineChart from "@/components/AdminPanel/LineChart/LineChart";
+import ColumnChart from "@/components/templates/AdminPanel/ColumnChart/ColumnChart";
+import { InfoCards } from "@/components/templates/AdminPanel/InfoCard/InfoCard";
+import LineChart from "@/components/templates/AdminPanel/LineChart/LineChart";
 import Content from "@/components/module/UserPanel/Content/Content";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { getTypeText } from "@/helper/helper";
@@ -8,7 +8,7 @@ import { getCookie } from "cookies-next";
 import React, { useMemo } from "react";
 import useSWR from "swr";
 
-const fetcher = (url) => 
+const fetcher = (url) =>
   fetch(url, {
     method: "GET",
     headers: {
@@ -19,7 +19,7 @@ const fetcher = (url) =>
 
 const Dashboard = () => {
   const { data, error, isLoading } = useSWR(
-    "http://localhost:5000/api/properties/admin-panel", 
+    "http://localhost:5000/api/properties/admin-panel",
     fetcher
   );
 
@@ -30,37 +30,30 @@ const Dashboard = () => {
         categories: [],
         columnSeries: [],
         lineSeries: [],
-        charts: []
+        charts: [],
       };
     }
 
     try {
-      const processedCharts = data.data.charts.map(chart => {
-        const labels = Array.isArray(chart?.data?.labels) ? chart.data.labels : [];
-        const datasets = Array.isArray(chart?.data?.datasets) ? chart.data.datasets : [];
-        
+      const processedCharts = data.data.charts.map((chart) => {
+        const labels = Array.isArray(chart?.data?.labels)
+          ? chart.data.labels
+          : [];
+        const datasets = Array.isArray(chart?.data?.datasets)
+          ? chart.data.datasets
+          : [];
+
         // Format labels
-        const formattedLabels = labels.map(label => {
-          // if (typeof label === 'string') {
-          //   // Handle date formatting if needed
-          //   if (label.includes('-')) {
-          //     const parts = label.split('-');
-          //     if (parts.length === 2) {
-          //       const [year, month] = parts;
-          //       const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-          //                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          //       return `${monthNames[parseInt(month) - 1]} ${year}`;
-          //     }
-          //   }
-          // }
+        const formattedLabels = labels.map((label) => {
+       
           return label;
         });
 
         // Process datasets safely
-        const processedDatasets = datasets.map(dataset => ({
+        const processedDatasets = datasets.map((dataset) => ({
           name: dataset.label || "Data Series",
           data: Array.isArray(dataset.data) ? dataset.data : [],
-          color: dataset.borderColor || dataset.backgroundColor || "#4bc0c0"
+          color: dataset.borderColor || dataset.backgroundColor || "#4bc0c0",
         }));
 
         return {
@@ -68,48 +61,55 @@ const Dashboard = () => {
           title: chart.title || "Chart",
           type: chart.chartType || "line",
           categories: formattedLabels,
-          datasets: processedDatasets
+          datasets: processedDatasets,
         };
       });
 
       // Separate charts by type
-      const lineCharts = processedCharts.filter(chart => chart.type === "line");
-      const columnCharts = processedCharts.filter(chart => chart.type === "column" || chart.type === "bar");
+      const lineCharts = processedCharts.filter(
+        (chart) => chart.type === "line"
+      );
+      const columnCharts = processedCharts.filter(
+        (chart) => chart.type === "column" || chart.type === "bar"
+      );
 
       return {
-        categories: columnCharts[0]?.categories || lineCharts[0]?.categories || [],
+        categories:
+          columnCharts[0]?.categories || lineCharts[0]?.categories || [],
         columnSeries: columnCharts[0]?.datasets || [],
         lineSeries: lineCharts[0]?.datasets || [],
         charts: processedCharts,
         lineCharts,
-        columnCharts
+        columnCharts,
       };
-
     } catch (error) {
       console.error("Error processing chart data:", error);
       return {
         categories: [],
         columnSeries: [],
         lineSeries: [],
-        charts: []
+        charts: [],
       };
     }
   }, [data, isLoading, error]);
 
   if (isLoading) return <div>Loading dashboard...</div>;
   if (error) return <div>Error loading dashboard data</div>;
-;
   return (
     <DashboardLayout title="" role="admin">
       <Content isDashboard={true}>
-        <InfoCards data={data.data&&data.data.infoBoxes} />
+        <InfoCards data={data.data && data.data.infoBoxes} />
         <div className="panel-main">
           <div className="panel-charts">
             {chartData.columnCharts.length > 0 && (
               <ColumnChart
                 series={chartData.columnCharts[0].datasets}
-                categories={chartData.columnCharts[0].categories.map(cat => getTypeText(cat))}
-                colors={chartData.columnCharts[0].datasets.map(ds => ds.color)}
+                categories={chartData.columnCharts[0].categories.map((cat) =>
+                  getTypeText(cat)
+                )}
+                colors={chartData.columnCharts[0].datasets.map(
+                  (ds) => ds.color
+                )}
                 title="توزیع املاک بر اساس نوع"
               />
             )}

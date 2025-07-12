@@ -1,5 +1,5 @@
-import PropertyDialog from "@/components/AdminPanel/PropertyDialog/PropertyDialog";
-import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
+import PropertyDialog from "@/components/templates/AdminPanel/PropertyDialog/PropertyDialog";
+import { PropertyTable } from "@/components/templates/AdminPanel/PropertyTable/PropertyTable";
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
 import Home from "@/components/module/Home/Home";
 import Content from "@/components/module/UserPanel/Content/Content";
@@ -19,7 +19,7 @@ import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import styles from "../../styles/comment.module.css";
-import CommentDetail from "@/components/AdminPanel/CommentDetail/CommentDetail";
+import CommentDetail from "@/components/templates/AdminPanel/CommentDetail/CommentDetail";
 import CommentModal from "@/components/templates/HomeDetail/Comment/CommentModal";
 import Tab from "@/components/module/Tab/Tab";
 import TabItem from "@/components/module/Tab/TabItem";

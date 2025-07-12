@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import styles from "../../styles/Homes.module.css";
-import db from "../../data/db.json";
 import FilterHome from "@/components/templates/Homes/FilterHome/FilterHome";
 import Tab from "@/components/module/Tab/Tab";
 import TabItem from "@/components/module/Tab/TabItem";
@@ -46,47 +45,50 @@ const Homes = ({
     const initialMaxPrice = query.maxPrice || "";
     const initialRoomCount = query.room ? parseInt(query.room) : 0;
     const initialWithPhoto = query.withPhoto === "true";
-    const initialHouseType = query.houseType 
-      ? Array.isArray(query.houseType) 
-        ? query.houseType 
+    const initialHouseType = query.houseType
+      ? Array.isArray(query.houseType)
+        ? query.houseType
         : [query.houseType]
       : [];
-  
+
     setMinPrice(initialMinPrice);
     setMaxPrice(initialMaxPrice);
     setRoomCount(initialRoomCount);
     setWithPhoto(initialWithPhoto);
     setHouseType(initialHouseType);
-  
+
     // Calculate filter count based on query params
     const count = calculateFilterCount(query);
     setFilterCount(count);
-  
     // Handle compare state
-    const fromCompare = router.query.from === "compare";
-    if (!fromCompare && isCompare) {
-      toggleCompare();
-    }
-  }, [router.query]);
   
+      
+      const fromCompare = router.query.from == "compare";
+    
+      if (!fromCompare && isCompare) {
+        toggleCompare();
+      }
+    
+  },[router.query]);
+
   const calculateFilterCount = (queryParams) => {
     let count = 0;
-  
+
     // Price filters
     if (queryParams.minPrice) count++;
     if (queryParams.maxPrice) count++;
-  
+
     // Room count filter
     if (queryParams.room && parseInt(queryParams.room) > 0) count++;
-  
+
     // Other filters
     if (queryParams.withPhoto === "true") count++;
     if (queryParams.houseType) {
-      count += Array.isArray(queryParams.houseType) 
-        ? queryParams.houseType.length 
+      count += Array.isArray(queryParams.houseType)
+        ? queryParams.houseType.length
         : 1;
     }
-  
+
     return count;
   };
 
@@ -236,7 +238,7 @@ const Homes = ({
           )}
         </div>
 
-        {houses.length>0 && totalPage > page && (
+        {houses.length > 0 && totalPage > page && (
           <div className={styles.btnMore}>
             <button
               className={`btn btn-primary ${styles.btnMore__btn}`}

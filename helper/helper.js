@@ -84,3 +84,34 @@ export const toastOption = {
   position: "top-center",
   hideProgressBar: true,
 };
+
+export const calculateTimeRemaining = (visitDate, visitTime) => {
+  const now = new Date()
+
+  // For demo purposes, let's create a future date based on the property ID
+  const visitDateTime = new Date()
+
+  // Create different future times for different properties
+  if (visitDate.includes("۲۶")) {
+    visitDateTime.setDate(visitDateTime.getDate() + 2) // 2 days from now
+    visitDateTime.setHours(14, 0, 0, 0) // 2 PM
+  } else if (visitDate.includes("۲۸")) {
+    visitDateTime.setDate(visitDateTime.getDate() + 4) // 4 days from now
+    visitDateTime.setHours(10, 30, 0, 0) // 10:30 AM
+  } else {
+    visitDateTime.setHours(visitDateTime.getHours() + 3) // 3 hours from now
+  }
+
+  const timeDiff = visitDateTime.getTime() - now.getTime()
+
+  if (timeDiff <= 0) return null
+
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+
+  if (days > 0) return `${days} روز و ${hours} ساعت`
+  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`
+  return `${minutes} دقیقه`
+}
+export const toEnglish = (str) => str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));

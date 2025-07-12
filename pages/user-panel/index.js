@@ -88,6 +88,7 @@ const Dashboard = () => {
                 height={100}
                 className="profile-pic"
                 onChange={(e) => setProfileImage(e.target.files[0])}
+                priority
               />
             </div>
             <label htmlFor="profile-image" className="change-image-btn">
@@ -194,6 +195,7 @@ const Dashboard = () => {
                     type="email"
                     className={`input ${errors.email ? "input-error" : ""}`}
                     placeholder="ایمیل را وارد کنید"
+                    autoComplete="username"
                     defaultValue={data?.user?.email}
                     {...register("email", {
                       required: "ایمیل الزامی است",
@@ -215,6 +217,7 @@ const Dashboard = () => {
                   <input
                     type="password"
                     className={`input ${errors.password ? "input-error" : ""}`}
+                    autoComplete="current-password"
                     placeholder="رمز عبور جدید را وارد کنید"
                     {...register("password", {
                       minLength: {

@@ -1,5 +1,5 @@
-import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
-import VisitCard from "@/components/AdminPanel/VisitCard/VisitCard";
+import { PropertyTable } from "@/components/templates/AdminPanel/PropertyTable/PropertyTable";
+import VisitCard from "@/components/templates/AdminPanel/VisitCard/VisitCard";
 import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
 import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import Content from "@/components/module/UserPanel/Content/Content";

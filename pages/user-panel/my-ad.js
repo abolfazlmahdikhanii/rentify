@@ -1,3 +1,5 @@
+import PropertyDialog from "@/components/templates/AdminPanel/PropertyDialog/PropertyDialog";
+import EditPropertyModal from "@/components/module/EditProperty/EditPropertyModal";
 import Home from "@/components/module/Home/Home";
 import Pagination from "@/components/module/Pagination/Pagination";
 import Content from "@/components/module/UserPanel/Content/Content";
@@ -5,10 +7,10 @@ import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { toastOption } from "@/helper/helper";
 import { getCookie } from "cookies-next";
-import Image from "next/image";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import { CompareContext } from "@/context/CompareContext";
 
 const fetcher = () =>
   fetch("http://localhost:5000/api/properties/user-ads", {
@@ -24,7 +26,10 @@ const MyAdvertisement = () => {
   const { data, isLoading, mutate } = useSWR("user-ad", fetcher);
   const [currentPage, setCurrentPage] = useState(1);
   const [newData, setNewData] = useState([]);
-
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [adDetail, setAdDetail] = useState(null);
+  const [editingProperty, setEditingProperty] = useState(false);
+  
   const removeAdHandler = (id) => {
     fetch(`http://localhost:5000/api/properties/${id}`, {
       method: "DELETE",
@@ -59,11 +64,15 @@ const MyAdvertisement = () => {
                   isBorder={true}
                   isMyAd={true}
                   remove={() => removeAdHandler(home.id)}
+                  onDetail={() => {
+                    setAdDetail(home);
+                    setIsOpenDialog(true);
+                  }}
                 />
               ))}
             </div>
             <Pagination
-              totalPages={Math.ceil(data.length / 10)}
+              totalPages={Math.ceil(data.data.length / 10)}
               currentPage={currentPage}
               onPageChange={onPageChange}
             />
@@ -75,9 +84,26 @@ const MyAdvertisement = () => {
             subtitle="روزانه هزاران مشتری در رنتی‌فای در جستجوی ملک مورد نظرشان هستند"
             btnText="ثبت آگهی ‌رایگان"
             type="add"
+            
           />
         )}
       </Content>
+      {isOpenDialog && (
+        <PropertyDialog
+          isOpen={isOpenDialog}
+          onClose={() => setIsOpenDialog(false)}
+          property={adDetail}
+          setEditingProperty={setEditingProperty}
+        />
+      )}
+      {editingProperty && (
+        <EditPropertyModal
+          isOpen={editingProperty ? true : false}
+          propertyData={editingProperty}
+          onClose={() => setEditingProperty(null)}
+          onSuccess={mutate}
+        />
+      )}
     </DashboardLayout>
   );
 };

@@ -1,5 +1,5 @@
-import PropertyDialog from "@/components/AdminPanel/PropertyDialog/PropertyDialog";
-import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
+import PropertyDialog from "@/components/templates/AdminPanel/PropertyDialog/PropertyDialog";
+import { PropertyTable } from "@/components/templates/AdminPanel/PropertyTable/PropertyTable";
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
 import Home from "@/components/module/Home/Home";
 import Content from "@/components/module/UserPanel/Content/Content";
@@ -21,7 +21,7 @@ const fetcher = () =>
   }).then((res) => res.json());
 const Users = () => {
   const { data, isLoading, mutate } = useSWR("users", fetcher);
-  
+
   const [newUsers, setNewUsers] = useState([]);
 
   const [isOpenChangeDialog, setIsOpenChangeDialog] = useState(false);
@@ -30,7 +30,6 @@ const Users = () => {
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [userRole, setUserRole] = useState("user");
- 
 
   const deleteUser = (id) => {
     fetch(`http://localhost:5000/api/auth/admin/users/${id}`, {

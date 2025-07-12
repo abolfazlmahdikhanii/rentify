@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./herobg.module.css";
 import DropDown from "../DropDown/DropDown";
-import db from "../../../../data/db.json";
 import { useRouter } from "next/router";
 
 const HeroBg = ({ children,houses }) => {

@@ -1,5 +1,5 @@
-import PropertyDialog from "@/components/AdminPanel/PropertyDialog/PropertyDialog";
-import { PropertyTable } from "@/components/AdminPanel/PropertyTable/PropertyTable";
+import PropertyDialog from "@/components/templates/AdminPanel/PropertyDialog/PropertyDialog";
+import { PropertyTable } from "@/components/templates/AdminPanel/PropertyTable/PropertyTable";
 import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
 import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
@@ -13,7 +13,6 @@ import { getDate, toastOption } from "@/helper/helper";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
-import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
@@ -24,7 +23,7 @@ const fetcher = () =>
   }).then((res) => res.json());
 const MyAdvertisement = () => {
   const { data, isLoading, mutate } = useSWR("admin-ad", fetcher);
-  const {user}=useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const [tabActive, setTabActive] = useState("all");
   const [newAd, setNewAd] = useState([]);
   const [adDetail, setAdDetail] = useState(null);
@@ -105,8 +104,8 @@ const MyAdvertisement = () => {
 
     if (filterType === "all") {
       setFilterAd(data.data);
-    }else if(filterType==="me"){
-      setFilterAd(data.data.filter((item) => item.user_id ===user?.id));
+    } else if (filterType === "me") {
+      setFilterAd(data.data.filter((item) => item.user_id === user?.id));
     } else {
       setFilterAd(data.data.filter((item) => item.status === filterType));
     }
@@ -233,7 +232,7 @@ const MyAdvertisement = () => {
       </Content>
       {editingProperty && (
         <EditPropertyModal
-        isOpen={editingProperty?true:false}
+          isOpen={editingProperty ? true : false}
           propertyData={editingProperty}
           onClose={() => setEditingProperty(null)}
           onSuccess={mutate}
