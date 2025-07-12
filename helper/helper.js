@@ -63,7 +63,7 @@ export const getStatusText = (status) => {
   }
 };
 export const getTypeText = (type) => {
-  const newType=type.toString().toLowerCase()
+  const newType = type.toString().toLowerCase();
   console.log(newType);
   switch (newType) {
     case "villa":
@@ -85,33 +85,65 @@ export const toastOption = {
   hideProgressBar: true,
 };
 
-export const calculateTimeRemaining = (visitDate, visitTime) => {
+export const toEnglish = (str) =>
+  str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+// Main function - Calculates time remaining from backend date
+ const calculateTimeRemainingCore = (visitDate, visitTime) => {
   const now = new Date()
-
-  // For demo purposes, let's create a future date based on the property ID
-  const visitDateTime = new Date()
-
-  // Create different future times for different properties
-  if (visitDate.includes("۲۶")) {
-    visitDateTime.setDate(visitDateTime.getDate() + 2) // 2 days from now
-    visitDateTime.setHours(14, 0, 0, 0) // 2 PM
-  } else if (visitDate.includes("۲۸")) {
-    visitDateTime.setDate(visitDateTime.getDate() + 4) // 4 days from now
-    visitDateTime.setHours(10, 30, 0, 0) // 10:30 AM
-  } else {
-    visitDateTime.setHours(visitDateTime.getHours() + 3) // 3 hours from now
+  
+  try {
+    if (!visitDate) {
+      throw new Error('Visit date is required')
+    }
+    
+    const dateObj = new Date(visitDate)
+    let visitDateTime
+    
+    if (visitTime) {
+      // Use the provided time
+      const cleanTime = toEnglish(visitTime)
+      const timeParts = cleanTime.split(':')
+      const hours = parseInt(timeParts[0])
+      const minutes = parseInt(timeParts[1])
+      const seconds = timeParts[2] ? parseInt(timeParts[2]) : 0
+      
+      visitDateTime = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), hours, minutes, seconds)
+    } else {
+      visitDateTime = new Date(visitDate)
+    }
+    
+    if (isNaN(visitDateTime.getTime())) {
+      throw new Error('Invalid date/time')
+    }
+    
+    const timeDiff = visitDateTime.getTime() - now.getTime()
+    
+    if (timeDiff <= 0) return null
+    
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
+    
+    return { days, hours, minutes, seconds, timeDiff }
+  } catch (error) {
+    console.error('Error calculating time remaining:', error)
+    return null
   }
-
-  const timeDiff = visitDateTime.getTime() - now.getTime()
-
-  if (timeDiff <= 0) return null
-
-  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
-
-  if (days > 0) return `${days} روز و ${hours} ساعت`
-  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`
-  return `${minutes} دقیقه`
 }
-export const toEnglish = (str) => str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+export const calculateTimeRemaining = (visitDate, visitTime) => {
+ const result = calculateTimeRemainingCore(visitDate, visitTime)
+  
+  if (!result) return 'زمان بازدید گذشته است'
+  
+  const { days, hours, minutes, seconds } = result
+  
+  if (days > 7) return `${days} روز باقی مانده`
+  if (days > 0) return `${days} روز، ${hours} ساعت و ${minutes} دقیقه`
+  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`
+  if (minutes > 5) return `${minutes} دقیقه`
+  if (minutes > 0) return `${minutes} دقیقه و ${seconds} ثانیه`
+  return `${seconds} ثانیه`
+}
+
+
