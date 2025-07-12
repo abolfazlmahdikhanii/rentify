@@ -99,7 +99,7 @@ const PropertyDialog = ({
                   </div>
                   <div className={styles.specItem}>
                     <Bath className={styles.iconSmall} />
-                    <span>{property?.bathrooms?1:0} حمام</span>
+                    <span>{property?.bathrooms?`1 حمام`:"حمام ندارد"}</span>
                   </div>
                   <div className={styles.specItem}>
                     <Ruler className={styles.iconSmall} />
@@ -107,7 +107,7 @@ const PropertyDialog = ({
                   </div>
                   <div className={styles.specItem}>
                     <Car className={styles.iconSmall} />
-                    <span>{property?.parking ? 1 : 0} پارکینگ</span>
+                    <span>{property?.parking ? `1 پارکینگ` : "پارکینگ ندارد"}</span>
                   </div>
                 </div>
 

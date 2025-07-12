@@ -43,9 +43,11 @@ const Home = ({
   useEffect(() => {
     if (isMyVisit) {
       if (status === "approved" && visitDate && visitTime) {
+        
         const updateTime = () => {
-          const remaining = calculateTimeRemaining(visitDate, visitTime);
-          setTimeRemaining(remaining);
+        
+          setTimeRemaining(calculateTimeRemaining(visitDate, visitTime));
+          
         };
 
         updateTime();
@@ -110,7 +112,7 @@ const Home = ({
     onCancel(id);
     setShowMenu(false);
   };
-  console.log(isMyAd);
+  
   return (
     <div
       className={`${styles.cardParents} ${
