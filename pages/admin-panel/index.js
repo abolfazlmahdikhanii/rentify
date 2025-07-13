@@ -7,6 +7,7 @@ import { getTypeText } from "@/helper/helper";
 import { getCookie } from "cookies-next";
 import React, { useMemo } from "react";
 import useSWR from "swr";
+import { PanelProvider } from "@/context/PanelContext";
 
 const fetcher = (url) =>
   fetch(url, {
@@ -45,7 +46,6 @@ const Dashboard = () => {
 
         // Format labels
         const formattedLabels = labels.map((label) => {
-       
           return label;
         });
 
@@ -96,34 +96,36 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading dashboard...</div>;
   if (error) return <div>Error loading dashboard data</div>;
   return (
-    <DashboardLayout title="" role="admin">
-      <Content isDashboard={true}>
-        <InfoCards data={data.data && data.data.infoBoxes} />
-        <div className="panel-main">
-          <div className="panel-charts">
-            {chartData.columnCharts.length > 0 && (
-              <ColumnChart
-                series={chartData.columnCharts[0].datasets}
-                categories={chartData.columnCharts[0].categories.map((cat) =>
-                  getTypeText(cat)
-                )}
-                colors={chartData.columnCharts[0].datasets.map(
-                  (ds) => ds.color
-                )}
-                title="توزیع املاک بر اساس نوع"
-              />
-            )}
-            {chartData.lineCharts.length > 0 && (
-              <LineChart
-                series={chartData.lineCharts[0].datasets}
-                categories={chartData.lineCharts[0].categories}
-                title="اگهی های ایجاد شده در ماه های اخیر"
-              />
-            )}
+    
+      <DashboardLayout title="" role="admin">
+        <Content isDashboard={true}>
+          <InfoCards data={data.data && data.data.infoBoxes} />
+          <div className="panel-main">
+            <div className="panel-charts">
+              {chartData.columnCharts.length > 0 && (
+                <ColumnChart
+                  series={chartData.columnCharts[0].datasets}
+                  categories={chartData.columnCharts[0].categories.map((cat) =>
+                    getTypeText(cat)
+                  )}
+                  colors={chartData.columnCharts[0].datasets.map(
+                    (ds) => ds.color
+                  )}
+                  title="توزیع املاک بر اساس نوع"
+                />
+              )}
+              {chartData.lineCharts.length > 0 && (
+                <LineChart
+                  series={chartData.lineCharts[0].datasets}
+                  categories={chartData.lineCharts[0].categories}
+                  title="اگهی های ایجاد شده در ماه های اخیر"
+                />
+              )}
+            </div>
           </div>
-        </div>
-      </Content>
-    </DashboardLayout>
+        </Content>
+      </DashboardLayout>
+    
   );
 };
 
