@@ -1,6 +1,8 @@
+import { toastOption } from "@/helper/helper";
 import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
@@ -36,14 +38,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
   const logoutHandler = () => {
+    route.replace("/");
+    toast.success("با موفقیت خارج شدید", toastOption);
     setUser(null);
     setLoading(false);
+
     deleteCookie("token");
-    route.replace("/");
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, setUser,logoutHandler }}>
+    <AuthContext.Provider value={{ user, loading, setUser, logoutHandler }}>
       {children}
     </AuthContext.Provider>
   );
