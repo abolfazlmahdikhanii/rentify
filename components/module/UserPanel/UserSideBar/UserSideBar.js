@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "../../SideBar/SideBar.module.css";
 import Link from "next/link";
+import { PanelContext } from "@/context/PanelContext";
 const UserSideBar = ({isActiveHandler}) => {
+  const {showModalLogout} = useContext(PanelContext);
   return (
     <nav className={styles.navigation}>
       <Link
@@ -150,7 +152,7 @@ const UserSideBar = ({isActiveHandler}) => {
         </svg>
         <span>مقایسه املاک</span>
       </Link>
-      <p className={`${styles.navItem} ${styles.logout}`}>
+      <p className={`${styles.navItem} ${styles.logout}`} onClick={showModalLogout}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
