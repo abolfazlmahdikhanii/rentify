@@ -3,12 +3,13 @@ import "@/styles/globals.css";
 import "@/styles/panel.css";
 import "@/styles/admin-panel.css";
 import { useRouter } from "next/router";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
 import Footer from "@/components/module/Footer/Footer";
 import { CompareProvider } from "@/context/CompareContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { PanelProvider } from "@/context/PanelContext";
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const noFooterRoutes = ["user-panel", "register-step", "login"];
@@ -27,12 +28,14 @@ export default function App({ Component, pageProps }) {
       shallowRouting
     >
       <AuthProvider>
-        <CompareProvider>
-          {shouldShowHeader && <Header />}
-          <Component {...pageProps} />
-          {shouldShowFooter && <Footer />}
-          <ToastContainer />
-        </CompareProvider>
+        <PanelProvider>
+          <CompareProvider>
+            {shouldShowHeader && <Header />}
+            <Component {...pageProps} />
+            {shouldShowFooter && <Footer />}
+            <ToastContainer />
+          </CompareProvider>
+        </PanelProvider>
       </AuthProvider>
     </ProgressProvider>
   );
