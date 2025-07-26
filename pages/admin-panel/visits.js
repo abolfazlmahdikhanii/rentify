@@ -8,6 +8,8 @@ import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { getCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
+import { toast } from "react-toastify";
+import { toastOption } from "@/helper/helper";
 
 const fetcher = () =>
   fetch("http://localhost:5000/api/visits/admin", {
@@ -20,10 +22,13 @@ const Visits = () => {
   const [newVisits, setNewVisits] = useState([]);
   const [tabActive, setTabActive] = useState("all");
   useEffect(() => {
-    if (data) {
+    if (data&&tabActive==="all") {
       filterContent("all");
     }
-  }, [data]);
+    else if(data&&tabActive!=="all"){
+      filterContent(tabActive);
+    }
+  }, [data,tabActive]);
   const filterContent = (filterType) => {
     if (!data) return;
 
@@ -32,6 +37,33 @@ const Visits = () => {
     } else {
       setNewVisits(data.filter((item) => item.status === filterType));
     }
+  };
+  const changeStatusHandler = (id, status) => {
+    fetch(`http://localhost:5000/api/visits/${id}/status`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        mutate()
+          // After mutation, re-filter the content based on current tab
+          filterContent(tabActive);
+          toast.success(
+            `ملک با موفقیت ${status === "approved" ? "تایید" : "رد"} شد`,
+            toastOption
+          );
+        
+      })
+      .catch((err) => {
+        toast.error(
+          `خطا در ${status === "approved" ? "تایید" : "رد"} ملک`,
+          toastOption
+        );
+      });
   };
   return (
     <DashboardLayout title="بازدیدها" role="admin">
@@ -66,10 +98,14 @@ const Visits = () => {
         />
       </TabPanel>
       <Content type="tbl">
-        {newVisits?.length ? (
+        {newVisits && newVisits?.length ? (
           <>
-            {newVisits.map((visit) => (
-              <VisitCard key={visit.id} {...visit} />
+            {newVisits?.map((visit) => (
+              <VisitCard
+                key={visit.id}
+                {...visit}
+                onChangeStatus={changeStatusHandler}
+              />
             ))}
           </>
         ) : (
