@@ -103,7 +103,7 @@ const PropertyDialog = ({
                   </div>
                   <div className={styles.specItem}>
                     <Ruler className={styles.iconSmall} />
-                    <span>{property?.building_area} متر مربع</span>
+                    <span>{property?.building_area}</span>
                   </div>
                   <div className={styles.specItem}>
                     <Car className={styles.iconSmall} />
