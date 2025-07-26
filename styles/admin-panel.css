@@ -43,8 +43,7 @@
   background: #fef3c7;
   color: #92400e;
   border-color: #fbbf24;
-   left: 4.7rem !important;
-
+  left: 4.7rem !important;
 }
 
 .status__approved {
@@ -141,6 +140,7 @@
   transition: all 300ms;
   cursor: pointer;
   color: #3f3f46;
+  user-select: none;
   /*text-zinc-700*/
   padding: 8px 10px;
   /*px-3py-3(assuming1unit=4px)*/
