@@ -1,6 +1,5 @@
-
-.container{
-    padding-bottom: 3rem;
+.container {
+  padding-bottom: 3rem;
 }
 .card {
   width: 100%;
@@ -12,10 +11,9 @@
   overflow: hidden;
   height: 320px;
   position: relative;
-  
 }
-.cardActive{
-    height: 100%;
+.cardActive {
+  height: 100%;
 }
 /* هدر */
 .header {
@@ -40,7 +38,15 @@
   font-size: 12px;
   font-weight: 600;
 }
-
+.statusWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+.statusWrapper p{
+  cursor: pointer;
+}
 /* بخش‌ها */
 .section {
   padding: 24px;
@@ -165,12 +171,12 @@
   display: flex;
   gap: 40px;
 }
-.moreBtn{
-position: absolute;
-bottom: 7px;
-left: 50%;
-transform: translateX(-50%);
-cursor: pointer;
+.moreBtn {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
   background: #f1f5f9;
   padding: 6px 8px;
   border-radius: 8px;
@@ -180,14 +186,13 @@ cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
   display: grid;
   place-items: center;
-
 }
-.moreBtnActive{
-position: static;
-margin-top: 7px;
-max-width: max-content;
-margin-bottom: 15px;
-margin-inline: auto;
+.moreBtnActive {
+  position: static;
+  margin-top: 7px;
+  max-width: max-content;
+  margin-bottom: 15px;
+  margin-inline: auto;
 }
 /* اطلاعات شخص */
 .personInfo {
@@ -204,7 +209,7 @@ margin-inline: auto;
   flex-shrink: 0;
   overflow: hidden;
 }
-.avatar img{
+.avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;

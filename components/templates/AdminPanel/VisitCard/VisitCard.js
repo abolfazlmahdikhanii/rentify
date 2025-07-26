@@ -3,6 +3,7 @@ import {
   ChevronDown,
   ChevronUp,
   Clock,
+  EllipsisVerticalIcon,
   Mail,
   MapPin,
   Phone,
@@ -30,9 +31,11 @@ export default function VisitCard({
   image,
   id,
   ejare_price,
-  
+  onChangeStatus,
 }) {
   const [isMore, setIsMore] = useState(false);
+  const [isShowDropdown, setIsShowDropdown] = useState(false);
+
   return (
     <div className={styles.container}>
       <div className={`${styles.card} ${isMore ? styles.cardActive : ""}`}>
@@ -41,7 +44,45 @@ export default function VisitCard({
           <div className={styles.visitId}>
             کد بازدید: RNT-{id.toString().padStart(3, 0)}
           </div>
-          <div className={styles.statusBadge}>{getStatusText(status)}</div>
+          <div className={styles.statusWrapper}>
+            <div className={styles.statusBadge}>{getStatusText(status)}</div>
+            {status === "pending" && (
+              <>
+                <p
+                  className=""
+                  onClick={() => {
+                    setIsShowDropdown((prev) => !prev);
+                  }}
+                >
+                  <EllipsisVerticalIcon size={14} />
+                </p>
+                <ul
+                  className={`drop-down--tbl shadow-light
+              ${isShowDropdown ? "active" : ""}`}
+                  onMouseLeave={() => setIsShowDropdown(false)}
+                >
+                  <li
+                    className="drop-down__btn"
+                    onClick={() => {
+                      onChangeStatus(id, "approved");
+                      setIsShowDropdown(false);
+                    }}
+                  >
+                    تایید
+                  </li>
+                  <li
+                    className="drop-down__btn"
+                    onClick={() => {
+                      onChangeStatus(id, "rejected");
+                      setIsShowDropdown(false);
+                    }}
+                  >
+                    رد
+                  </li>
+                </ul>
+              </>
+            )}
+          </div>
         </div>
 
         {/* جزئیات ملک */}
@@ -163,7 +204,7 @@ export default function VisitCard({
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>یادداشت‌ها</h3>
           <div className={styles.notesBox}>
-           {message||"هیچ یادداشتی برای این بازدید وجود ندارد"}
+            {message || "هیچ یادداشتی برای این بازدید وجود ندارد"}
           </div>
         </div>
         <div
