@@ -14,11 +14,11 @@
 }
 .sectionText {
   color: #595c61;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
 }
 .sectionText span {
   color: #353739;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   margin-right: 0.3rem;
 }
 .sectionIcon {
@@ -26,7 +26,7 @@
   align-items: center;
   gap: 1rem;
   color: #353739;
-  font-size: 1.8rem;
+  font-size: 1.7rem;
 }
 .btnMore {
   display: flex;
