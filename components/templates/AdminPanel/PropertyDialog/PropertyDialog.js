@@ -25,6 +25,7 @@ import {
   Trees,
   Shield,
   Mail,
+  ChevronLeft,
 } from "lucide-react";
 import { getDate, getStatusText } from "@/helper/helper";
 import { AuthContext } from "@/context/AuthContext";
@@ -45,7 +46,7 @@ const PropertyDialog = ({
   const [isLoading, setIsLoading] = useState(null);
   const [reason, setReason] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+  const [isMore, setIsMore] = useState(false);
   return (
     <>
       {/* Backdrop */}
@@ -95,11 +96,11 @@ const PropertyDialog = ({
                 <div className={styles.specsGrid}>
                   <div className={styles.specItem}>
                     <Bed className={styles.iconSmall} />
-                    <span>{property?.bedrooms||1} </span>
+                    <span>{property?.bedrooms || 1} </span>
                   </div>
                   <div className={styles.specItem}>
                     <Bath className={styles.iconSmall} />
-                    <span>{property?.bathrooms?`1 حمام`:"حمام ندارد"}</span>
+                    <span>{property?.bathrooms ? `1 حمام` : "حمام ندارد"}</span>
                   </div>
                   <div className={styles.specItem}>
                     <Ruler className={styles.iconSmall} />
@@ -107,7 +108,9 @@ const PropertyDialog = ({
                   </div>
                   <div className={styles.specItem}>
                     <Car className={styles.iconSmall} />
-                    <span>{property?.parking ? `1 پارکینگ` : "پارکینگ ندارد"}</span>
+                    <span>
+                      {property?.parking ? `1 پارکینگ` : "پارکینگ ندارد"}
+                    </span>
                   </div>
                 </div>
 
@@ -130,7 +133,19 @@ const PropertyDialog = ({
                 <h4 className={styles.cardTitle}>توضیحات</h4>
               </div>
               <div className={styles.cardContent}>
-                <p className={styles.description}>{property?.description}</p>
+                <p
+                  className={`${styles.description} ${
+                    isMore ? styles.expend : styles.lowest
+                  }`}
+                >
+                  {property?.description}
+                </p>
+                <p
+                  className={styles.btnMore}
+                  onClick={() => setIsMore((prev) => !prev)}
+                >
+                  {!isMore ? "مشاهده بیشتر" : "بستن"} <ChevronLeft size={15} />
+                </p>
               </div>
             </div>
 
@@ -179,7 +194,7 @@ const PropertyDialog = ({
                       </div>
                     )}
                     {property?.author_email && (
-                       <div className={styles.ownerContact}>
+                      <div className={styles.ownerContact}>
                         <Mail className={styles.iconSmall} />
                         {property.author_email}
                       </div>

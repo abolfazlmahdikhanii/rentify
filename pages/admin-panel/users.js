@@ -13,14 +13,15 @@ import React, { useEffect, useState } from "react";
 import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("http://localhost:5000/api/auth/admin/users", {
+  fetch("https://rentify-app.liara.run/api/auth/admin/users", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const Users = () => {
-  const { data, isLoading, mutate } = useSWR("users", fetcher);
+  const { data, isLoading, mutate, error } = useSWR("users", fetcher);
 
   const [newUsers, setNewUsers] = useState([]);
 
@@ -32,7 +33,7 @@ const Users = () => {
   const [userRole, setUserRole] = useState("user");
 
   const deleteUser = (id) => {
-    fetch(`http://localhost:5000/api/auth/admin/users/${id}`, {
+    fetch(`https://rentify-app.liara.run/api/auth/admin/users/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getCookie("token")}` },
     })
@@ -52,7 +53,7 @@ const Users = () => {
   };
   const changeUserRoleHandler = (id, role) => {
     const newRole = role === "user" ? "admin" : "user";
-    fetch(`http://localhost:5000/api/auth/admin/change-role/${id}`, {
+    fetch(`https://rentify-app.liara.run/api/auth/admin/change-role/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -81,6 +82,8 @@ const Users = () => {
         toast.error("خطا در تغییر کاربر", toastOption);
       });
   };
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="کاربران" role="admin">
       <Content type="tbl">

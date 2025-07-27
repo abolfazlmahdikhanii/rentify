@@ -13,7 +13,7 @@ import ShareModal from "@/components/templates/HomeDetail/ShareModal/ShareModal"
 const HomePageDetail = ({ houses }) => {
   const { query } = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [isShowShareModal,setIsShowShareModal]=useState(false)
+  const [isShowShareModal, setIsShowShareModal] = useState(false);
   return (
     <div className="detail-bg">
       <div className="container">
@@ -21,7 +21,10 @@ const HomePageDetail = ({ houses }) => {
         <section className={styles.detailGrid}>
           {/* info */}
           <div className={styles.detailInfo}>
-            <TitleInfo data={houses[0]} onShare={()=>setIsShowShareModal(true)}/>
+            <TitleInfo
+              data={houses[0]}
+              onShare={() => setIsShowShareModal(true)}
+            />
             <GeneralInfo
               data={houses[0]?.details}
               locationDetail={houses[0]?.location}
@@ -29,7 +32,7 @@ const HomePageDetail = ({ houses }) => {
             />
             <PayService />
             <Offer />
-            <CommentWrapper comments={houses[0]?.comments}/>
+            <CommentWrapper comments={houses[0]?.comments} />
           </div>
 
           {/* call */}
@@ -52,13 +55,13 @@ const HomePageDetail = ({ houses }) => {
           approvedTime={houses[0].visitTimes}
         />
       )}
-      {
-        isShowShareModal&&<ShareModal
-        isOpen={isShowShareModal}
-        onClose={()=>setIsShowShareModal(false)}
-        title="اشتراک گذاری ملک"
+      {isShowShareModal && (
+        <ShareModal
+          isOpen={isShowShareModal}
+          onClose={() => setIsShowShareModal(false)}
+          title="اشتراک گذاری ملک"
         />
-      }
+      )}
     </div>
   );
 };
@@ -68,10 +71,13 @@ export async function getServerSideProps(context) {
   const cookies = context.req.cookies || {};
   const token = cookies.token;
 
-  const res = await fetch(`http://localhost:5000/api/properties/${params.id}`, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const res = await fetch(
+    `https://rentify-app.liara.run/api/properties/${params.id}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   if (res.status !== 200) {
     return {
       notFound: true,

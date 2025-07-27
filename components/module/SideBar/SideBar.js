@@ -6,18 +6,19 @@ import Link from "next/link";
 import { AuthContext } from "@/context/AuthContext";
 import AdminSideBar from "../AdminPanel/AdminSideBar/AdminSideBar";
 import UserSideBar from "../UserPanel/UserSideBar/UserSideBar";
+import Loader from "../Loader/Loader";
 
 const SideBar = () => {
   const routes = useRouter();
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
   const isActiveHandler = (route) => {
-    
     const splidtedRoute = routes.pathname.split("/");
     if (splidtedRoute[splidtedRoute.length - 1] === route) return true;
     else false;
   };
-  
+  if (loading) return <Loader />;
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.profileHeader}>

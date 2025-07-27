@@ -9,10 +9,7 @@ import LoanBanner from "@/components/templates/index/LoanBanner/LoanBanner";
 import { getCookie } from "cookies-next";
 import useSWR from "swr";
 
-
 const Page = ({ houses }) => {
-
-
   return (
     <div className={styles.main}>
       <HeroBg houses={houses} />
@@ -50,11 +47,11 @@ export async function getServerSideProps(context) {
   const cookies = context.req.cookies || {};
   const token = cookies.token;
 
-
-  const res = await fetch("http://localhost:5000/api/properties", {
+  const res = await fetch("https://rentify-app.liara.run/api/properties", {
     headers: { Authorization: `Bearer ${token}` },
   });
 
+  if (!res) return false;
   const data = await res.json();
   return { props: { houses: data.data || [] } };
 }

@@ -55,7 +55,7 @@ const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
       visitTime: selectedTime,
       visitDate: formatNewDate(date),
     };
-    fetch(`http://localhost:5000/api/visits/${id}`, {
+    fetch(`https://rentify-app.liara.run/api/visits/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

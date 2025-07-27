@@ -1,5 +1,6 @@
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
 import Home from "@/components/module/Home/Home";
+import Loader from "@/components/module/Loader/Loader";
 import MapSelect from "@/components/module/Map/MapSelect";
 import Pagination from "@/components/module/Pagination/Pagination";
 import Content from "@/components/module/UserPanel/Content/Content";
@@ -16,7 +17,7 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 
 const fetcher = () =>
-  fetch("http://localhost:5000/api/visits/user", {
+  fetch("https://rentify-app.liara.run/api/visits/user", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -26,24 +27,23 @@ const fetcher = () =>
     if (res.ok) return res.json();
   });
 const MyAdvertisement = () => {
-  const { data, isLoading, mutate } = useSWR("user-visit", fetcher);
+  const { data, isLoading, mutate,error } = useSWR("user-visit", fetcher);
   const [currentPage, setCurrentPage] = useState(1);
   const [newData, setNewData] = useState([]);
   const [position, setPosition] = useState(null);
   const [isShowModal, setIsShowModal] = useState(false);
-const [selectedVisit, setSelectedVisit] = useState(null);
+  const [selectedVisit, setSelectedVisit] = useState(null);
   const [isOpenCancelModal, setIsOpenCancelModal] = useState(false);
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
   const cancelVisitHandler = (id) => {
-    fetch(`http://localhost:5000/api/visits/${id}/cancel`, {
+    fetch(`https://rentify-app.liara.run/api/visits/${id}/cancel`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${getCookie("token")}`,
       },
-    
     })
       .then((res) => {
         if (res.status !== 200) {
@@ -67,7 +67,8 @@ const [selectedVisit, setSelectedVisit] = useState(null);
   const paginationData = data
     ? data.slice((currentPage - 1) * 9, currentPage * 9)
     : [];
-  
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="بازدیدهای من">
       <Content>
@@ -131,7 +132,6 @@ const [selectedVisit, setSelectedVisit] = useState(null);
           question="آیا از لغو بازدید این ملک اطمینان دارید؟ این عملیات قابل بازگشت نیست."
           onConfirm={() => cancelVisitHandler(selectedVisit.id)}
           btnText="لغو بازدید"
-        
         />
       )}
     </DashboardLayout>

@@ -22,12 +22,15 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      const response = await fetch("http://localhost:5000/api/auth/get-me", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://rentify-app.liara.run/api/auth/get-me",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
 
       setUser(data.user);
@@ -38,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
   const logoutHandler = () => {
+    setLoading(true)
     route.replace("/");
     toast.success("با موفقیت خارج شدید", toastOption);
     setUser(null);

@@ -25,13 +25,14 @@ import Tab from "@/components/module/Tab/Tab";
 import TabItem from "@/components/module/Tab/TabItem";
 import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
 import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
+import Loader from "@/components/module/Loader/Loader";
 const fetcher = () =>
-  fetch("http://localhost:5000/api/comments/admin", {
+  fetch("https://rentify-app.liara.run/api/comments/admin", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const Comments = () => {
-  const { data, isLoading, mutate } = useSWR("comments", fetcher);
+  const { data, isLoading, mutate ,error} = useSWR("comments", fetcher);
   const [page, setPage] = useState(1);
   const [newComment, setNewComment] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
@@ -77,7 +78,7 @@ const Comments = () => {
     const newComment = {
       content: replyContent,
     };
-    fetch(`http://localhost:5000/api/comments/${commentId}`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${commentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +104,7 @@ const Comments = () => {
   };
 
   const approveCommentHandler = (id) => {
-    fetch(`http://localhost:5000/api/comments/${id}/approve`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${id}/approve`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -126,7 +127,7 @@ const Comments = () => {
       });
   };
   const rejectCommentHandler = (id) => {
-    fetch(`http://localhost:5000/api/comments/${id}/reject`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${id}/reject`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -150,7 +151,7 @@ const Comments = () => {
       });
   };
   const handleDelete = (commentId) => {
-    fetch(`http://localhost:5000/api/comments/${commentId}`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -174,6 +175,9 @@ const Comments = () => {
         console.log(err);
       });
   };
+
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="نظرات" role="admin">
       <TabPanel>

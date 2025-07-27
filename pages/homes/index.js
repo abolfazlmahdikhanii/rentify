@@ -61,15 +61,13 @@ const Homes = ({
     const count = calculateFilterCount(query);
     setFilterCount(count);
     // Handle compare state
-  
-      
-      const fromCompare = router.query.from == "compare";
-    
-      if (!fromCompare && isCompare) {
-        toggleCompare();
-      }
-    
-  },[router.query]);
+
+    const fromCompare = router.query.from == "compare";
+
+    if (!fromCompare && isCompare) {
+      toggleCompare();
+    }
+  }, [router.query]);
 
   const calculateFilterCount = (queryParams) => {
     let count = 0;
@@ -299,10 +297,10 @@ export async function getServerSideProps(context) {
   const limit = 8 * page; // 8 items per page
   const start = (page - 1) * limit;
   // Get total count
-  const countRes = await fetch("http://localhost:5000/api/properties");
+  const countRes = await fetch("https://rentify-app.liara.run/api/properties");
   const total = await countRes.json();
 
-  let url = `http://localhost:5000/api/properties?limit=${limit}`;
+  let url = `https://rentify-app.liara.run/api/properties?limit=${limit}`;
 
   // Add sorting if specified
   if (query.sort === "newest") {

@@ -23,7 +23,7 @@ const fetcher = () =>
     res.json()
   );
 const fetcherEquipment = () =>
-  fetch("http://localhost:5000/api/properties/equipment").then((res) =>
+  fetch("https://rentify-app.liara.run/api/properties/equipment").then((res) =>
     res.json()
   );
 
@@ -223,7 +223,7 @@ export default function RegisterStep() {
     try {
       setIsLoading(true);
       // Transform data to match backend expectations
-      
+
       const backendData = {
         houseType: data.houseType,
         title: data.title || fillTitle(),
@@ -250,14 +250,17 @@ export default function RegisterStep() {
         longitude: position?.[0],
       };
 
-      const response = await fetch(`http://localhost:5000/api/properties`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getCookie("token")}`,
-        },
-        body: JSON.stringify(backendData),
-      });
+      const response = await fetch(
+        `https://rentify-app.liara.run/api/properties`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getCookie("token")}`,
+          },
+          body: JSON.stringify(backendData),
+        }
+      );
 
       const result = await response.json();
 
@@ -306,7 +309,7 @@ export default function RegisterStep() {
       console.log("FormData contents:");
 
       const response = await fetch(
-        `http://localhost:5000/api/properties/${propertyId}/images`,
+        `https://rentify-app.liara.run/api/properties/${propertyId}/images`,
         {
           method: "POST",
           headers: {

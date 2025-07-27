@@ -3,11 +3,13 @@ import { InfoCards } from "@/components/templates/AdminPanel/InfoCard/InfoCard";
 import LineChart from "@/components/templates/AdminPanel/LineChart/LineChart";
 import Content from "@/components/module/UserPanel/Content/Content";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
-import { getTypeText } from "@/helper/helper";
+import { getTypeText, toastOption } from "@/helper/helper";
 import { getCookie } from "cookies-next";
 import React, { useMemo } from "react";
 import useSWR from "swr";
 import { PanelProvider } from "@/context/PanelContext";
+import Loader from "@/components/module/Loader/Loader";
+import { toast } from "react-toastify";
 
 const fetcher = (url) =>
   fetch(url, {
@@ -20,7 +22,7 @@ const fetcher = (url) =>
 
 const Dashboard = () => {
   const { data, error, isLoading } = useSWR(
-    "http://localhost:5000/api/properties/admin-panel",
+    "https://rentify-app.liara.run/api/properties/admin-panel",
     fetcher
   );
 
@@ -93,39 +95,37 @@ const Dashboard = () => {
     }
   }, [data, isLoading, error]);
 
-  if (isLoading) return <div>Loading dashboard...</div>;
-  if (error) return <div>Error loading dashboard data</div>;
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
-    
-      <DashboardLayout title="" role="admin">
-        <Content isDashboard={true}>
-          <InfoCards data={data.data && data.data.infoBoxes} />
-          <div className="panel-main">
-            <div className="panel-charts">
-              {chartData.columnCharts.length > 0 && (
-                <ColumnChart
-                  series={chartData.columnCharts[0].datasets}
-                  categories={chartData.columnCharts[0].categories.map((cat) =>
-                    getTypeText(cat)
-                  )}
-                  colors={chartData.columnCharts[0].datasets.map(
-                    (ds) => ds.color
-                  )}
-                  title="توزیع املاک بر اساس نوع"
-                />
-              )}
-              {chartData.lineCharts.length > 0 && (
-                <LineChart
-                  series={chartData.lineCharts[0].datasets}
-                  categories={chartData.lineCharts[0].categories}
-                  title="اگهی های ایجاد شده در ماه های اخیر"
-                />
-              )}
-            </div>
+    <DashboardLayout title="" role="admin">
+      <Content isDashboard={true}>
+        <InfoCards data={data.data && data.data.infoBoxes} />
+        <div className="panel-main">
+          <div className="panel-charts">
+            {chartData.columnCharts.length > 0 && (
+              <ColumnChart
+                series={chartData.columnCharts[0].datasets}
+                categories={chartData.columnCharts[0].categories.map((cat) =>
+                  getTypeText(cat)
+                )}
+                colors={chartData.columnCharts[0].datasets.map(
+                  (ds) => ds.color
+                )}
+                title="توزیع املاک بر اساس نوع"
+              />
+            )}
+            {chartData.lineCharts.length > 0 && (
+              <LineChart
+                series={chartData.lineCharts[0].datasets}
+                categories={chartData.lineCharts[0].categories}
+                title="اگهی های ایجاد شده در ماه های اخیر"
+              />
+            )}
           </div>
-        </Content>
-      </DashboardLayout>
-    
+        </div>
+      </Content>
+    </DashboardLayout>
   );
 };
 

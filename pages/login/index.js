@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { getCookie, setCookie } from "cookies-next";
 import { timeFormat, toastOption } from "@/helper/helper";
 import { toast } from "react-toastify";
+import Loader from "@/components/module/Loader/Loader";
 
 export default function LoginPage() {
   const route = useRouter();
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [countdown, setCountdown] = useState(180);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [isVerify, setIsVerify] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     watch,
@@ -135,7 +137,7 @@ export default function LoginPage() {
       setOtp(true);
       const email = getValues("email");
       setCountdown(180);
-      fetch("http://localhost:5000/api/auth/send-otp", {
+      fetch("https://rentify-app.liara.run/api/auth/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,9 +161,9 @@ export default function LoginPage() {
       toast.error("لطفا ایمیل معتبر وارد کنید", toastOption);
     }
   };
-
   const verifyOtp = () => {
-    fetch("http://localhost:5000/api/auth/verify-otp", {
+    setIsLoading(true);
+    fetch("https://rentify-app.liara.run/api/auth/verify-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -169,40 +171,48 @@ export default function LoginPage() {
       body: JSON.stringify({
         email: getValues("email"),
         otp: otpValue,
-        // name: getValues("name"),
-        // lastName: getValues("last_name"),
-        // agencyName: getValues("agency_name"),
       }),
     })
       .then((response) => {
-        if (!response.status===400) {
+        if (response.status === 400) {
           setOtp(false);
           setOtpValue("");
           toast.error("کد تایید منقضی شده است", toastOption);
+          return Promise.reject("Expired OTP");
         }
-         if(response.ok){
-          return response.json();
+        if (!response.ok) {
+          return Promise.reject("Request failed");
         }
+        return response.json();
       })
       .then((data) => {
-        if (data.success) {
-          console.log("OTP verified:", data);
+        if (data?.success) {
+          setIsLoading(false);
+          const cookieOptions = {
+            maxAge: data.needsProfileSetup ? 60 * 60 * 24 : 60 * 60 * 24 * 7,
+          };
+          setCookie("token", data.token, cookieOptions);
+
           if (!data.needsProfileSetup) {
-            setCookie("token", data.token, { maxAge: 60 * 60 * 24 * 7 });
             route.replace("/");
           } else {
-            setCookie("token", data.token, { maxAge: 60 * 60 * 24 });
             setIsVerify(true);
           }
+        } else {
+          throw new Error("OTP verification failed");
         }
       })
       .catch((error) => {
-        toast.error("کد تایید اشتباه است", toastOption);
+        setIsLoading(false);
+        if (!error?.includes("Expired OTP")) {
+          toast.error("کد تایید اشتباه است", toastOption);
+        }
+    
       });
   };
   const resendOtp = () => {
     const email = getValues("email");
-    fetch("http://localhost:5000/api/auth/send-otp", {
+    fetch("https://rentify-app.liara.run/api/auth/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -232,7 +242,7 @@ export default function LoginPage() {
         lastName: getValues("last_name"),
         agencyName: getValues("agency_name"),
       };
-      fetch("http://localhost:5000/api/auth/setup-profile", {
+      fetch("https://rentify-app.liara.run/api/auth/setup-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -255,6 +265,7 @@ export default function LoginPage() {
         });
     }
   };
+  if (isLoading) return <Loader />;
   return (
     <div className={styles.containerRow}>
       <div className={styles.rightSection}>

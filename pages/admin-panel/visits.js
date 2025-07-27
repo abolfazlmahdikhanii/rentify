@@ -10,25 +10,25 @@ import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
+import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("http://localhost:5000/api/visits/admin", {
+  fetch("https://rentify-app.liara.run/api/visits/admin", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const Visits = () => {
-  const { data, isLoading, mutate } = useSWR("visits", fetcher);
+  const { data, isLoading, mutate, error } = useSWR("visits", fetcher);
   const [page, setPage] = useState(1);
   const [newVisits, setNewVisits] = useState([]);
   const [tabActive, setTabActive] = useState("all");
   useEffect(() => {
-    if (data&&tabActive==="all") {
+    if (data && tabActive === "all") {
       filterContent("all");
-    }
-    else if(data&&tabActive!=="all"){
+    } else if (data && tabActive !== "all") {
       filterContent(tabActive);
     }
-  }, [data,tabActive]);
+  }, [data, tabActive]);
   const filterContent = (filterType) => {
     if (!data) return;
 
@@ -39,7 +39,7 @@ const Visits = () => {
     }
   };
   const changeStatusHandler = (id, status) => {
-    fetch(`http://localhost:5000/api/visits/${id}/status`, {
+    fetch(`https://rentify-app.liara.run/api/visits/${id}/status`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -49,14 +49,13 @@ const Visits = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        mutate()
-          // After mutation, re-filter the content based on current tab
-          filterContent(tabActive);
-          toast.success(
-            `ملک با موفقیت ${status === "approved" ? "تایید" : "رد"} شد`,
-            toastOption
-          );
-        
+        mutate();
+        // After mutation, re-filter the content based on current tab
+        filterContent(tabActive);
+        toast.success(
+          `ملک با موفقیت ${status === "approved" ? "تایید" : "رد"} شد`,
+          toastOption
+        );
       })
       .catch((err) => {
         toast.error(
@@ -65,6 +64,8 @@ const Visits = () => {
         );
       });
   };
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="بازدیدها" role="admin">
       <TabPanel>

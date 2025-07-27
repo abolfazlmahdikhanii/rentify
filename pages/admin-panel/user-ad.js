@@ -15,14 +15,15 @@ import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("http://localhost:5000/api/properties/admin-ads", {
+  fetch("https://rentify-app.liara.run/api/properties/admin-ads", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const MyAdvertisement = () => {
-  const { data, isLoading, mutate } = useSWR("admin-ad", fetcher);
+  const { data, isLoading, mutate, error } = useSWR("admin-ad", fetcher);
   const { user } = useContext(AuthContext);
   const [tabActive, setTabActive] = useState("all");
   const [newAd, setNewAd] = useState([]);
@@ -39,7 +40,7 @@ const MyAdvertisement = () => {
     }
   }, [data]);
   const approveHandler = (id) => {
-    fetch(`http://localhost:5000/api/properties/${id}/approve`, {
+    fetch(`https://rentify-app.liara.run/api/properties/${id}/approve`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${getCookie("token")}` },
     })
@@ -56,7 +57,7 @@ const MyAdvertisement = () => {
       });
   };
   const rejectHandler = (id, reason) => {
-    fetch(`http://localhost:5000/api/properties/${id}/reject`, {
+    fetch(`https://rentify-app.liara.run/api/properties/${id}/reject`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -80,23 +81,55 @@ const MyAdvertisement = () => {
     setPropertyDetail(data);
     setIsOpenDeleteModal(true);
   };
-  const deleteProperty = (id) => {
-    fetch(`http://localhost:5000/api/properties/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${getCookie("token")}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsOpenDeleteModal(false);
-        setIsOpenDialog(false);
-        setPropertyDetail(null);
-        mutate("admin-ad");
-        toast.success("ملک با موفقیت حذف شد", toastOption);
-      })
-      .catch((err) => {
-        setIsOpenDeleteModal(false);
-        toast.error("خطا در حذف ملک", toastOption);
-      });
+  const deleteProperty = async (id) => {
+    try {
+      const response = await fetch(
+        `https://rentify-app.liara.run/api/properties/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${getCookie("token")}` },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message ||
+            `Failed to delete property: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+
+      // Close modals/dialogs and reset state
+      setIsOpenDeleteModal(false);
+      setIsOpenDialog(false);
+      setPropertyDetail(null);
+
+      // Revalidate data
+      mutate("admin-ad");
+
+      // Show success feedback ONLY if we reach here (no errors)
+      toast.success("ملک با موفقیت حذف شد", toastOption);
+
+      return data; // Optional: return the response data
+    } catch (err) {
+      console.error("Delete property error:", err); // Log actual error for debugging
+
+      // Close modal on error but keep other states
+      setIsOpenDeleteModal(false);
+
+      // Show user-friendly error message
+      toast.error(
+        err.message?.includes("Failed to delete") ||
+          err.message?.includes("حذف")
+          ? "خطا در حذف ملک. لطفاً دوباره تلاش کنید"
+          : "خطا در اتصال به سرور",
+        toastOption
+      );
+
+      throw err; // Re-throw the error if you need to handle it further up the chain
+    }
   };
 
   const filterContent = (filterType) => {
@@ -110,6 +143,9 @@ const MyAdvertisement = () => {
       setFilterAd(data.data.filter((item) => item.status === filterType));
     }
   };
+
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده" role="admin">
       <TabPanel>

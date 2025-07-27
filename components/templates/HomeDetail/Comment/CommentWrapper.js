@@ -26,12 +26,12 @@ export default function CommentWrapper({ comments }) {
   const [editComment, setEditComment] = useState(null);
   const [editContent, setEditContent] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteComment,setDeleteComment]=useState(null)
+  const [deleteComment, setDeleteComment] = useState(null);
   const [propertyComment, setPropertyComment] = useState(comments || []);
   const { query } = useRouter();
 
   const getComments = () => {
-    fetch(`http://localhost:5000/api/comments/property/${query.id}`, {
+    fetch(`https://rentify-app.liara.run/api/comments/property/${query.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function CommentWrapper({ comments }) {
       propertyId: query.id,
       content,
     };
-    fetch("http://localhost:5000/api/comments", {
+    fetch("https://rentify-app.liara.run/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export default function CommentWrapper({ comments }) {
       .then((res) => {
         if (res.status === 201) {
           toast.success("کامنت با موفقیت ثبت شد", toastOption);
-          getComments()
+          getComments();
         } else if (res.status === 500) {
           toast.error("ثبت کامنت با مشکل مواجه شد", toastOption);
         }
@@ -86,7 +86,7 @@ export default function CommentWrapper({ comments }) {
     const newComment = {
       content: replyContent,
     };
-    fetch(`http://localhost:5000/api/comments/${parentId}`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${parentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,13 +97,12 @@ export default function CommentWrapper({ comments }) {
       .then((res) => {
         if (res.status === 201) {
           toast.success("پاسخ کامنت با موفقیت ثبت شد", toastOption);
-    
         } else if (res.status === 500) {
           toast.error("ثبت پاسخ کامنت با مشکل مواجه شد", toastOption);
         }
       })
       .then((data) => {
-              getComments()
+        getComments();
         setReplyContent("");
         setReplyingTo(null);
       })
@@ -120,7 +119,7 @@ export default function CommentWrapper({ comments }) {
     const updateComment = {
       content: editContent,
     };
-    fetch(`http://localhost:5000/api/comments/${parentId}`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${parentId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -146,7 +145,7 @@ export default function CommentWrapper({ comments }) {
       });
   };
   const handleDelete = (commentId) => {
-    fetch(`http://localhost:5000/api/comments/${commentId}`, {
+    fetch(`https://rentify-app.liara.run/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -156,14 +155,17 @@ export default function CommentWrapper({ comments }) {
       .then((res) => {
         if (res.status === 201) {
           toast.success(" کامنت با موفقیت حذف شد", toastOption);
-        } else if (res.status === 500||res.status===404||res.status===403) {
+        } else if (
+          res.status === 500 ||
+          res.status === 404 ||
+          res.status === 403
+        ) {
           toast.error("حذف  کامنت با مشکل مواجه شد", toastOption);
         }
       })
       .then((data) => {
-        setDeleteComment(null)
+        setDeleteComment(null);
         getComments();
-       
       })
       .catch((err) => {
         toast.error("حذف کامنت با مشکل مواجه شد", toastOption);
@@ -186,39 +188,42 @@ export default function CommentWrapper({ comments }) {
       </div>
 
       <div className={styles.commentsList}>
-        {propertyComment.length?propertyComment.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            replyingTo={replyingTo}
-            setReplyingTo={setReplyingTo}
-            replyContent={replyContent}
-            setReplyContent={setReplyContent}
-            handleAddReply={handleAddReply}
-            editComment={editComment}
-            setEditComment={setEditComment}
-            editContent={editContent}
-            setEditContent={setEditContent}
-            handleEdit={handleEdit}
-            setDeleteComment={setDeleteComment}
-          />
-        )):<EmptyItem title="هنوز نظری ثبت نشده است" />}
+        {propertyComment.length ? (
+          propertyComment.map((comment) => (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              replyingTo={replyingTo}
+              setReplyingTo={setReplyingTo}
+              replyContent={replyContent}
+              setReplyContent={setReplyContent}
+              handleAddReply={handleAddReply}
+              editComment={editComment}
+              setEditComment={setEditComment}
+              editContent={editContent}
+              setEditContent={setEditContent}
+              handleEdit={handleEdit}
+              setDeleteComment={setDeleteComment}
+            />
+          ))
+        ) : (
+          <EmptyItem title="هنوز نظری ثبت نشده است" />
+        )}
       </div>
       <CommentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddComment}
       />
-       {deleteComment && (
-          <DeleteModal
-            isOpen={deleteComment?true:false}
-            onClose={() => setDeleteComment(null)}
-            title="حذف کامنت"
-            question="آیا از تغییر نقش این کاربر اطمینان دارید؟ این عملیات قابل بازگشت نیست."
-            onConfirm={() => handleDelete(deleteComment)}
-            
-          />
-        )}
+      {deleteComment && (
+        <DeleteModal
+          isOpen={deleteComment ? true : false}
+          onClose={() => setDeleteComment(null)}
+          title="حذف کامنت"
+          question="آیا از تغییر نقش این کاربر اطمینان دارید؟ این عملیات قابل بازگشت نیست."
+          onConfirm={() => handleDelete(deleteComment)}
+        />
+      )}
     </div>
   );
 }

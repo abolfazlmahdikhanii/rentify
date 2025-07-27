@@ -9,8 +9,10 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
+import Loader from "@/components/module/Loader/Loader";
+import { toast } from "react-toastify";
 const fetcher = () =>
-  fetch("http://localhost:5000/api/favorites", {
+  fetch("https://rentify-app.liara.run/api/favorites", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +22,7 @@ const fetcher = () =>
     if (res.ok) return res.json();
   });
 const compare = () => {
-  const { data = [], isLoading, mutate } = useSWR("favorites", fetcher);
+  const { data = [], isLoading, mutate,error } = useSWR("favorites", fetcher);
   const {
     isCompare,
     toggleCompare,
@@ -28,14 +30,15 @@ const compare = () => {
     compare,
     isShowCompare,
     showCompare,
-    compareHandler
+    compareHandler,
   } = useContext(CompareContext);
   const router = useRouter();
   useEffect(() => {
     toggleCompare();
-    
   }, []);
   const displayedHomes = data?.slice(0, 6) || [];
+    if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <>
       {!isShowCompare ? (
@@ -65,7 +68,7 @@ const compare = () => {
                 btnText="جستجو کنید"
                 type="search"
                 isAction={true}
-                action={()=>compareHandler()}
+                action={() => compareHandler()}
               />
             )}
 

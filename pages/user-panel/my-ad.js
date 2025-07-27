@@ -11,9 +11,10 @@ import React, { use, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { CompareContext } from "@/context/CompareContext";
+import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("http://localhost:5000/api/properties/user-ads", {
+  fetch("https://rentify-app.liara.run/api/properties/user-ads", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -23,15 +24,15 @@ const fetcher = () =>
     if (res.ok) return res.json();
   });
 const MyAdvertisement = () => {
-  const { data, isLoading, mutate } = useSWR("user-ad", fetcher);
+  const { data, isLoading, mutate, error } = useSWR("user-ad", fetcher);
   const [currentPage, setCurrentPage] = useState(1);
   const [newData, setNewData] = useState([]);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [adDetail, setAdDetail] = useState(null);
   const [editingProperty, setEditingProperty] = useState(false);
-  
+
   const removeAdHandler = (id) => {
-    fetch(`http://localhost:5000/api/properties/${id}`, {
+    fetch(`https://rentify-app.liara.run/api/properties/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -51,6 +52,9 @@ const MyAdvertisement = () => {
   const paginationData = data?.data
     ? data.data.slice((currentPage - 1) * 9, currentPage * 9)
     : [];
+
+  if (isLoading) return <Loader />;
+  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="آگهی‌های من">
       <Content>
@@ -84,7 +88,6 @@ const MyAdvertisement = () => {
             subtitle="روزانه هزاران مشتری در رنتی‌فای در جستجوی ملک مورد نظرشان هستند"
             btnText="ثبت آگهی ‌رایگان"
             type="add"
-            
           />
         )}
       </Content>

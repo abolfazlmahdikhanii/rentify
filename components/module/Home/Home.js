@@ -34,7 +34,7 @@ const Home = ({
   longitude,
   onShowMap,
   onCancel,
-  onDetail
+  onDetail,
 }) => {
   const [isFav, setIsFav] = useState(is_favorite);
   const [timeRemaining, setTimeRemaining] = useState(null);
@@ -43,11 +43,8 @@ const Home = ({
   useEffect(() => {
     if (isMyVisit) {
       if (status === "approved" && visitDate && visitTime) {
-        
         const updateTime = () => {
-        
           setTimeRemaining(calculateTimeRemaining(visitDate, visitTime));
-          
         };
 
         updateTime();
@@ -72,7 +69,7 @@ const Home = ({
   }
 
   const likeHomeHandler = (id) => {
-    fetch(`http://localhost:5000/api/favorites`, {
+    fetch(`https://rentify-app.liara.run/api/favorites`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +86,7 @@ const Home = ({
     });
   };
   const removeLikeHomeHandler = (id) => {
-    fetch(`http://localhost:5000/api/favorites/${id}`, {
+    fetch(`https://rentify-app.liara.run/api/favorites/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -112,7 +109,7 @@ const Home = ({
     onCancel(id);
     setShowMenu(false);
   };
-  
+
   return (
     <div
       className={`${styles.cardParents} ${
@@ -331,14 +328,14 @@ const Home = ({
           </button>
         </div>
       )}
-      {isMyAd&&
+      {isMyAd && (
         <div className={styles.actions}>
           <button className={styles.secondaryBtn} onClick={onDetail}>
             <Eye className={styles.eyeIcon} />
             جزئیات
           </button>
         </div>
-      }
+      )}
       {(isMyAd || isMyCompare) && (
         <button className={styles.removeBtn} onClick={remove}>
           <svg
@@ -374,7 +371,7 @@ const StatusBadge = ({ status, pos = "right" }) => {
     pending: {
       text: "در انتظار تأیید",
       iconColor: "#F4B740",
-      bgClass: pos==="left"?"status__pending-3":"status__pending",
+      bgClass: pos === "left" ? "status__pending-3" : "status__pending",
     },
     approved: {
       text: "تأیید شده",
