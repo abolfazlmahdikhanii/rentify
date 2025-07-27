@@ -1,40 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Rentify - Property Rental Platform
 
-## Getting Started
+![Rentify Logo](https://via.placeholder.com/150) <!-- Replace with your actual logo -->
 
-First, run the development server:
+Rentify is a modern property rental platform that connects landlords with potential tenants, providing an easy-to-use interface for listing, searching, and managing rental properties.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **User Authentication**
+  - Secure signup/login for landlords and tenants
+  - Role-based access control
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- **Property Management**
+  - Create, edit, and delete property listings
+  - Upload multiple property images using ImgKit
+  - Detailed property information (location, amenities, pricing)
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- **Search & Filters**
+  - Advanced search functionality
+  - Filter by price range, location, property type
+  - Saved searches and favorites
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- **Messaging System**
+  - Direct communication between landlords and tenants
+  - Notification system
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Admin Dashboard**
+  - Manage users and listings
+  - Analytics and reporting
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
+- **Framework**: Next.js (App Router)
+- **Styling**: CSS Modules
+- **State Management**: Context API
+- **Form Handling**: React Hook Form
+- **UI Components**: Custom components with CSS Modules
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### Backend
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MySQL
+- **Authentication**: JWT
+- **Image Storage**: ImgKit
