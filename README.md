@@ -1,6 +1,6 @@
 # Rentify - Property Rental Platform
 
-![Rentify Logo](https://via.placeholder.com/150) <!-- Replace with your actual logo -->
+
 
 Rentify is a modern property rental platform that connects landlords with potential tenants, providing an easy-to-use interface for listing, searching, and managing rental properties.
 
