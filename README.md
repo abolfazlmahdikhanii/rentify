@@ -1,5 +1,6 @@
 # Rentify - Property Rental Platform
 
+**➡️ [Live Demo](https://rentify-iota-ochre.vercel.app/)**
 
 
 Rentify is a modern property rental platform that connects landlords with potential tenants, providing an easy-to-use interface for listing, searching, and managing rental properties.
