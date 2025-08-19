@@ -22,7 +22,7 @@ const fetcher = (url) =>
 
 const Dashboard = () => {
   const { data, error, isLoading } = useSWR(
-    "https://rentify-app.liara.run/api/properties/admin-panel",
+    "https://rentify-project.ir/api/properties/admin-panel",
     fetcher
   );
 

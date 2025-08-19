@@ -72,7 +72,7 @@ export async function getServerSideProps(context) {
   const token = cookies.token;
 
   const res = await fetch(
-    `https://rentify-app.liara.run/api/properties/${params.id}`,
+    `https://rentify-project.ir/api/properties/${params.id}`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },

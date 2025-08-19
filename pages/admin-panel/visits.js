@@ -13,7 +13,7 @@ import { toastOption } from "@/helper/helper";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/visits/admin", {
+  fetch("https://rentify-project.ir/api/visits/admin", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -39,7 +39,7 @@ const Visits = () => {
     }
   };
   const changeStatusHandler = (id, status) => {
-    fetch(`https://rentify-app.liara.run/api/visits/${id}/status`, {
+    fetch(`https://rentify-project.ir/api/visits/${id}/status`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,

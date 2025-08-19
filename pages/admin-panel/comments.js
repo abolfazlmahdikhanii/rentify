@@ -27,12 +27,12 @@ import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
 import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import Loader from "@/components/module/Loader/Loader";
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/comments/admin", {
+  fetch("https://rentify-project.ir/api/comments/admin", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const Comments = () => {
-  const { data, isLoading, mutate ,error} = useSWR("comments", fetcher);
+  const { data, isLoading, mutate, error } = useSWR("comments", fetcher);
   const [page, setPage] = useState(1);
   const [newComment, setNewComment] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
@@ -78,7 +78,7 @@ const Comments = () => {
     const newComment = {
       content: replyContent,
     };
-    fetch(`https://rentify-app.liara.run/api/comments/${commentId}`, {
+    fetch(`https://rentify-project.ir/api/comments/${commentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const Comments = () => {
   };
 
   const approveCommentHandler = (id) => {
-    fetch(`https://rentify-app.liara.run/api/comments/${id}/approve`, {
+    fetch(`https://rentify-project.ir/api/comments/${id}/approve`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -127,7 +127,7 @@ const Comments = () => {
       });
   };
   const rejectCommentHandler = (id) => {
-    fetch(`https://rentify-app.liara.run/api/comments/${id}/reject`, {
+    fetch(`https://rentify-project.ir/api/comments/${id}/reject`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -151,7 +151,7 @@ const Comments = () => {
       });
   };
   const handleDelete = (commentId) => {
-    fetch(`https://rentify-app.liara.run/api/comments/${commentId}`, {
+    fetch(`https://rentify-project.ir/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

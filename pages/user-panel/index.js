@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/auth/info", {
+  fetch("https://rentify-project.ir/api/auth/info", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +20,7 @@ const fetcher = () =>
     },
   }).then((res) => res.json());
 const Dashboard = () => {
-  const { data, isLoading,error } = useSWR("info", fetcher);
+  const { data, isLoading, error } = useSWR("info", fetcher);
 
   const [profileImage, setProfileImage] = useState("");
   const {
@@ -53,7 +53,7 @@ const Dashboard = () => {
   const onSubmit = async (formData) => {
     try {
       const response = await fetch(
-        "https://rentify-app.liara.run/api/auth/complete-profile",
+        "https://rentify-project.ir/api/auth/complete-profile",
         {
           method: "POST",
           headers: {
@@ -80,7 +80,7 @@ const Dashboard = () => {
     }
   };
 
-    if (isLoading) return <Loader />;
+  if (isLoading) return <Loader />;
   if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <>

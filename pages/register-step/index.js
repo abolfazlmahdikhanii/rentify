@@ -23,7 +23,7 @@ const fetcher = () =>
     res.json()
   );
 const fetcherEquipment = () =>
-  fetch("https://rentify-app.liara.run/api/properties/equipment").then((res) =>
+  fetch("https://rentify-project.ir/api/properties/equipment").then((res) =>
     res.json()
   );
 
@@ -251,7 +251,7 @@ export default function RegisterStep() {
       };
 
       const response = await fetch(
-        `https://rentify-app.liara.run/api/properties`,
+        `https://rentify-project.ir/api/properties`,
         {
           method: "POST",
           headers: {
@@ -309,7 +309,7 @@ export default function RegisterStep() {
       console.log("FormData contents:");
 
       const response = await fetch(
-        `https://rentify-app.liara.run/api/properties/${propertyId}/images`,
+        `https://rentify-project.ir/api/properties/${propertyId}/images`,
         {
           method: "POST",
           headers: {

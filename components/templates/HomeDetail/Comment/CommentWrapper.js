@@ -31,7 +31,7 @@ export default function CommentWrapper({ comments }) {
   const { query } = useRouter();
 
   const getComments = () => {
-    fetch(`https://rentify-app.liara.run/api/comments/property/${query.id}`, {
+    fetch(`https://rentify-project.ir/api/comments/property/${query.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function CommentWrapper({ comments }) {
       propertyId: query.id,
       content,
     };
-    fetch("https://rentify-app.liara.run/api/comments", {
+    fetch("https://rentify-project.ir/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export default function CommentWrapper({ comments }) {
     const newComment = {
       content: replyContent,
     };
-    fetch(`https://rentify-app.liara.run/api/comments/${parentId}`, {
+    fetch(`https://rentify-project.ir/api/comments/${parentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export default function CommentWrapper({ comments }) {
     const updateComment = {
       content: editContent,
     };
-    fetch(`https://rentify-app.liara.run/api/comments/${parentId}`, {
+    fetch(`https://rentify-project.ir/api/comments/${parentId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ export default function CommentWrapper({ comments }) {
       });
   };
   const handleDelete = (commentId) => {
-    fetch(`https://rentify-app.liara.run/api/comments/${commentId}`, {
+    fetch(`https://rentify-project.ir/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

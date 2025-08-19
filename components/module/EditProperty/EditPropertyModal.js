@@ -153,7 +153,7 @@ export default function EditPropertyModal({
   const fetchEquipment = async () => {
     try {
       const response = await fetch(
-        "https://rentify-app.liara.run/api/properties/equipment"
+        "https://rentify-project.ir/api/properties/equipment"
       );
       const data = await response.json();
       setEquipment(data.data || []);
@@ -280,7 +280,7 @@ export default function EditPropertyModal({
       };
 
       const response = await fetch(
-        `https://rentify-app.liara.run/api/properties/${propertyData.id}`,
+        `https://rentify-project.ir/api/properties/${propertyData.id}`,
         {
           method: "PUT",
           headers: {
@@ -360,7 +360,7 @@ export default function EditPropertyModal({
       );
 
       const response = await fetch(
-        `https://rentify-app.liara.run/api/properties/${propertyId}/images`,
+        `https://rentify-project.ir/api/properties/${propertyId}/images`,
         {
           method: "POST",
           headers: {

@@ -16,7 +16,7 @@ import useSWR from "swr";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/auth/admin/users", {
+  fetch("https://rentify-project.ir/api/auth/admin/users", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -33,7 +33,7 @@ const Users = () => {
   const [userRole, setUserRole] = useState("user");
 
   const deleteUser = (id) => {
-    fetch(`https://rentify-app.liara.run/api/auth/admin/users/${id}`, {
+    fetch(`https://rentify-project.ir/api/auth/admin/users/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getCookie("token")}` },
     })
@@ -53,7 +53,7 @@ const Users = () => {
   };
   const changeUserRoleHandler = (id, role) => {
     const newRole = role === "user" ? "admin" : "user";
-    fetch(`https://rentify-app.liara.run/api/auth/admin/change-role/${id}`, {
+    fetch(`https://rentify-project.ir/api/auth/admin/change-role/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

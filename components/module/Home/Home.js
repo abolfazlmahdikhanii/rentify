@@ -69,7 +69,7 @@ const Home = ({
   }
 
   const likeHomeHandler = (id) => {
-    fetch(`https://rentify-app.liara.run/api/favorites`, {
+    fetch(`https://rentify-project.ir/api/favorites`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +86,7 @@ const Home = ({
     });
   };
   const removeLikeHomeHandler = (id) => {
-    fetch(`https://rentify-app.liara.run/api/favorites/${id}`, {
+    fetch(`https://rentify-project.ir/api/favorites/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,

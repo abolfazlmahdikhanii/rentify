@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       const response = await fetch(
-        "https://rentify-app.liara.run/api/auth/get-me",
+        "https://rentify-project.ir/api/auth/get-me",
         {
           method: "GET",
           headers: {
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
   const logoutHandler = () => {
-    setLoading(true)
+    setLoading(true);
     route.replace("/");
     toast.success("با موفقیت خارج شدید", toastOption);
     setUser(null);

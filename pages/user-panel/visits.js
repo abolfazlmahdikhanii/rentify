@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/visits/user", {
+  fetch("https://rentify-project.ir/api/visits/user", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const fetcher = () =>
     if (res.ok) return res.json();
   });
 const MyAdvertisement = () => {
-  const { data, isLoading, mutate,error } = useSWR("user-visit", fetcher);
+  const { data, isLoading, mutate, error } = useSWR("user-visit", fetcher);
   const [currentPage, setCurrentPage] = useState(1);
   const [newData, setNewData] = useState([]);
   const [position, setPosition] = useState(null);
@@ -38,7 +38,7 @@ const MyAdvertisement = () => {
     setCurrentPage(page);
   };
   const cancelVisitHandler = (id) => {
-    fetch(`https://rentify-app.liara.run/api/visits/${id}/cancel`, {
+    fetch(`https://rentify-project.ir/api/visits/${id}/cancel`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

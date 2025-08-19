@@ -137,7 +137,7 @@ export default function LoginPage() {
       setOtp(true);
       const email = getValues("email");
       setCountdown(180);
-      fetch("https://rentify-app.liara.run/api/auth/send-otp", {
+      fetch("https://rentify-project.ir/api/auth/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +163,7 @@ export default function LoginPage() {
   };
   const verifyOtp = () => {
     setIsLoading(true);
-    fetch("https://rentify-app.liara.run/api/auth/verify-otp", {
+    fetch("https://rentify-project.ir/api/auth/verify-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -207,12 +207,11 @@ export default function LoginPage() {
         if (!error?.includes("Expired OTP")) {
           toast.error("کد تایید اشتباه است", toastOption);
         }
-    
       });
   };
   const resendOtp = () => {
     const email = getValues("email");
-    fetch("https://rentify-app.liara.run/api/auth/send-otp", {
+    fetch("https://rentify-project.ir/api/auth/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -242,7 +241,7 @@ export default function LoginPage() {
         lastName: getValues("last_name"),
         agencyName: getValues("agency_name"),
       };
-      fetch("https://rentify-app.liara.run/api/auth/setup-profile", {
+      fetch("https://rentify-project.ir/api/auth/setup-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

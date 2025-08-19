@@ -18,7 +18,7 @@ import useSWR from "swr";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/properties/admin-ads", {
+  fetch("https://rentify-project.ir/api/properties/admin-ads", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -40,7 +40,7 @@ const MyAdvertisement = () => {
     }
   }, [data]);
   const approveHandler = (id) => {
-    fetch(`https://rentify-app.liara.run/api/properties/${id}/approve`, {
+    fetch(`https://rentify-project.ir/api/properties/${id}/approve`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${getCookie("token")}` },
     })
@@ -57,7 +57,7 @@ const MyAdvertisement = () => {
       });
   };
   const rejectHandler = (id, reason) => {
-    fetch(`https://rentify-app.liara.run/api/properties/${id}/reject`, {
+    fetch(`https://rentify-project.ir/api/properties/${id}/reject`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -84,7 +84,7 @@ const MyAdvertisement = () => {
   const deleteProperty = async (id) => {
     try {
       const response = await fetch(
-        `https://rentify-app.liara.run/api/properties/${id}`,
+        `https://rentify-project.ir/api/properties/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${getCookie("token")}` },

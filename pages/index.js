@@ -47,12 +47,13 @@ export async function getServerSideProps(context) {
   const cookies = context.req.cookies || {};
   const token = cookies.token;
 
-  const res = await fetch("https://rentify-app.liara.run/api/properties", {
-    headers: { Authorization: `Bearer ${token}` },
+  const res = await fetch("https://rentify-project.ir/api/properties", {
+    headers: { Authorization: `Bearer ${token}`},
   });
 
-  if (!res) return false;
-  const data = await res.json();
+const data = await res.json();
+console.log(data);
+if (!data.length) return false;
   return { props: { houses: data.data || [] } };
 }
 export default Page;

@@ -297,10 +297,10 @@ export async function getServerSideProps(context) {
   const limit = 8 * page; // 8 items per page
   const start = (page - 1) * limit;
   // Get total count
-  const countRes = await fetch("https://rentify-app.liara.run/api/properties");
+  const countRes = await fetch("https://rentify-project.ir/api/properties");
   const total = await countRes.json();
 
-  let url = `https://rentify-app.liara.run/api/properties?limit=${limit}`;
+  let url = `https://rentify-project.ir/api/properties?limit=${limit}`;
 
   // Add sorting if specified
   if (query.sort === "newest") {

@@ -12,7 +12,7 @@ import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import Loader from "@/components/module/Loader/Loader";
 import { toast } from "react-toastify";
 const fetcher = () =>
-  fetch("https://rentify-app.liara.run/api/favorites", {
+  fetch("https://rentify-project.ir/api/favorites", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +22,7 @@ const fetcher = () =>
     if (res.ok) return res.json();
   });
 const compare = () => {
-  const { data = [], isLoading, mutate,error } = useSWR("favorites", fetcher);
+  const { data = [], isLoading, mutate, error } = useSWR("favorites", fetcher);
   const {
     isCompare,
     toggleCompare,
@@ -37,7 +37,7 @@ const compare = () => {
     toggleCompare();
   }, []);
   const displayedHomes = data?.slice(0, 6) || [];
-    if (isLoading) return <Loader />;
+  if (isLoading) return <Loader />;
   if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <>
