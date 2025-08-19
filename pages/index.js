@@ -50,10 +50,10 @@ export async function getServerSideProps(context) {
   const res = await fetch("https://rentify-project.ir/api/properties", {
     headers: { Authorization: `Bearer ${token}`},
   });
+  if (!res) return ;
 
 const data = await res.json();
-console.log(data);
-if (!data.length) return false;
+
   return { props: { houses: data.data || [] } };
 }
 export default Page;
