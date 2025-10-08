@@ -1,39 +1,54 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Calendar, MapPin, Home, Bath, Car, Heart, Eye, Clock, Map, MoreVertical, X } from "lucide-react"
-import styles from "./user-visit.module.css"
+import { useState, useEffect } from "react";
+import {
+  Calendar,
+  MapPin,
+  Home,
+  Bath,
+  Car,
+  Heart,
+  Eye,
+  Clock,
+  Map,
+  MoreVertical,
+  X,
+} from "lucide-react";
+import styles from "./user-visit.module.css";
+import Image from "next/image";
 
 const calculateTimeRemaining = (visitDate, visitTime) => {
-  const now = new Date()
+  const now = new Date();
 
   // For demo purposes, let's create a future date based on the property ID
-  const visitDateTime = new Date()
+  const visitDateTime = new Date();
 
   // Create different future times for different properties
   if (visitDate.includes("۲۶")) {
-    visitDateTime.setDate(visitDateTime.getDate() + 2) // 2 days from now
-    visitDateTime.setHours(14, 0, 0, 0) // 2 PM
+    visitDateTime.setDate(visitDateTime.getDate() + 2); // 2 days from now
+    visitDateTime.setHours(14, 0, 0, 0); // 2 PM
   } else if (visitDate.includes("۲۸")) {
-    visitDateTime.setDate(visitDateTime.getDate() + 4) // 4 days from now
-    visitDateTime.setHours(10, 30, 0, 0) // 10:30 AM
+    visitDateTime.setDate(visitDateTime.getDate() + 4); // 4 days from now
+    visitDateTime.setHours(10, 30, 0, 0); // 10:30 AM
   } else {
-    visitDateTime.setHours(visitDateTime.getHours() + 3) // 3 hours from now
+    visitDateTime.setHours(visitDateTime.getHours() + 3); // 3 hours from now
   }
 
-  const timeDiff = visitDateTime.getTime() - now.getTime()
+  const timeDiff = visitDateTime.getTime() - now.getTime();
 
-  if (timeDiff <= 0) return null
+  if (timeDiff <= 0) return null;
 
-  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
-  if (days > 0) return `${days} روز و ${hours} ساعت`
-  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`
-  return `${minutes} دقیقه`
-}
- function UserVisitBox({
+  if (days > 0) return `${days} روز و ${hours} ساعت`;
+  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`;
+  return `${minutes} دقیقه`;
+};
+function UserVisitBox({
   property,
   onScheduleVisit,
   onViewDetails,
@@ -42,60 +57,67 @@ const calculateTimeRemaining = (visitDate, visitTime) => {
   onCancelVisit,
   isFavorite = false,
 }) {
-  const [isHovered, setIsHovered] = useState(false)
-  const [showMenu, setShowMenu] = useState(false)
-  const [timeRemaining, setTimeRemaining] = useState(null)
-console.log(property);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  console.log(property);
   useEffect(() => {
-    if (property.status === "scheduled" && property.visitDate && property.visitTime) {
+    if (
+      property.status === "scheduled" &&
+      property.visitDate &&
+      property.visitTime
+    ) {
       const updateTime = () => {
-        const remaining = calculateTimeRemaining(property.visitDate, property.visitTime)
-        setTimeRemaining(remaining)
-      }
+        const remaining = calculateTimeRemaining(
+          property.visitDate,
+          property.visitTime
+        );
+        setTimeRemaining(remaining);
+      };
 
-      updateTime()
-      const interval = setInterval(updateTime, 60000) // Update every minute
+      updateTime();
+      const interval = setInterval(updateTime, 60000); // Update every minute
 
-      return () => clearInterval(interval)
+      return () => clearInterval(interval);
     }
-  }, [property.status, property.visitDate, property.visitTime])
+  }, [property.status, property.visitDate, property.visitTime]);
 
   const getStatusColor = (status) => {
     switch (status) {
       case "scheduled":
-        return styles.statusScheduled
+        return styles.statusScheduled;
       case "completed":
-        return styles.statusCompleted
+        return styles.statusCompleted;
       case "cancelled":
-        return styles.statusCancelled
+        return styles.statusCancelled;
       default:
-        return styles.statusPending
+        return styles.statusPending;
     }
-  }
+  };
 
   const getStatusText = (status) => {
     switch (status) {
       case "scheduled":
-        return "بازدید برنامه‌ریزی شده"
+        return "بازدید برنامه‌ریزی شده";
       case "completed":
-        return "بازدید انجام شده"
+        return "بازدید انجام شده";
       case "cancelled":
-        return "بازدید لغو شده"
+        return "بازدید لغو شده";
       default:
-        return "برنامه‌ریزی بازدید"
+        return "برنامه‌ریزی بازدید";
     }
-  }
+  };
 
   const handleMenuClick = (e) => {
-    e.stopPropagation()
-    setShowMenu(!showMenu)
-  }
+    e.stopPropagation();
+    setShowMenu(!showMenu);
+  };
 
   const handleCancelClick = (e) => {
-    e.stopPropagation()
-    onCancelVisit?.(property.id)
-    setShowMenu(false)
-  }
+    e.stopPropagation();
+    onCancelVisit?.(property.id);
+    setShowMenu(false);
+  };
 
   return (
     <div
@@ -104,16 +126,28 @@ console.log(property);
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className={styles.imageContainer}>
-        <img src={property.image || "/placeholder.svg"} alt={property.title} className={styles.propertyImage} />
+        <Image
+          width={400}
+          height={242}
+          src={property.image || "/placeholder.svg"}
+          alt={property.title}
+          className={styles.propertyImage}
+        />
         <div className={styles.imageOverlay}>
           <button
-            className={`${styles.favoriteBtn} ${isFavorite ? styles.favoriteActive : ""}`}
+            className={`${styles.favoriteBtn} ${
+              isFavorite ? styles.favoriteActive : ""
+            }`}
             onClick={() => onToggleFavorite?.(property.id)}
             aria-label="Toggle favorite"
           >
             <Heart className={styles.heartIcon} />
           </button>
-          <div className={`${styles.statusBadge} ${getStatusColor(property.status)}`}>
+          <div
+            className={`${styles.statusBadge} ${getStatusColor(
+              property.status
+            )}`}
+          >
             <Clock className={styles.statusIcon} />
             {getStatusText(property.status)}
           </div>
@@ -127,20 +161,30 @@ console.log(property);
             <p className={styles.price}>{property.price}</p>
           </div>
 
-          {(property.status === "scheduled" || property.status === "pending") && (
+          {(property.status === "scheduled" ||
+            property.status === "pending") && (
             <div className={styles.menuContainer}>
-              <button className={styles.menuBtn} onClick={handleMenuClick} aria-label="گزینه‌های بیشتر">
+              <button
+                className={styles.menuBtn}
+                onClick={handleMenuClick}
+                aria-label="گزینه‌های بیشتر"
+              >
                 <MoreVertical className={styles.menuIcon} />
               </button>
 
               {showMenu && (
                 <div className={styles.dropdownMenu}>
-                  <button className={styles.menuItem} onClick={handleCancelClick}>
+                  <button
+                    className={styles.menuItem}
+                    onClick={handleCancelClick}
+                  >
                     <X className={styles.menuItemIcon} />
                     لغو بازدید
                   </button>
                   <div className={styles.menuDivider}></div>
-                  <div className={styles.menuNote}>این عمل قابل بازگشت نیست</div>
+                  <div className={styles.menuNote}>
+                    این عمل قابل بازگشت نیست
+                  </div>
                 </div>
               )}
             </div>
@@ -191,30 +235,38 @@ console.log(property);
           <button
             className={styles.primaryBtn}
             onClick={() => onScheduleVisit?.(property.id)}
-            disabled={property.status === "completed" || property.status === "cancelled"}
+            disabled={
+              property.status === "completed" || property.status === "cancelled"
+            }
           >
             {property.status === "scheduled"
               ? "تغییر زمان بازدید"
               : property.status === "completed"
-                ? "بازدید انجام شده"
-                : property.status === "cancelled"
-                  ? "بازدید لغو شده"
-                  : "برنامه‌ریزی بازدید"}
+              ? "بازدید انجام شده"
+              : property.status === "cancelled"
+              ? "بازدید لغو شده"
+              : "برنامه‌ریزی بازدید"}
           </button>
 
-          <button className={styles.secondaryBtn} onClick={() => onViewDetails?.(property.id)}>
+          <button
+            className={styles.secondaryBtn}
+            onClick={() => onViewDetails?.(property.id)}
+          >
             <Eye className={styles.eyeIcon} />
             جزئیات
           </button>
 
-          <button className={styles.mapBtn} onClick={() => onViewMap?.(property.id)}>
+          <button
+            className={styles.mapBtn}
+            onClick={() => onViewMap?.(property.id)}
+          >
             <Map className={styles.mapIcon} />
             نقشه
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default UserVisitBox
+export default UserVisitBox;

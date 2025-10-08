@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./PropertyDialog.module.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const ImageGallery = ({ property }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -43,11 +44,12 @@ const ImageGallery = ({ property }) => {
     <div className={styles.imageGallery} onKeyDown={handleKeyDown} tabIndex={0}>
       {/* Main Image Display */}
       <div className={styles.mainImage}>
-        <img
+        <Image
+          width={300}
+          height={256}
           src={imageUrl}
           alt={`تصویر ملک ${currentImageIndex + 1}`}
           className={styles.propertyImage}
-          loading="lazy"
         />
 
         {/* Image Counter */}
@@ -90,11 +92,12 @@ const ImageGallery = ({ property }) => {
               }`}
               aria-label={`نمایش تصویر ${index + 1}`}
             >
-              <img
+              <Image
+                width={64}
+                height={64}
                 src={image.url || "/images/empty-image.jpg"}
                 alt={`تصویر کوچک ${index + 1}`}
                 className={styles.thumbnailImage}
-                loading="lazy"
               />
             </button>
           ))}

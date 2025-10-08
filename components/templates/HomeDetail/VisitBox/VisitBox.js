@@ -3,20 +3,23 @@ import styles from "./VisitBox.module.css";
 import { Edit3 } from "lucide-react";
 import Link from "next/link";
 import { AuthContext } from "@/context/AuthContext";
+import Image from "next/image";
 const VisitBox = ({
   authorName,
   authorEmail,
   authorPhone,
   onVisitReq,
   isOwner,
-  isMyVisit
+  isMyVisit,
 }) => {
-  const {user}=useContext(AuthContext)
-  
+  const { user } = useContext(AuthContext);
+
   return (
     <div className={styles.userProfile}>
       <div className={styles.profileHeader}>
-        <img
+        <Image
+          width={88}
+          height={88}
           src="/images/profile.png"
           alt="Profile Image"
           className={styles.profileImage}
@@ -28,8 +31,15 @@ const VisitBox = ({
       </div>
       {isOwner ? (
         <div className={styles.requestContainer}>
-          <Link href={user?.role==="user"?"/user-panel/my-ad":"/admin-panel/user-ad"} className={`btn ${styles.requestBtn}`}>
-             ویرایش آگهی <Edit3 size={19}/>
+          <Link
+            href={
+              user?.role === "user"
+                ? "/user-panel/my-ad"
+                : "/admin-panel/user-ad"
+            }
+            className={`btn ${styles.requestBtn}`}
+          >
+            ویرایش آگهی <Edit3 size={19} />
           </Link>
         </div>
       ) : (
@@ -77,8 +87,12 @@ const VisitBox = ({
             </button>
           </div>
           <div className={styles.requestContainer}>
-            <button className={`btn ${styles.requestBtn}`} onClick={user&&!isMyVisit?onVisitReq:null} disabled={isMyVisit}>
-             {isMyVisit?"درخواست بازدید ارسال شد":"درخواست بازدید"}
+            <button
+              className={`btn ${styles.requestBtn}`}
+              onClick={user && !isMyVisit ? onVisitReq : null}
+              disabled={isMyVisit}
+            >
+              {isMyVisit ? "درخواست بازدید ارسال شد" : "درخواست بازدید"}
             </button>
           </div>
         </>

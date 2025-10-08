@@ -198,7 +198,9 @@ const MyAdvertisement = () => {
                 ? newAd.map((item) => (
                     <tr key={item.id}>
                       <td>
-                        <img
+                        <Image
+                          width={50}
+                          height={50}
                           src={
                             item.images.length > 0
                               ? item.images[0]?.url

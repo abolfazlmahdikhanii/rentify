@@ -9,6 +9,7 @@ import LocationInfo from "../LocationInfo/LocationInfo";
 import MapLocation from "@/components/module/Map/MapLocation";
 import { ChevronLeft } from "lucide-react";
 import EmptyItem from "@/components/module/EmptyItem/EmptyItem";
+import Image from "next/image";
 const GeneralInfo = ({ data, locationDetail, equipment }) => {
   const [tabActive, setTabActive] = useState("main");
   const [locationTabActive, setLocationTabActive] = useState("sports");
@@ -94,87 +95,102 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
         <Title title="اطلاعات اصلی" />
         <div className={styles.sectionGrid}>
           <p className={styles.sectionText}>
-            مساحت زیر بنا: <span>{data?.building_area||"-"}</span>
+            مساحت زیر بنا: <span>{data?.building_area || "-"}</span>
           </p>
           <p className={styles.sectionText}>
             مساحت زمین: <span>{data?.land_area || "-"}</span>
           </p>
           <p className={styles.sectionText}>
-            طبقات: <span>{data?.floors||1}</span>
+            طبقات: <span>{data?.floors || 1}</span>
           </p>
           <p className={styles.sectionText}>
-            خواب: <span>{data?.bedrooms||1}</span>
+            خواب: <span>{data?.bedrooms || 1}</span>
           </p>
           <p className={styles.sectionText}>
             سرویس بهداشتی: <span>{data?.bathrooms || 1}</span>
           </p>
           <p className={styles.sectionText}>
-            طبقه: <span>{data?.floor_number||1}</span>
+            طبقه: <span>{data?.floor_number || 1}</span>
           </p>
           <p className={styles.sectionText}>
-            هر طبقه: <span>{data?.units_per_floor||1}</span>
+            هر طبقه: <span>{data?.units_per_floor || 1}</span>
           </p>
         </div>
       </section>
       <section className={styles.section} id="equipment">
         <Title title="تجهیزات و امکانات" />
         <div className={styles.sectionGrid}>
-          {equipment.length?
+          {equipment.length ? (
             equipment.map((item, i) => (
               <p key={item.id} className={styles.sectionIcon}>
                 <span dangerouslySetInnerHTML={{ __html: item.icon }}></span>
                 {item.title}
               </p>
-            )):<EmptyItem title="هنوز تجهیزاتی ثبت نشده است" />}
+            ))
+          ) : (
+            <EmptyItem title="هنوز تجهیزاتی ثبت نشده است" />
+          )}
         </div>
       </section>
       <section className={styles.section} id="description">
         <Title title="توضیحات" />
         <div>
-        {data.description?
-          <>
-            <p
-            className={`${styles.disContent} ${
-              isMoreContent ? styles.expend : ""
-            }`}
-          >
-            {data && data?.description}
-          </p>
-          <p
-            className={styles.btnMore}
-            onClick={() => setIsMoreContent((prev) => !prev)}
-          >
-            {!isMoreContent ? "مشاهده بیشتر" : "بستن"} <ChevronLeft size={15} />
-          </p>
-          </>:<EmptyItem title="توضیحاتی ثبت نشده" />
-        }
+          {data.description ? (
+            <>
+              <p
+                className={`${styles.disContent} ${
+                  isMoreContent ? styles.expend : ""
+                }`}
+              >
+                {data && data?.description}
+              </p>
+              <p
+                className={styles.btnMore}
+                onClick={() => setIsMoreContent((prev) => !prev)}
+              >
+                {!isMoreContent ? "مشاهده بیشتر" : "بستن"}{" "}
+                <ChevronLeft size={15} />
+              </p>
+            </>
+          ) : (
+            <EmptyItem title="توضیحاتی ثبت نشده" />
+          )}
         </div>
       </section>
       <section className={styles.section} id="floor-map">
         <Title title="نقشه طبقه" />
         <div className={styles.sectionImg}>
-          <img src="/images/h-map.png" alt="" />
+          <Image
+             width={500}
+            height={488}
+            src="/images/h-map.png"
+            alt="room map"
+          />
         </div>
       </section>
       <section className={styles.section} id="location">
         <Title title="موقعیت مکانی" />
 
         <div className={styles.locationContainer}>
-      
-        
-           {locationDetail?.latitude && locationDetail?.longitude ? (
-             <MapLocation
+          {locationDetail?.latitude && locationDetail?.longitude ? (
+            <MapLocation
               lat={locationDetail?.latitude}
               long={locationDetail?.longitude}
-            />):<EmptyItem title="موقعیتی برای این ملک ثبت نشده" />
-           }
-        
+            />
+          ) : (
+            <EmptyItem title="موقعیتی برای این ملک ثبت نشده" />
+          )}
         </div>
       </section>
       <section className={styles.section} id="virtual-tour">
         <Title title="تور مجازی" />
         <div className={styles.sectionTour}>
-          <img src="/images/h-d2.png" alt="" />
+          <Image
+            width={500}
+            height={454}
+            src="/images/h-d2.png"
+            alt="v-tour"
+          />
           <button className={styles.btnPlay}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

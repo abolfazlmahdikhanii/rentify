@@ -3,6 +3,7 @@ import styles from "./comments.module.css";
 import { Edit3, Reply, Trash } from "lucide-react";
 import { getDate } from "@/helper/helper";
 import { AuthContext } from "@/context/AuthContext";
+import Image from "next/image";
 
 const CommentItem = ({
   comment,
@@ -25,7 +26,9 @@ const CommentItem = ({
   return (
     <div className={styles.commentItem}>
       <div className={styles.commentHeader}>
-        <img
+        <Image
+          width={40}
+          height={40}
           src={comment.comment_avatar || "/images/profile.png"}
           alt={comment.commenter_name}
           className={styles.avatar}
@@ -37,7 +40,9 @@ const CommentItem = ({
             {comment.role === "admin" ? "مدیر" : "کاربر"}{" "}
           </h4>
           <span className={styles.timestamp}>
-            {getDate(!comment.updated_at?comment.created_at:comment.updated_at)}
+            {getDate(
+              !comment.updated_at ? comment.created_at : comment.updated_at
+            )}
           </span>
         </div>
         <div className={styles.commentActions}>
@@ -90,7 +95,9 @@ const CommentItem = ({
 
       {replyingTo === comment.id && (
         <div className={styles.replyForm}>
-          <img
+          <Image
+            width={40}
+            height={40}
             src="/images/profile.png"
             alt="Your avatar"
             className={styles.replyAvatar}
@@ -126,7 +133,9 @@ const CommentItem = ({
       )}
       {editComment === comment.id && (
         <div className={styles.replyForm}>
-          <img
+          <Image
+          width={40}
+          height={40}
             src="/images/profile.png"
             alt="Your avatar"
             className={styles.replyAvatar}

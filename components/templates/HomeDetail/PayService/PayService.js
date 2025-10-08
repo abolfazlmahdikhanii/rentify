@@ -1,12 +1,13 @@
 import React from "react";
 import styles from "./PayService.module.css";
+import Image from "next/image";
 const PayService = () => {
   return (
     <div>
       <div className={styles.payRow}>
         <div className={styles.payInfo}>
           <div className={styles.payInfo__Img}>
-            <img src="/images/toman.png" alt="" />
+            <Image width={68} height={65} src="/images/toman.png" alt="pay" />
           </div>
           <div className={styles.payInfo__text}>
             <p className={styles.payInfo__title}>پرداخت امن با تومن</p>

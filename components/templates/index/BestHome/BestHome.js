@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./BestHome.module.css";
 import { useRouter } from "next/router";
+import Image from "next/image";
 const BestHome = ({ src, title, count, type }) => {
   const router = useRouter();
   const goTo = () => {
@@ -14,7 +15,9 @@ const BestHome = ({ src, title, count, type }) => {
   return (
     <div className={styles.bestHouse}>
       <div className={styles.bestHouseImg}>
-        <img
+        <Image
+          width={376}
+          height={376}
           src={src}
           alt="best house image"
           className={styles.bestHouseImg__img}

@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import styles from "./Slider.module.css";
+import Image from "next/image";
 const Slider = ({ images }) => {
   const sliderRef = useRef(null);
   const nextSlideHandler = () => {
@@ -27,7 +28,7 @@ const Slider = ({ images }) => {
   return (
     <div className={styles.sliderContainer}>
       <div className={styles.sliderGrid} ref={sliderRef}>
-        {images.length>1 ? (
+        {images.length > 1 ? (
           images.map((slide) => (
             <div
               className={styles.sliderImg}
@@ -46,19 +47,18 @@ const Slider = ({ images }) => {
                   if (e.target.src !== "/images/empty-image.jpg")
                     e.currentTarget.src = "/images/empty-image.jpg";
                 }}
+                
               />
             </div>
           ))
         ) : (
-          <div
-            className={styles.sliderImg}
-            style={{ minWidth: `100%` }}
-          >
-            <img
+          <div className={styles.sliderImg} style={{ minWidth: `100%` }}>
+            <Image
+              width={400}
+              height={405}
               src={"/images/empty-image.jpg"}
               alt="img"
               className={styles.sliderImg__img}
-             
             />
           </div>
         )}

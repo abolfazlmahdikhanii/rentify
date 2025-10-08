@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { X } from "lucide-react";
 import styles from "./Uploader.module.css";
+import Image from "next/image";
 
 const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   const id = useId();
@@ -132,7 +133,9 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
       >
         {previewUrl ? (
           <div className={styles.previewContainer}>
-            <img
+            <Image
+            width={172}
+            height={42}
               src={previewUrl}
               alt="Preview"
               className={styles.preview}

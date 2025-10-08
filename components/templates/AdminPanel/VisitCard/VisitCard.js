@@ -89,7 +89,9 @@ export default function VisitCard({
         <div className={styles.section}>
           <div className={styles.propertyDetails}>
             <div className={styles.propertyImage}>
-              <img
+              <Image
+                width={80}
+                height={80}
                 src={image || "/images/empty-image.jpg"}
                 alt="Property Image"
               />
@@ -143,7 +145,7 @@ export default function VisitCard({
             {/* مالک */}
             <div className={styles.personInfo}>
               <div className={styles.avatar}>
-                <img src="/images/profile.png" alt="profile" />
+                <Image width={40} height={40} src="/images/profile.png" alt="profile" />
               </div>
               <div className={styles.personDetails}>
                 <div className={styles.personHeader}>
@@ -172,7 +174,7 @@ export default function VisitCard({
             {/* مشتری */}
             <div className={styles.personInfo}>
               <div className={styles.avatar}>
-                <img src="/images/profile.png" alt="profile" />
+                <Image width={40} height={40} src="/images/profile.png" alt="profile" />
               </div>
               <div className={styles.personDetails}>
                 <div className={styles.personHeader}>

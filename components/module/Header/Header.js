@@ -3,6 +3,7 @@ import styles from "./header.module.css";
 import { useRouter } from "next/router";
 import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
+import Image from "next/image";
 const Header = () => {
   const { pathname } = useRouter();
   const { user } = useContext(AuthContext);
@@ -15,7 +16,9 @@ const Header = () => {
         }`}
       >
         <Link href="/" className="header__right">
-          <img
+          <Image
+          width={132}
+          height={52}
             src={pathname === "/" ? "/images/logo.svg" : "/images/logo.png"}
             alt="logo"
             className={styles.header__logo}

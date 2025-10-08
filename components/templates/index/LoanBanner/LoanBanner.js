@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "./LoanBanner.module.css";
 
 const LoanBanner = () => {
@@ -18,7 +19,9 @@ const LoanBanner = () => {
           </div>
         </div>
         <div className={styles.imageSection}>
-          <img
+          <Image
+            width={600}
+            height={320}
             src="/images/ad.png"
             alt="Person stacking coins with house models"
             className={styles.bannerImage}

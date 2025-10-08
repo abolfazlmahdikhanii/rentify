@@ -106,7 +106,9 @@ const Users = () => {
                 ? newUsers.map((item) => (
                     <tr key={item.id}>
                       <td>
-                        <img
+                        <Image
+                          width={50}
+                          height={50}
                           src={"/images/profile.png"}
                           alt="house"
                           className="tbl-img"
