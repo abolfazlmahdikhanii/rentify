@@ -10,6 +10,7 @@ import Footer from "@/components/module/Footer/Footer";
 import { CompareProvider } from "@/context/CompareContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { PanelProvider } from "@/context/PanelContext";
+import Head from "next/head";
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const noFooterRoutes = ["user-panel", "register-step", "login"];
