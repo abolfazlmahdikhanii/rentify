@@ -10,12 +10,16 @@ import Offer from "@/components/templates/HomeDetail/Offer/Offer";
 import ModalVisitRequest from "@/components/templates/HomeDetail/ModalVisitRequest/ModalVisitRequest";
 import CommentWrapper from "@/components/templates/HomeDetail/Comment/CommentWrapper";
 import ShareModal from "@/components/templates/HomeDetail/ShareModal/ShareModal";
+import Head from "next/head";
 const HomePageDetail = ({ houses }) => {
   const { query } = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowShareModal, setIsShowShareModal] = useState(false);
   return (
     <div className="detail-bg">
+      <Head>
+        <title>{houses[0]?.title}</title>
+      </Head>
       <div className="container">
         <Slider images={houses[0]?.images} />
         <section className={styles.detailGrid}>

@@ -27,6 +27,9 @@ export default function App({ Component, pageProps }) {
       options={{ showSpinner: false }}
       shallowRouting
     >
+      <Head>
+        <title>رنتیفای</title>
+      </Head>
       <AuthProvider>
         <PanelProvider>
           <CompareProvider>
