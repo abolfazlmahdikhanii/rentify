@@ -66,11 +66,7 @@ input:focus,
 input:focus-visible {
   outline-color: var(--primary) !important;
 }
-.container {
-  width: 83vw;
-  max-width: 130.4rem;
-  margin: 0 auto;
-}
+
 .btn {
   all: unset;
   font: inherit;
@@ -238,8 +234,7 @@ input:focus-visible {
   -moz-border-radius: 0.6rem;
   -ms-border-radius: 0.6rem;
   -o-border-radius: 0.6rem;
-  &:hover 
-{
+  &:hover {
     background-color: #f3f4f6;
     border-color: #9ca3af;
   }
@@ -293,8 +288,8 @@ input:focus-visible {
 .maplibregl-ctrl-attrib {
   display: none;
 }
-.map-box-2,.map-box-3 {
-  
+.map-box-2,
+.map-box-3 {
   width: 100%;
   font: inherit;
   height: 18.7rem;
@@ -304,10 +299,10 @@ input:focus-visible {
   -ms-border-radius: 0.8rem;
   -o-border-radius: 0.8rem;
 }
-.map-box-2{
+.map-box-2 {
   margin-top: 4rem;
 }
-.map-box-3{
+.map-box-3 {
   margin-top: 0;
 }
 .marker {
@@ -713,8 +708,26 @@ input:focus-visible {
   color: #73767c;
   grid-column: 1/4;
 }
-.no-comment__text{
+.no-comment__text {
   font-size: 1.8rem;
   color: #73767c;
   text-align: center;
+}
+
+
+  .container {
+    width: 96vw;
+    max-width: 130.4rem;
+    margin: 0 auto;
+  }
+.btn-drawerMenu{
+  width: 100%;
+  display: flex;
+}
+@media (min-width: 1240px) {
+  .container {
+    width: 83vw;
+    max-width: 130.4rem;
+    margin: 0 auto;
+  }
 }
