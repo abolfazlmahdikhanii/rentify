@@ -23,8 +23,8 @@ const fetcher = () =>
     res.json()
   );
 const fetcherEquipment = () =>
-  fetch("https://rentify-project.ir/api/properties/equipment").then((res) =>
-    res.json()
+  fetch("https://rentify-api.runflare.run/api/properties/equipment").then(
+    (res) => res.json()
   );
 
 export default function RegisterStep() {
@@ -251,7 +251,7 @@ export default function RegisterStep() {
       };
 
       const response = await fetch(
-        `https://rentify-project.ir/api/properties`,
+        `https://rentify-api.runflare.run/api/properties`,
         {
           method: "POST",
           headers: {
@@ -309,7 +309,7 @@ export default function RegisterStep() {
       console.log("FormData contents:");
 
       const response = await fetch(
-        `https://rentify-project.ir/api/properties/${propertyId}/images`,
+        `https://rentify-api.runflare.run/api/properties/${propertyId}/images`,
         {
           method: "POST",
           headers: {

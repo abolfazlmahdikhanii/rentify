@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 
 const fetcher = () =>
-  fetch("https://rentify-project.ir/api/favorites", {
+  fetch("https://rentify-api.runflare.run/api/favorites", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

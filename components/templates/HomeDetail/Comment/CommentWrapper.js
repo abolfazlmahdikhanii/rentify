@@ -31,13 +31,16 @@ export default function CommentWrapper({ comments }) {
   const { query } = useRouter();
 
   const getComments = () => {
-    fetch(`https://rentify-project.ir/api/comments/property/${query.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
-    })
+    fetch(
+      `https://rentify-api.runflare.run/api/comments/property/${query.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setPropertyComment(data);
@@ -56,7 +59,7 @@ export default function CommentWrapper({ comments }) {
       propertyId: query.id,
       content,
     };
-    fetch("https://rentify-project.ir/api/comments", {
+    fetch("https://rentify-api.runflare.run/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +89,7 @@ export default function CommentWrapper({ comments }) {
     const newComment = {
       content: replyContent,
     };
-    fetch(`https://rentify-project.ir/api/comments/${parentId}`, {
+    fetch(`https://rentify-api.runflare.run/api/comments/${parentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +122,7 @@ export default function CommentWrapper({ comments }) {
     const updateComment = {
       content: editContent,
     };
-    fetch(`https://rentify-project.ir/api/comments/${parentId}`, {
+    fetch(`https://rentify-api.runflare.run/api/comments/${parentId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +148,7 @@ export default function CommentWrapper({ comments }) {
       });
   };
   const handleDelete = (commentId) => {
-    fetch(`https://rentify-project.ir/api/comments/${commentId}`, {
+    fetch(`https://rentify-api.runflare.run/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

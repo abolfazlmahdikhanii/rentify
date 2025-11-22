@@ -47,7 +47,7 @@ export async function getServerSideProps(context) {
   const cookies = context.req.cookies || {};
   const token = cookies.token;
 
-  const res = await fetch("https://rentify-project.ir/api/properties", {
+  const res = await fetch("https://rentify-api.runflare.run/api/properties", {
     headers: { Authorization: `Bearer ${token}`},
   });
   if (!res) return ;

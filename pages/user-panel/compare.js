@@ -12,7 +12,7 @@ import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import Loader from "@/components/module/Loader/Loader";
 import { toast } from "react-toastify";
 const fetcher = () =>
-  fetch("https://rentify-project.ir/api/favorites", {
+  fetch("https://rentify-api.runflare.run/api/favorites", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       const response = await fetch(
-        "https://rentify-project.ir/api/auth/get-me",
+        "https://rentify-api.runflare.run/api/auth/get-me",
         {
           method: "GET",
           headers: {

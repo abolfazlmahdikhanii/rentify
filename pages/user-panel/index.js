@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 const fetcher = () =>
-  fetch("https://rentify-project.ir/api/auth/info", {
+  fetch("https://rentify-api.runflare.run/api/auth/info", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const Dashboard = () => {
   const onSubmit = async (formData) => {
     try {
       const response = await fetch(
-        "https://rentify-project.ir/api/auth/complete-profile",
+        "https://rentify-api.runflare.run/api/auth/complete-profile",
         {
           method: "POST",
           headers: {
