@@ -6,8 +6,6 @@ import LastVisited from "@/components/templates/index/LastVisited/LastVisited";
 import CardSection from "@/components/templates/index/CardSection/CardSection";
 import StepProcess from "@/components/templates/index/StepProcess/StepProcess";
 import LoanBanner from "@/components/templates/index/LoanBanner/LoanBanner";
-import { getCookie } from "cookies-next";
-import useSWR from "swr";
 
 const Page = ({ houses }) => {
   return (
