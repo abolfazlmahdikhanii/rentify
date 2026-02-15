@@ -43,17 +43,31 @@ const Page = ({ houses }) => {
   );
 };
 export async function getServerSideProps(context) {
-  // Access cookies from the request
-  const cookies = context.req.cookies || {};
-  const token = cookies.token;
+  try {
+    const token = context.req.cookies?.token;
 
-  const res = await fetch("https://rentify-api.runflare.run/api/properties", {
-    headers: { Authorization: `Bearer ${token}`},
-  });
-  if (!res) return ;
+    const res = await fetch("https://rentify-api.runflare.run/api/properties", {
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    });
 
-const data = await res.json();
+    if (!res.ok) {
+      console.error("API Error:", res.status);
+      return { props: { houses: [] } };
+    }
 
-  return { props: { houses: data.data || [] } };
+    const data = await res.json();
+
+    return {
+      props: {
+        houses: data?.data || [],
+      },
+    };
+  } catch (error) {
+    console.error("Fetch error:", error.message);
+    return { props: { houses: [] } };
+  }
 }
 export default Page;
