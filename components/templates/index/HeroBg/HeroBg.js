@@ -1,16 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styles from "./herobg.module.css";
 import DropDown from "../DropDown/DropDown";
 import { useRouter } from "next/router";
 
-const HeroBg = ({ children,houses }) => {
-  const newLocation = Array.from(new Set(houses.map((item) => item.location)));
-  const [selectedLocation, setSelectedLocation] = useState(newLocation[0]);
-  const [selectedHomeType, setSelectedHomeType] = useState("Apartment");
-  const [selectedContractType, setSelectedContractType] = useState("رهن");
+const HeroBg = ({ children, houses = [] }) => {
   const router = useRouter();
 
+
+  const newLocation = useMemo(() => {
+    if (!houses || houses.length === 0) {
+      return ["تهران", "اصفهان", "شیراز"]; // مقادیر پیش‌فرض
+    }
+    const locations = houses
+      .map((item) => item?.location)
+      .filter(Boolean); // فیلتر کردن undefined و null
+    return Array.from(new Set(locations));
+  }, [houses]);
+
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedHomeType, setSelectedHomeType] = useState("Apartment");
+  const [selectedContractType, setSelectedContractType] = useState("رهن");
+
+
+  useEffect(() => {
+    if (newLocation.length > 0 && !selectedLocation) {
+      setSelectedLocation(newLocation[0]);
+    }
+  }, [newLocation, selectedLocation,setSelectedLocation]);
+
   const searchHomeHandler = () => {
+    if (!selectedLocation) {
+      console.warn("Location not selected");
+      return;
+    }
+
     router.push({
       pathname: "/homes",
       query: {
@@ -20,6 +43,9 @@ const HeroBg = ({ children,houses }) => {
       },
     });
   };
+
+ 
+
   return (
     <div className={styles.heroBg}>
       <div className={styles.headerBg__info}>
@@ -33,7 +59,7 @@ const HeroBg = ({ children,houses }) => {
             <DropDown
               title="موقعیت مکانی"
               datas={newLocation}
-              selected={selectedLocation}
+              selected={selectedLocation || newLocation[0] || ""}
               setSelected={setSelectedLocation}
             />
             <DropDown
