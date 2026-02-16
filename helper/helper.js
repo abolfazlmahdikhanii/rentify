@@ -25,6 +25,7 @@ export const getDate = (date, monthType) => {
   }).format(d);
 };
 export const getDateRelative = (date) => {
+  if (!date) return;
   const d = new Date(date);
   const now = Date.now();
   const diff = d.getTime() - now;
@@ -88,62 +89,69 @@ export const toastOption = {
 export const toEnglish = (str) =>
   str.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
 // Main function - Calculates time remaining from backend date
- const calculateTimeRemainingCore = (visitDate, visitTime) => {
-  const now = new Date()
-  
+const calculateTimeRemainingCore = (visitDate, visitTime) => {
+  const now = new Date();
+
   try {
     if (!visitDate) {
-      throw new Error('Visit date is required')
+      throw new Error("Visit date is required");
     }
-    
-    const dateObj = new Date(visitDate)
-    let visitDateTime
-    
+
+    const dateObj = new Date(visitDate);
+    let visitDateTime;
+
     if (visitTime) {
       // Use the provided time
-      const cleanTime = toEnglish(visitTime)
-      const timeParts = cleanTime.split(':')
-      const hours = parseInt(timeParts[0])
-      const minutes = parseInt(timeParts[1])
-      const seconds = timeParts[2] ? parseInt(timeParts[2]) : 0
-      
-      visitDateTime = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), hours, minutes, seconds)
+      const cleanTime = toEnglish(visitTime);
+      const timeParts = cleanTime.split(":");
+      const hours = parseInt(timeParts[0]);
+      const minutes = parseInt(timeParts[1]);
+      const seconds = timeParts[2] ? parseInt(timeParts[2]) : 0;
+
+      visitDateTime = new Date(
+        dateObj.getFullYear(),
+        dateObj.getMonth(),
+        dateObj.getDate(),
+        hours,
+        minutes,
+        seconds,
+      );
     } else {
-      visitDateTime = new Date(visitDate)
+      visitDateTime = new Date(visitDate);
     }
-    
+
     if (isNaN(visitDateTime.getTime())) {
-      throw new Error('Invalid date/time')
+      throw new Error("Invalid date/time");
     }
-    
-    const timeDiff = visitDateTime.getTime() - now.getTime()
-    
-    if (timeDiff <= 0) return null
-    
-    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
-    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
-    
-    return { days, hours, minutes, seconds, timeDiff }
+
+    const timeDiff = visitDateTime.getTime() - now.getTime();
+
+    if (timeDiff <= 0) return null;
+
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds, timeDiff };
   } catch (error) {
-    console.error('Error calculating time remaining:', error)
-    return null
+    console.error("Error calculating time remaining:", error);
+    return null;
   }
-}
+};
 export const calculateTimeRemaining = (visitDate, visitTime) => {
- const result = calculateTimeRemainingCore(visitDate, visitTime)
-  
-  if (!result) return 'زمان بازدید گذشته است'
-  
-  const { days, hours, minutes, seconds } = result
-  
-  if (days > 7) return `${days} روز باقی مانده`
-  if (days > 0) return `${days} روز، ${hours} ساعت و ${minutes} دقیقه`
-  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`
-  if (minutes > 5) return `${minutes} دقیقه`
-  if (minutes > 0) return `${minutes} دقیقه و ${seconds} ثانیه`
-  return `${seconds} ثانیه`
-}
+  const result = calculateTimeRemainingCore(visitDate, visitTime);
 
+  if (!result) return "زمان بازدید گذشته است";
 
+  const { days, hours, minutes, seconds } = result;
+
+  if (days > 7) return `${days} روز باقی مانده`;
+  if (days > 0) return `${days} روز، ${hours} ساعت و ${minutes} دقیقه`;
+  if (hours > 0) return `${hours} ساعت و ${minutes} دقیقه`;
+  if (minutes > 5) return `${minutes} دقیقه`;
+  if (minutes > 0) return `${minutes} دقیقه و ${seconds} ثانیه`;
+  return `${seconds} ثانیه`;
+};

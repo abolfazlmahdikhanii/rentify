@@ -3,7 +3,7 @@ import styles from "../../../../styles/Detail.module.css";
 import { Heart } from "lucide-react";
 import { getDateRelative } from "@/helper/helper";
 import { AuthContext } from "@/context/AuthContext";
-const TitleInfo = ({ data,onShare }) => {
+const TitleInfo = ({ data, onShare }) => {
   const { user } = useContext(AuthContext);
   return (
     <div className={styles.detailInfo__Title}>
@@ -88,7 +88,7 @@ const TitleInfo = ({ data,onShare }) => {
               clipRule="evenodd"
             ></path>
           </svg>
-          {getDateRelative(data?.created_at)}
+          {data && data.created_at && getDateRelative(data?.created_at)}
         </p>
       </div>
       <div className={styles.detailPrice}>

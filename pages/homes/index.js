@@ -1,44 +1,130 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import Cookies from "js-cookie";
+import dynamic from "next/dynamic";
 import styles from "../../styles/Homes.module.css";
 import FilterHome from "@/components/templates/Homes/FilterHome/FilterHome";
 import Tab from "@/components/module/Tab/Tab";
 import TabItem from "@/components/module/Tab/TabItem";
 import Home from "@/components/module/Home/Home";
-import Image from "next/image";
-import { useRouter } from "next/router";
+import NotFound from "@/components/module/NotFound/NotFound";
+import { CompareContext } from "@/context/CompareContext";
+import Loader from "@/components/module/Loader/Loader";
+
 const FilterModal = dynamic(
   () => import("@/components/module/FilterModal/FilterModal"),
-  { ssr: false }
+  { ssr: false },
 );
-import NotFound from "@/components/module/NotFound/NotFound";
-import Link from "next/link";
-import { CompareContext } from "@/context/CompareContext";
-import dynamic from "next/dynamic";
-const Homes = ({
-  houses = [],
-  query = {},
-  page = 1,
-  totalPage = 1,
-  minPrices,
-  maxPrices,
-  roomCounts,
-}) => {
+
+const buildUrl = (query) => {
+  const page = query.page || 1;
+  const limit = 8 * page;
+
+  let url = `https://rentify-api.runflare.run/api/properties?limit=${limit}`;
+
+  // Sorting
+  if (query.sort === "newest") {
+    url += `&_sort=created_date&_order=desc`;
+  } else if (query.sort === "cheap") {
+    url += `&_sort=price,ejare_price&_order=asc`;
+  } else if (query.sort === "expensive") {
+    url += `&_sort=price,ejare_price&_order=desc`;
+  }
+
+  // Filters
+  if (query.minPrice) {
+    url += `&price_gte=${query.minPrice}`;
+  }
+  if (query.maxPrice) {
+    url += `&price_lte=${query.maxPrice}`;
+  }
+  if (query.room) {
+    url += `&roomCount=${query.room}`;
+  }
+  if (query.houseType) {
+    if (Array.isArray(query.houseType) && query.houseType.length > 0) {
+      const validTypes = ["Villa", "House", "Apartment"];
+      const filterType = query.houseType.filter((item) =>
+        validTypes.includes(item),
+      );
+      url += filterType.map((item) => `&type=${item}`).join("");
+    } else {
+      url += `&type=${query.houseType}`;
+    }
+  }
+
+  return url;
+};
+
+// Fetcher function
+const fetcher = async (url) => {
+  const token = Cookies.get("token");
+
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const res = await fetch(url, { headers });
+
+  if (!res.ok) {
+    throw new Error(`خطا در دریافت اطلاعات (${res.status})`);
+  }
+
+  const data = await res.json();
+  return data?.data || [];
+};
+
+const totalFetcher = async (url) => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch total");
+  const data = await res.json();
+  return data?.data?.length || 0;
+};
+
+const Homes = () => {
   const { isCompare, addToCompare, compare, showCompare, toggleCompare } =
     useContext(CompareContext);
   const router = useRouter();
+  const { query } = router;
+
   const [isFilter, setIsFilter] = useState(false);
   const [search, setSearch] = useState("");
   const [filterCount, setFilterCount] = useState(0);
-  const [pages, setPages] = useState(page || 1);
   const [minPrice, setMinPrice] = useState(query.minPrice || "");
   const [maxPrice, setMaxPrice] = useState(query.maxPrice || "");
   const [roomCount, setRoomCount] = useState(
-    query.room ? parseInt(query.room) : 0
+    query.room ? parseInt(query.room) : 0,
+  );
+  const [withPhoto, setWithPhoto] = useState(false);
+  const [houseType, setHouseType] = useState([query.houseType] || []);
+
+  const page = parseInt(query.page) || 1;
+
+  const {
+    data: houses,
+    error,
+    isLoading,
+  } = useSWR(buildUrl(query), fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    dedupingInterval: 5000,
+  });
+
+  const { data: totalCount } = useSWR(
+    "https://rentify-api.runflare.run/api/properties",
+    totalFetcher,
+    {
+      revalidateOnFocus: false,
+    },
   );
 
-  const [withPhoto, setWithPhoto] = useState(false);
+  const totalPage = totalCount ? Math.ceil(totalCount / 8) : 1;
 
-  const [houseType, setHouseType] = useState([query.houseType] || []);
   useEffect(() => {
     // Initialize state from query params
     const initialMinPrice = query.minPrice || "";
@@ -57,13 +143,12 @@ const Homes = ({
     setWithPhoto(initialWithPhoto);
     setHouseType(initialHouseType);
 
-    // Calculate filter count based on query params
+    // Calculate filter count
     const count = calculateFilterCount(query);
     setFilterCount(count);
+
     // Handle compare state
-
     const fromCompare = router.query.from == "compare";
-
     if (!fromCompare && isCompare) {
       toggleCompare();
     }
@@ -72,14 +157,9 @@ const Homes = ({
   const calculateFilterCount = (queryParams) => {
     let count = 0;
 
-    // Price filters
     if (queryParams.minPrice) count++;
     if (queryParams.maxPrice) count++;
-
-    // Room count filter
     if (queryParams.room && parseInt(queryParams.room) > 0) count++;
-
-    // Other filters
     if (queryParams.withPhoto === "true") count++;
     if (queryParams.houseType) {
       count += Array.isArray(queryParams.houseType)
@@ -92,7 +172,7 @@ const Homes = ({
 
   const filterHandler = (...filters) => {
     const {
-      houseType, // Should be ["Villa", "Apartment"] (not split into chars)
+      houseType,
       withPhoto,
       withVideo,
       agencyOnly,
@@ -101,103 +181,147 @@ const Homes = ({
       ejareMax,
     } = filters[0];
 
-    // Create query object
-    const query = { ...router.query };
+    const newQuery = { ...router.query };
 
-    // Ensure houseType is an array of valid strings (not split chars)
+    // House type
     if (houseType && houseType.length > 0) {
-      // If houseType is a string (e.g., "Villa"), convert it to an array
       const normalizedHouseType =
         typeof houseType === "string" ? [houseType] : houseType;
-      // Filter out empty values (optional)
-      query.houseType = normalizedHouseType.filter(Boolean);
+      newQuery.houseType = normalizedHouseType.filter(Boolean);
     } else {
-      delete query.houseType;
+      delete newQuery.houseType;
     }
 
-    // Rest of the filters (unchanged)
+    // Other filters
     if (withPhoto) {
-      query.withPhoto = "true";
+      newQuery.withPhoto = "true";
     } else {
-      delete query.withPhoto;
+      delete newQuery.withPhoto;
     }
 
     if (withVideo) {
-      query.withVideo = "true";
+      newQuery.withVideo = "true";
     } else {
-      delete query.withVideo;
+      delete newQuery.withVideo;
     }
 
     if (agencyOnly) {
-      query.agencyOnly = "true";
+      newQuery.agencyOnly = "true";
     } else {
-      delete query.agencyOnly;
+      delete newQuery.agencyOnly;
     }
 
     if (room && !isNaN(room)) {
-      query.room = room.toString();
+      newQuery.room = room.toString();
     } else {
-      delete query.room;
+      delete newQuery.room;
     }
 
     if (ejareMin) {
-      query.minPrice = ejareMin;
+      newQuery.minPrice = ejareMin;
     } else {
-      delete query.minPrice;
+      delete newQuery.minPrice;
     }
 
     if (ejareMax) {
-      query.maxPrice = ejareMax;
+      newQuery.maxPrice = ejareMax;
     } else {
-      delete query.maxPrice;
+      delete newQuery.maxPrice;
     }
 
-    // Update URL without page reload
+    // Reset page to 1 when filtering
+    delete newQuery.page;
+
     router.push({
       pathname: "/homes",
-      query: query,
+      query: newQuery,
     });
 
-    filterCountHandler();
     setIsFilter(false);
   };
+
   const resetFilters = () => {
     setMinPrice("");
     setMaxPrice("");
     setRoomCount(0);
-
     setWithPhoto(false);
     setHouseType([]);
-    filterHandler({
-      houseType: [],
-      withPhoto: false,
-      withVideo: false,
-      agencyOnly: false,
-      roomCount: 0,
-      minPrice: "",
-      maxPrice: "",
+
+    router.push({
+      pathname: "/homes",
+      query: {},
     });
+
     setFilterCount(0);
     setIsFilter(false);
   };
+
   const handleShowMore = () => {
-    setIsLoading(true);
     router.push({
       pathname: "/homes",
       query: { ...query, page: page + 1 },
     });
   };
+
+  // Loading state
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div
+        className="container"
+        style={{ padding: "100px 20px", textAlign: "center" }}
+      >
+        <div
+          style={{
+            background: "#fff3cd",
+            border: "1px solid #ffc107",
+            borderRadius: "10px",
+            padding: "30px",
+            maxWidth: "600px",
+            margin: "0 auto",
+          }}
+        >
+          <h2 style={{ color: "#856404", marginBottom: "15px" }}>
+            ⚠️ خطا در دریافت اطلاعات
+          </h2>
+          <p style={{ color: "#856404", marginBottom: "20px" }}>
+            {error.message}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "12px 30px",
+              background: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
+            🔄 تلاش مجدد
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const housesList = houses || [];
+
   return (
     <div>
       <FilterHome
-        // onSearch={setSearch}
         searchVal={search}
         setFilter={setIsFilter}
         count={filterCount}
       />
       <div className="container">
         <h3 className={styles.title}>رهن و اجاره آپارتمان در ایران</h3>
-        {houses.length > 0 && (
+        {housesList.length > 0 && (
           <Tab size="sm">
             <TabItem
               title="بروزترین"
@@ -221,8 +345,8 @@ const Homes = ({
         )}
 
         <div className={`homes-grid ${styles.homeGridContainer}`}>
-          {houses.length ? (
-            houses?.map((home, i) => (
+          {housesList.length ? (
+            housesList.map((home) => (
               <Home
                 key={home.id}
                 {...home}
@@ -236,18 +360,19 @@ const Homes = ({
           )}
         </div>
 
-        {houses.length > 0 && totalPage > page && (
+        {housesList.length > 0 && totalPage > page && (
           <div className={styles.btnMore}>
             <button
               className={`btn btn-primary ${styles.btnMore__btn}`}
               onClick={handleShowMore}
-              disabled={page && +totalPage === page}
+              disabled={totalPage === page}
             >
               نمایش آگهی‌های بیشتر
             </button>
           </div>
         )}
       </div>
+
       {isCompare && (
         <div className={styles.homesFooter}>
           <button
@@ -269,6 +394,7 @@ const Homes = ({
           </button>
         </div>
       )}
+
       {isFilter && (
         <FilterModal
           close={() => setIsFilter(false)}
@@ -290,68 +416,70 @@ const Homes = ({
   );
 };
 
-export async function getServerSideProps(context) {
-  const { params, query } = context;
-
-  const page = query.page || 1;
-  const limit = 8 * page; // 8 items per page
-  const start = (page - 1) * limit;
-  // Get total count
-  const countRes = await fetch(
-    "https://rentify-api.runflare.run/api/properties"
-  );
-  const total = await countRes.json();
-
-  let url = `https://rentify-api.runflare.run/api/properties?limit=${limit}`;
-
-  // Add sorting if specified
-  if (query.sort === "newest") {
-    url += `&_sort=created_date&_order=desc`;
-  } else if (query.sort === "cheap") {
-    url += `&_sort=price,ejare_price&_order=asc`;
-  } else if (query.sort === "expensive") {
-    url += `&_sort=pric,ejare_pricee&_order=desc`;
-  }
-  // Add filter if specified
-  if (query.minPrice) {
-    url += `&price_gte=${query.minPrice}`;
-  }
-  if (query.maxPrice) {
-    url += `&price_lte=${query.maxPrice}`;
-  }
-  if (query.room) {
-    url += `&roomCount=${query.room}`;
-  }
-  if (query.houseType) {
-    if (Array.isArray(query.houseType) && query.houseType.length > 0) {
-      const newHouseType = ["Villa", "House", "Apartment"];
-      const filterType = query.houseType.filter((item, i) =>
-        newHouseType.includes(item)
-      );
-      url += filterType.map((item) => `&type=${item}`).join("");
-    } else {
-      url += `&type=${query.houseType}`;
-    }
-  }
-  console.log(url);
-  const res = await fetch(url);
-
-  if (res.status !== 200) {
-    return {
-      notFound: true,
-    };
-  }
-  const data = await res.json();
-
-  const totalPage = Math.ceil(total.length / 8);
-
-  return {
-    props: {
-      houses: data.data,
-      page: Number(query.page),
-      totalPage,
-      query,
-    },
-  };
-}
 export default Homes;
+
+// export async function getServerSideProps(context) {
+//   const { params, query } = context;
+
+//   const page = query.page || 1;
+//   const limit = 8 * page; // 8 items per page
+//   const start = (page - 1) * limit;
+//   // Get total count
+//   const countRes = await fetch(
+//     "https://rentify-api.runflare.run/api/properties"
+//   );
+//   const total = await countRes.json();
+
+//   let url = `https://rentify-api.runflare.run/api/properties?limit=${limit}`;
+
+//   // Add sorting if specified
+//   if (query.sort === "newest") {
+//     url += `&_sort=created_date&_order=desc`;
+//   } else if (query.sort === "cheap") {
+//     url += `&_sort=price,ejare_price&_order=asc`;
+//   } else if (query.sort === "expensive") {
+//     url += `&_sort=pric,ejare_pricee&_order=desc`;
+//   }
+//   // Add filter if specified
+//   if (query.minPrice) {
+//     url += `&price_gte=${query.minPrice}`;
+//   }
+//   if (query.maxPrice) {
+//     url += `&price_lte=${query.maxPrice}`;
+//   }
+//   if (query.room) {
+//     url += `&roomCount=${query.room}`;
+//   }
+//   if (query.houseType) {
+//     if (Array.isArray(query.houseType) && query.houseType.length > 0) {
+//       const newHouseType = ["Villa", "House", "Apartment"];
+//       const filterType = query.houseType.filter((item, i) =>
+//         newHouseType.includes(item)
+//       );
+//       url += filterType.map((item) => `&type=${item}`).join("");
+//     } else {
+//       url += `&type=${query.houseType}`;
+//     }
+//   }
+//   console.log(url);
+//   const res = await fetch(url);
+
+//   if (res.status !== 200) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+//   const data = await res.json();
+
+//   const totalPage = Math.ceil(total.length / 8);
+
+//   return {
+//     props: {
+//       houses: data.data,
+//       page: Number(query.page),
+//       totalPage,
+//       query,
+//     },
+//   };
+// }
+// export default Homes;

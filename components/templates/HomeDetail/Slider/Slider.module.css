@@ -18,6 +18,7 @@
   scrollbar-width: none;
   scroll-snap-type: x mandatory;
   scroll-snap-align: center;
+ 
 }
 .sliderGrid::-webkit-scrollbar {
   display: none;

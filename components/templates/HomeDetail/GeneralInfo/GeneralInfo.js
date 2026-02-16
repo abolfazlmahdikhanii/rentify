@@ -120,7 +120,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
       <section className={styles.section} id="equipment">
         <Title title="تجهیزات و امکانات" />
         <div className={styles.sectionGrid}>
-          {equipment.length ? (
+          {equipment?.length ? (
             equipment.map((item, i) => (
               <p key={item.id} className={styles.sectionIcon}>
                 <span dangerouslySetInnerHTML={{ __html: item.icon }}></span>
@@ -135,7 +135,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
       <section className={styles.section} id="description">
         <Title title="توضیحات" />
         <div>
-          {data.description ? (
+          {data?.description ? (
             <>
               <p
                 className={`${styles.disContent} ${

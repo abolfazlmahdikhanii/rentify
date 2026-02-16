@@ -28,7 +28,7 @@ const Slider = ({ images }) => {
   return (
     <div className={styles.sliderContainer}>
       <div className={styles.sliderGrid} ref={sliderRef}>
-        {images.length > 1 ? (
+        {images?.length > 1 ? (
           images.map((slide) => (
             <div
               className={styles.sliderImg}
@@ -39,6 +39,7 @@ const Slider = ({ images }) => {
                 src={slide.image_url}
                 alt="img"
                 className={styles.sliderImg__img}
+              
                 onLoadStart={(e) => {
                   if (e.target.src !== "/images/empty-image.jpg")
                     e.currentTarget.src = "/images/empty-image.jpg";
@@ -47,7 +48,6 @@ const Slider = ({ images }) => {
                   if (e.target.src !== "/images/empty-image.jpg")
                     e.currentTarget.src = "/images/empty-image.jpg";
                 }}
-                
               />
             </div>
           ))
@@ -59,11 +59,12 @@ const Slider = ({ images }) => {
               src={"/images/empty-image.jpg"}
               alt="img"
               className={styles.sliderImg__img}
+              priority
             />
           </div>
         )}
       </div>
-      {images.length > 3 ? (
+      {images?.length > 3 ? (
         <div className={styles.btnContainer}>
           <button className={styles.btnSlider} onClick={prevSlideHandler}>
             <svg
