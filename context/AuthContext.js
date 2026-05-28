@@ -23,13 +23,13 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       const response = await fetch(
-        "https://rentify-api.runflare.run/api/auth/get-me",
+        "https://rentify.bonto.run/api/auth/get-me",
         {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       const data = await response.json();
 

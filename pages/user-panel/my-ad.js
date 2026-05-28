@@ -14,7 +14,7 @@ import { CompareContext } from "@/context/CompareContext";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify-api.runflare.run/api/properties/user-ads", {
+  fetch("https://rentify.bonto.run/api/properties/user-ads", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const MyAdvertisement = () => {
   const [editingProperty, setEditingProperty] = useState(false);
 
   const removeAdHandler = (id) => {
-    fetch(`https://rentify-api.runflare.run/api/properties/${id}`, {
+    fetch(`https://rentify.bonto.run/api/properties/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,

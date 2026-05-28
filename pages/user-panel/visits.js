@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 
 const fetcher = () =>
-  fetch("https://rentify-api.runflare.run/api/visits/user", {
+  fetch("https://rentify.bonto.run/api/visits/user", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const MyAdvertisement = () => {
     setCurrentPage(page);
   };
   const cancelVisitHandler = (id) => {
-    fetch(`https://rentify-api.runflare.run/api/visits/${id}/cancel`, {
+    fetch(`https://rentify.bonto.run/api/visits/${id}/cancel`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -22,8 +22,8 @@ const fetcher = (url) =>
 
 const Dashboard = () => {
   const { data, error, isLoading } = useSWR(
-    "https://rentify-api.runflare.run/api/properties/admin-panel",
-    fetcher
+    "https://rentify.bonto.run/api/properties/admin-panel",
+    fetcher,
   );
 
   // Process chart data safely
@@ -69,10 +69,10 @@ const Dashboard = () => {
 
       // Separate charts by type
       const lineCharts = processedCharts.filter(
-        (chart) => chart.type === "line"
+        (chart) => chart.type === "line",
       );
       const columnCharts = processedCharts.filter(
-        (chart) => chart.type === "column" || chart.type === "bar"
+        (chart) => chart.type === "column" || chart.type === "bar",
       );
 
       return {
@@ -107,10 +107,10 @@ const Dashboard = () => {
               <ColumnChart
                 series={chartData.columnCharts[0].datasets}
                 categories={chartData.columnCharts[0].categories.map((cat) =>
-                  getTypeText(cat)
+                  getTypeText(cat),
                 )}
                 colors={chartData.columnCharts[0].datasets.map(
-                  (ds) => ds.color
+                  (ds) => ds.color,
                 )}
                 title="توزیع املاک بر اساس نوع"
               />

@@ -21,7 +21,7 @@ const buildUrl = (query) => {
   const page = query.page || 1;
   const limit = 8 * page;
 
-  let url = `https://rentify-api.runflare.run/api/properties?limit=${limit}`;
+  let url = `https://rentify.bonto.run/api/properties?limit=${limit}`;
 
   // Sorting
   if (query.sort === "newest") {
@@ -116,7 +116,7 @@ const Homes = () => {
   });
 
   const { data: totalCount } = useSWR(
-    "https://rentify-api.runflare.run/api/properties",
+    "https://rentify.bonto.run/api/properties",
     totalFetcher,
     {
       revalidateOnFocus: false,
@@ -426,11 +426,11 @@ export default Homes;
 //   const start = (page - 1) * limit;
 //   // Get total count
 //   const countRes = await fetch(
-//     "https://rentify-api.runflare.run/api/properties"
+//     "https://rentify.bonto.run/api/properties"
 //   );
 //   const total = await countRes.json();
 
-//   let url = `https://rentify-api.runflare.run/api/properties?limit=${limit}`;
+//   let url = `https://rentify.bonto.run/api/properties?limit=${limit}`;
 
 //   // Add sorting if specified
 //   if (query.sort === "newest") {

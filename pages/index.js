@@ -48,7 +48,7 @@ const Page = () => {
     error,
     isLoading,
     isValidating,
-  } = useSWR("https://rentify-api.runflare.run/api/properties", fetcher, {
+  } = useSWR("https://rentify.bonto.run/api/properties", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     fallbackData: [],

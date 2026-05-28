@@ -69,7 +69,7 @@ const Home = ({
   }
 
   const likeHomeHandler = (id) => {
-    fetch(`https://rentify-api.runflare.run/api/favorites`, {
+    fetch(`https://rentify.bonto.run/api/favorites`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +86,7 @@ const Home = ({
     });
   };
   const removeLikeHomeHandler = (id) => {
-    fetch(`https://rentify-api.runflare.run/api/favorites/${id}`, {
+    fetch(`https://rentify.bonto.run/api/favorites/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,

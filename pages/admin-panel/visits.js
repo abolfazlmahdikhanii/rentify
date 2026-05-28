@@ -13,7 +13,7 @@ import { toastOption } from "@/helper/helper";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify-api.runflare.run/api/visits/admin", {
+  fetch("https://rentify.bonto.run/api/visits/admin", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -39,7 +39,7 @@ const Visits = () => {
     }
   };
   const changeStatusHandler = (id, status) => {
-    fetch(`https://rentify-api.runflare.run/api/visits/${id}/status`, {
+    fetch(`https://rentify.bonto.run/api/visits/${id}/status`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -54,13 +54,13 @@ const Visits = () => {
         filterContent(tabActive);
         toast.success(
           `ملک با موفقیت ${status === "approved" ? "تایید" : "رد"} شد`,
-          toastOption
+          toastOption,
         );
       })
       .catch((err) => {
         toast.error(
           `خطا در ${status === "approved" ? "تایید" : "رد"} ملک`,
-          toastOption
+          toastOption,
         );
       });
   };

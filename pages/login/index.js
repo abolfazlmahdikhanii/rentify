@@ -137,7 +137,7 @@ export default function LoginPage() {
       setOtp(true);
       const email = getValues("email");
       setCountdown(180);
-      fetch("https://rentify-api.runflare.run/api/auth/send-otp", {
+      fetch("https://rentify.bonto.run/api/auth/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +163,7 @@ export default function LoginPage() {
   };
   const verifyOtp = () => {
     setIsLoading(true);
-    fetch("https://rentify-api.runflare.run/api/auth/verify-otp", {
+    fetch("https://rentify.bonto.run/api/auth/verify-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -211,7 +211,7 @@ export default function LoginPage() {
   };
   const resendOtp = () => {
     const email = getValues("email");
-    fetch("https://rentify-api.runflare.run/api/auth/send-otp", {
+    fetch("https://rentify.bonto.run/api/auth/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -241,7 +241,7 @@ export default function LoginPage() {
         lastName: getValues("last_name"),
         agencyName: getValues("agency_name"),
       };
-      fetch("https://rentify-api.runflare.run/api/auth/setup-profile", {
+      fetch("https://rentify.bonto.run/api/auth/setup-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

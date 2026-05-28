@@ -55,7 +55,7 @@ const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
       visitTime: selectedTime,
       visitDate: formatNewDate(date),
     };
-    fetch(`https://rentify-api.runflare.run/api/visits/${id}`, {
+    fetch(`https://rentify.bonto.run/api/visits/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

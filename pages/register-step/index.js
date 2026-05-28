@@ -20,11 +20,11 @@ import PrivateRoute from "@/components/module/PrivateRoute/PrivateRoute";
 
 const fetcher = () =>
   fetch("https://iranplacesapi.liara.run/api/provinces").then((res) =>
-    res.json()
+    res.json(),
   );
 const fetcherEquipment = () =>
-  fetch("https://rentify-api.runflare.run/api/properties/equipment").then(
-    (res) => res.json()
+  fetch("https://rentify.bonto.run/api/properties/equipment").then((res) =>
+    res.json(),
   );
 
 export default function RegisterStep() {
@@ -250,17 +250,14 @@ export default function RegisterStep() {
         longitude: position?.[0],
       };
 
-      const response = await fetch(
-        `https://rentify-api.runflare.run/api/properties`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-          body: JSON.stringify(backendData),
-        }
-      );
+      const response = await fetch(`https://rentify.bonto.run/api/properties`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+        body: JSON.stringify(backendData),
+      });
 
       const result = await response.json();
 
@@ -297,7 +294,7 @@ export default function RegisterStep() {
         if (!(file instanceof File)) {
           console.warn(
             `Item at index ${index} is not a valid File object:`,
-            file
+            file,
           );
           return;
         }
@@ -309,14 +306,14 @@ export default function RegisterStep() {
       console.log("FormData contents:");
 
       const response = await fetch(
-        `https://rentify-api.runflare.run/api/properties/${propertyId}/images`,
+        `https://rentify.bonto.run/api/properties/${propertyId}/images`,
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
           body: formData,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -337,7 +334,7 @@ export default function RegisterStep() {
   };
   const fillTitle = () => {
     const title = `${houseTypeToPersian(watch("houseType"))} ${watch(
-      "bedrooms"
+      "bedrooms",
     )} خوابه در ${watch("city")}`;
     return title;
   };
@@ -393,7 +390,7 @@ export default function RegisterStep() {
                     const digitsOnly = val.replace(/\D/g, "");
                     const formatted = digitsOnly.replace(
                       /\B(?=(\d{3})+(?!\d))/g,
-                      ","
+                      ",",
                     );
                     setValue("rahnPrice", formatted);
                   }}
@@ -409,7 +406,7 @@ export default function RegisterStep() {
                     const digitsOnly = val.replace(/\D/g, "");
                     const formatted = digitsOnly.replace(
                       /\B(?=(\d{3})+(?!\d))/g,
-                      ","
+                      ",",
                     );
                     setValue("ejarePrice", formatted);
                   }}
@@ -676,7 +673,7 @@ export default function RegisterStep() {
                             checked
                               ? [...current, item.id]
                               : current.filter((id) => id !== item.id),
-                            { shouldValidate: true } // Trigger validation immediately
+                            { shouldValidate: true }, // Trigger validation immediately
                           );
                         }}
                         value={isChecked}

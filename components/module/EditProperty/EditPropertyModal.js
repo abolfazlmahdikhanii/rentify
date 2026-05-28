@@ -19,7 +19,7 @@ import { toastOption } from "@/helper/helper";
 
 const fetcher = () =>
   fetch("https://iranplacesapi.liara.run/api/provinces").then((res) =>
-    res.json()
+    res.json(),
   );
 export default function EditPropertyModal({
   isOpen,
@@ -153,7 +153,7 @@ export default function EditPropertyModal({
   const fetchEquipment = async () => {
     try {
       const response = await fetch(
-        "https://rentify-api.runflare.run/api/properties/equipment"
+        "https://rentify.bonto.run/api/properties/equipment",
       );
       const data = await response.json();
       setEquipment(data.data || []);
@@ -280,7 +280,7 @@ export default function EditPropertyModal({
       };
 
       const response = await fetch(
-        `https://rentify-api.runflare.run/api/properties/${propertyData.id}`,
+        `https://rentify.bonto.run/api/properties/${propertyData.id}`,
         {
           method: "PUT",
           headers: {
@@ -288,7 +288,7 @@ export default function EditPropertyModal({
             Authorization: `Bearer ${getCookie("token")}`,
           },
           body: JSON.stringify(backendData),
-        }
+        },
       );
 
       const result = await response.json();
@@ -331,7 +331,7 @@ export default function EditPropertyModal({
         if (!(file instanceof File)) {
           console.warn(
             `Item at index ${index} is not a valid File object:`,
-            file
+            file,
           );
           return false;
         }
@@ -356,18 +356,18 @@ export default function EditPropertyModal({
 
       // Log FormData entries for debugging
       console.log(
-        `Uploading ${validFiles.length} images for property ${propertyId}`
+        `Uploading ${validFiles.length} images for property ${propertyId}`,
       );
 
       const response = await fetch(
-        `https://rentify-api.runflare.run/api/properties/${propertyId}/images`,
+        `https://rentify.bonto.run/api/properties/${propertyId}/images`,
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
           body: formData,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -393,7 +393,7 @@ export default function EditPropertyModal({
 
   const fillTitle = () => {
     const title = `${houseTypeToPersian(watch("houseType"))} ${watch(
-      "bedrooms"
+      "bedrooms",
     )} خوابه در ${watch("city")}`;
     return title;
   };
@@ -445,7 +445,7 @@ export default function EditPropertyModal({
                   const digitsOnly = val.replace(/\D/g, "");
                   const formatted = digitsOnly.replace(
                     /\B(?=(\d{3})+(?!\d))/g,
-                    ","
+                    ",",
                   );
                   setValue("rahnPrice", formatted);
                 }}
@@ -461,7 +461,7 @@ export default function EditPropertyModal({
                   const digitsOnly = val.replace(/\D/g, "");
                   const formatted = digitsOnly.replace(
                     /\B(?=(\d{3})+(?!\d))/g,
-                    ","
+                    ",",
                   );
                   setValue("ejarePrice", formatted);
                 }}
@@ -716,7 +716,7 @@ export default function EditPropertyModal({
                           checked
                             ? [...currentFacilities, item.id] // Add id if checked
                             : currentFacilities.filter((id) => id !== item.id), // Remove id if unchecked
-                          { shouldValidate: true }
+                          { shouldValidate: true },
                         );
                       }}
                     />

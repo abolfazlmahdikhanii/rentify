@@ -53,7 +53,7 @@ const HomePageDetail = () => {
     error,
     isLoading,
   } = useSWR(
-    id ? `https://rentify-api.runflare.run/api/properties/${id}` : null,
+    id ? `https://rentify.bonto.run/api/properties/${id}` : null,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -193,7 +193,7 @@ export default HomePageDetail;
 //   const token = cookies.token;
 
 //   const res = await fetch(
-//     `https://rentify-api.runflare.run/api/properties/${params.id}`,
+//     `https://rentify.bonto.run/api/properties/${params.id}`,
 //     {
 //       method: "GET",
 //       headers: { Authorization: `Bearer ${token}` },

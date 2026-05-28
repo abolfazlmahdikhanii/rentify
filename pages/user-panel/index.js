@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 const fetcher = () =>
-  fetch("https://rentify-api.runflare.run/api/auth/info", {
+  fetch("https://rentify.bonto.run/api/auth/info", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const Dashboard = () => {
   const onSubmit = async (formData) => {
     try {
       const response = await fetch(
-        "https://rentify-api.runflare.run/api/auth/complete-profile",
+        "https://rentify.bonto.run/api/auth/complete-profile",
         {
           method: "POST",
           headers: {
@@ -64,7 +64,7 @@ const Dashboard = () => {
             ...formData,
             // profileImage // Include the image if you're uploading it
           }),
-        }
+        },
       );
 
       const result = await response.json();

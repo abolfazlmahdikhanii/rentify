@@ -18,7 +18,7 @@ import useSWR from "swr";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify-api.runflare.run/api/properties/admin-ads", {
+  fetch("https://rentify.bonto.run/api/properties/admin-ads", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -40,7 +40,7 @@ const MyAdvertisement = () => {
     }
   }, [data]);
   const approveHandler = (id) => {
-    fetch(`https://rentify-api.runflare.run/api/properties/${id}/approve`, {
+    fetch(`https://rentify.bonto.run/api/properties/${id}/approve`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${getCookie("token")}` },
     })
@@ -57,7 +57,7 @@ const MyAdvertisement = () => {
       });
   };
   const rejectHandler = (id, reason) => {
-    fetch(`https://rentify-api.runflare.run/api/properties/${id}/reject`, {
+    fetch(`https://rentify.bonto.run/api/properties/${id}/reject`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -84,18 +84,18 @@ const MyAdvertisement = () => {
   const deleteProperty = async (id) => {
     try {
       const response = await fetch(
-        `https://rentify-api.runflare.run/api/properties/${id}`,
+        `https://rentify.bonto.run/api/properties/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${getCookie("token")}` },
-        }
+        },
       );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
           errorData.message ||
-            `Failed to delete property: ${response.status} ${response.statusText}`
+            `Failed to delete property: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -125,7 +125,7 @@ const MyAdvertisement = () => {
           err.message?.includes("حذف")
           ? "خطا در حذف ملک. لطفاً دوباره تلاش کنید"
           : "خطا در اتصال به سرور",
-        toastOption
+        toastOption,
       );
 
       throw err; // Re-throw the error if you need to handle it further up the chain
@@ -278,8 +278,8 @@ const MyAdvertisement = () => {
             // Update your properties list
             setProperties(
               properties.map((p) =>
-                p.id === updatedProperty.id ? updatedProperty : p
-              )
+                p.id === updatedProperty.id ? updatedProperty : p,
+              ),
             );
           }}
         />
