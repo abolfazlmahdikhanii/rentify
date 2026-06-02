@@ -5,22 +5,16 @@ import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { AuthContext } from "@/context/AuthContext";
 import { PanelContext, PanelProvider } from "@/context/PanelContext";
 import { toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/auth/info", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getCookie("token")}`,
-    },
-  }).then((res) => res.json());
+
 const Dashboard = () => {
-  const { data, isLoading, error } = useSWR("info", fetcher);
+  const { user, refetch, loading, logoutHandler } = useContext(AuthContext);
+  const router = useRouter();
 
   const [profileImage, setProfileImage] = useState("");
   const {
@@ -30,12 +24,14 @@ const Dashboard = () => {
     reset,
     setValue,
   } = useForm({
-    name: data?.user?.name || "",
-    lastName: data?.user?.lastName || "",
-    job: data?.user?.job || "",
-    phone: data?.user?.phone || "",
-    email: data?.user?.email || "",
-    password: "", // Don't pre-fill password for security
+    defaultValues: {
+      name: user?.name || "",
+      lastName: user?.lastName || "",
+      job: user?.job || "",
+      phone: user?.phone || "",
+      email: user?.email || "",
+      password: "", // Don't pre-fill password for security
+    },
   });
 
   const handleImageChange = (e) => {
@@ -50,29 +46,39 @@ const Dashboard = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name || "",
+        lastName: user.lastName || "",
+        job: user.job || "",
+        phone: user.phone || "",
+        email: user.email || "",
+        password: "",
+      });
+    }
+  }, [user, reset]);
   const onSubmit = async (formData) => {
     try {
-      const response = await fetch(
-        "https://rentify.bonto.run/api/auth/complete-profile",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-          body: JSON.stringify({
-            ...formData,
-            // profileImage // Include the image if you're uploading it
-          }),
+      const response = await fetch("/api/auth/completed-profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          ...formData,
+          // profileImage // Include the image if you're uploading it
+        }),
+      });
 
       const result = await response.json();
       if (response.ok) {
-        // Handle success (show toast, etc.)
         toast.success("اطلاعات با موفقیت ثبت شد", toastOption);
+       setTimeout(() => {
+          logoutHandler();
+        }, 600);
       } else {
-        // Handle error
         toast.error("ثبت اطلاعات با خطا مواجه شد", toastOption);
       }
     } catch (error) {
@@ -80,11 +86,11 @@ const Dashboard = () => {
     }
   };
 
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+  // if (!user) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <>
       <DashboardLayout title="ویرایش اطلاعات" role="user">
+        {loading && <Loader />}
         <form onSubmit={handleSubmit(onSubmit)}>
           <Content>
             <div className="profile-image-section">
@@ -120,7 +126,7 @@ const Dashboard = () => {
                       type="text"
                       className={`input ${errors.name ? "input-error" : ""}`}
                       placeholder="نام را وارد کنید"
-                      defaultValue={data?.user?.name}
+                      defaultValue={user?.name}
                       {...register("name", {
                         required: "نام الزامی است",
 
@@ -145,7 +151,7 @@ const Dashboard = () => {
                         errors.lastName ? "input-error" : ""
                       }`}
                       placeholder="نام خانوادگی را وارد کنید"
-                      defaultValue={data?.user?.lastName}
+                      defaultValue={user?.lastName}
                       {...register("lastName", {
                         required: "نام خانوادگی الزامی است",
                         minLength: {
@@ -169,7 +175,7 @@ const Dashboard = () => {
                       type="text"
                       className="input"
                       placeholder="شغل را وارد کنید"
-                      defaultValue={data?.user?.job}
+                      defaultValue={user?.job}
                       {...register("job")}
                     />
                   </div>
@@ -182,7 +188,7 @@ const Dashboard = () => {
                       type="tel"
                       className={`input ${errors.phone ? "input-error" : ""}`}
                       placeholder="تلفن همراه را وارد کنید"
-                      defaultValue={data?.user?.phone}
+                      defaultValue={user?.phone}
                       {...register("phone", {
                         required: "شماره تلفن الزامی است",
                         pattern: {
@@ -206,7 +212,7 @@ const Dashboard = () => {
                       className={`input ${errors.email ? "input-error" : ""}`}
                       placeholder="ایمیل را وارد کنید"
                       autoComplete="username"
-                      defaultValue={data?.user?.email}
+                      defaultValue={user?.email}
                       {...register("email", {
                         required: "ایمیل الزامی است",
                         pattern: {

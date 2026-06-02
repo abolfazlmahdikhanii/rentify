@@ -6,7 +6,7 @@ import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { getDate, getStatusText, toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
+
 import {
   EllipsisVertical,
   Eye,
@@ -27,9 +27,8 @@ import TabPanel from "@/components/module/AdminPanel/TabPanel/TabPanel";
 import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import Loader from "@/components/module/Loader/Loader";
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/comments/admin", {
+  fetch("/api/comments", {
     method: "GET",
-    headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const Comments = () => {
   const { data, isLoading, mutate, error } = useSWR("comments", fetcher);
@@ -46,17 +45,20 @@ const Comments = () => {
   const [tabActive, setTabActive] = useState("all");
 
   useEffect(() => {
-    if (data) {
+    if (data&&data.comments) {
       filterContent("all");
     }
+  
   }, [data]);
   const filterContent = (filterType) => {
-    if (!data) return;
+    if (!data.comments) return;
 
     if (filterType === "all") {
-      setFilterComment(data);
+      setFilterComment(data.comments);
     } else {
-      setFilterComment(data.filter((item) => item.status === filterType));
+      setFilterComment(
+        data.comments.filter((item) => item.status === filterType),
+      );
     }
   };
   const updateSelectedComment = (id, status) => {
@@ -78,11 +80,10 @@ const Comments = () => {
     const newComment = {
       content: replyContent,
     };
-    fetch(`https://rentify.bonto.run/api/comments/${commentId}`, {
+    fetch(`/api/comments/${commentId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
       body: JSON.stringify(newComment),
     })
@@ -104,7 +105,7 @@ const Comments = () => {
   };
 
   const approveCommentHandler = (id) => {
-    fetch(`https://rentify.bonto.run/api/comments/${id}/approve`, {
+    fetch(`/api/comments/${id}/approve`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -127,7 +128,7 @@ const Comments = () => {
       });
   };
   const rejectCommentHandler = (id) => {
-    fetch(`https://rentify.bonto.run/api/comments/${id}/reject`, {
+    fetch(`/api/comments/${id}/reject`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -151,7 +152,7 @@ const Comments = () => {
       });
   };
   const handleDelete = (commentId) => {
-    fetch(`https://rentify.bonto.run/api/comments/${commentId}`, {
+    fetch(`/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -176,10 +177,11 @@ const Comments = () => {
       });
   };
 
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error)  toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="نظرات" role="admin">
+        {isLoading&&<Loader />}
       <TabPanel>
         <TabPanelItem
           title="همه نظرات"

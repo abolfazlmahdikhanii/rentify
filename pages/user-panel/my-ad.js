@@ -6,7 +6,7 @@ import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
+
 import React, { use, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
@@ -14,11 +14,10 @@ import { CompareContext } from "@/context/CompareContext";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/properties/user-ads", {
+  fetch("/api/properties/my", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getCookie("token")}`,
     },
   }).then((res) => {
     if (res.ok) return res.json();
@@ -32,10 +31,10 @@ const MyAdvertisement = () => {
   const [editingProperty, setEditingProperty] = useState(false);
 
   const removeAdHandler = (id) => {
-    fetch(`https://rentify.bonto.run/api/properties/${id}`, {
+    fetch(`/api/properties/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${getCookie("token")}`,
+        "Content-Type": "application/json",
       },
     }).then((res) => {
       if (res.ok) {
@@ -53,21 +52,21 @@ const MyAdvertisement = () => {
     ? data.data.slice((currentPage - 1) * 9, currentPage * 9)
     : [];
 
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+  if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="آگهی‌های من">
+      {isLoading && <Loader />}
       <Content>
         {data?.data && data?.data.length > 0 ? (
           <>
             <div className="fav-grid">
               {paginationData.map((home) => (
                 <Home
-                  key={home.id}
+                  key={home._id}
                   {...home}
                   isBorder={true}
                   isMyAd={true}
-                  remove={() => removeAdHandler(home.id)}
+                  remove={() => removeAdHandler(home._id)}
                   onDetail={() => {
                     setAdDetail(home);
                     setIsOpenDialog(true);

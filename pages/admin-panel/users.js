@@ -16,7 +16,7 @@ import useSWR from "swr";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/auth/admin/users", {
+  fetch("/api/admin/users", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -82,10 +82,11 @@ const Users = () => {
         toast.error("خطا در تغییر کاربر", toastOption);
       });
   };
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error)  toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="کاربران" role="admin">
+        {isLoading&&<Loader />}
       <Content type="tbl">
         {data?.users?.length ? (
           <PropertyTable

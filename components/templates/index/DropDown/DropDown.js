@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import styles from "./dropdown.module.css";
-const DropDown = ({ datas, title, selected, setSelected }) => {
+const DropDown = ({
+  datas,
+  title,
+  selected,
+  setSelected,
+  isContract = false,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -12,9 +18,15 @@ const DropDown = ({ datas, title, selected, setSelected }) => {
     setIsOpen(false);
   };
   const englishTypeToPersian = (data) => {
-    if (data === "Apartment") return "آپارتمان";
-    else if (data === "Villa") return "ویلا";
-    else if (data === "House") return "خانه ویلایی";
+    if (data === "apartment") return "آپارتمان";
+    else if (data === "villa") return "ویلا";
+    else if (data === "house") return "خانه ویلایی";
+    else return data;
+  };
+  const englishContractTypeToPersian = (data) => {
+    if (data === "sale") return "فروش";
+    else if (data === "rent") return "اجاره";
+    else if (data === "mortgage") return "رهن و اجاره";
     else return data;
   };
   return (
@@ -58,7 +70,9 @@ const DropDown = ({ datas, title, selected, setSelected }) => {
             )}
           </div>
         </div>
-        <div className={styles.selectedLocation}>{englishTypeToPersian(selected)}</div>
+        <div className={styles.selectedLocation}>
+          {isContract ? englishContractTypeToPersian(selected) : englishTypeToPersian(selected)}
+        </div>
       </div>
 
       {isOpen && (
@@ -70,7 +84,7 @@ const DropDown = ({ datas, title, selected, setSelected }) => {
                   className={styles.locationOption}
                   onClick={() => selectHandler(data)}
                 >
-                  {englishTypeToPersian(data)}
+                  {isContract ? englishContractTypeToPersian(data) : englishTypeToPersian(data)}
                 </div>
               ))
             : null}

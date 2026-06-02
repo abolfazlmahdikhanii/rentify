@@ -1,58 +1,86 @@
-import { toastOption } from "@/helper/helper";
-import { getCookie, deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
+import useSWR from "swr";
 import { toast } from "react-toastify";
+import { toastOption } from "@/helper/helper";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const token = getCookie("token");
-  const route = useRouter();
-  useEffect(() => {
-    fetchUser();
-  }, [token]);
-  // console.log(token);
+const refreshToken = async () => {
+  try {
+    const res = await fetch("/api/auth/refresh", { method: "POST" });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    return null;
+  }
+};
 
-  const fetchUser = async () => {
-    try {
-      if (!token) {
-        setLoading(false);
-        return;
+const fetcher = async (url) => {
+  const res = await fetch(url, { method: "GET" });
+  if (res.status === 401) {
+    const refreshed = await refreshToken();
+    if (refreshed) {
+      const retried = await fetch(url, { method: "GET" });
+      if (!retried.ok) {
+        const error = new Error("Error fetching");
+        error.status = retried.status;
+        error.info = await retried.json().catch(() => null);
+        throw error;
       }
-      const response = await fetch(
-        "https://rentify.bonto.run/api/auth/get-me",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      const data = await response.json();
-
-      setUser(data.user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-    } finally {
-      setLoading(false);
+      return retried.json();
     }
-  };
-  const logoutHandler = () => {
-    setLoading(true);
-    route.replace("/");
-    toast.success("با موفقیت خارج شدید", toastOption);
-    setUser(null);
-    setLoading(false);
+    const err = new Error("Unauthorized");
+    err.status = 401;
+    throw err;
+  }
 
-    deleteCookie("token");
+  if (!res.ok) {
+    const error = new Error("Error fetching");
+    error.status = res.status;
+    error.info = await res.json().catch(() => null);
+    throw error;
+  }
+
+  return res.json();
+};
+
+export const AuthProvider = ({ children }) => {
+  const router = useRouter();
+
+  const { data, error, isLoading, mutate } = useSWR("/api/auth/me", fetcher, {
+    revalidateOnFocus: false,
+  
+  });
+
+  const user = data?.user ?? null;
+  const loading = isLoading;
+
+  const setUser = (value) => mutate({ user: value }, false);
+  const refetchUser = () => mutate();
+
+  const logoutHandler = async () => {
+    try {
+      const res = await fetch("/api/auth/signout", { method: "POST" });
+      if (res.ok) {
+        mutate({ user: null }, false);
+        toast.success("با موفقیت خارج شدید", toastOption);
+        router.replace("/");
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, setUser, logoutHandler }}>
+    <AuthContext.Provider
+      value={{ user, loading, setUser, refetchUser, logoutHandler, error }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+
+
+export default AuthContext;

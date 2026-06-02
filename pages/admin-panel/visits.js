@@ -5,7 +5,6 @@ import TabPanelItem from "@/components/module/AdminPanel/TabPanel/TabPanelItem";
 import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
-import { getCookie } from "cookies-next";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { toast } from "react-toastify";
@@ -13,9 +12,8 @@ import { toastOption } from "@/helper/helper";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/visits/admin", {
+  fetch("/api/admin/visits", {
     method: "GET",
-    headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
 const Visits = () => {
   const { data, isLoading, mutate, error } = useSWR("visits", fetcher);
@@ -23,26 +21,25 @@ const Visits = () => {
   const [newVisits, setNewVisits] = useState([]);
   const [tabActive, setTabActive] = useState("all");
   useEffect(() => {
-    if (data && tabActive === "all") {
+    if (data && data.visits && tabActive === "all") {
       filterContent("all");
-    } else if (data && tabActive !== "all") {
+    } else if (data && data.visits && tabActive !== "all") {
       filterContent(tabActive);
     }
   }, [data, tabActive]);
   const filterContent = (filterType) => {
-    if (!data) return;
+    if (!data || !data.visits) return;
 
     if (filterType === "all") {
-      setNewVisits(data);
+      setNewVisits(data.visits);
     } else {
-      setNewVisits(data.filter((item) => item.status === filterType));
+      setNewVisits(data.visits.filter((item) => item.status === filterType));
     }
   };
   const changeStatusHandler = (id, status) => {
-    fetch(`https://rentify.bonto.run/api/visits/${id}/status`, {
+    fetch(`/api/visits/${id}/status`, {
       method: "PATCH",
       headers: {
-        Authorization: `Bearer ${getCookie("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ status }),
@@ -64,10 +61,11 @@ const Visits = () => {
         );
       });
   };
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="بازدیدها" role="admin">
+      {isLoading && <Loader />}
       <TabPanel>
         <TabPanelItem
           title="همه بازدید ها"

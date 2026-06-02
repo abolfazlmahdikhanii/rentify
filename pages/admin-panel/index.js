@@ -4,7 +4,7 @@ import LineChart from "@/components/templates/AdminPanel/LineChart/LineChart";
 import Content from "@/components/module/UserPanel/Content/Content";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { getTypeText, toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
+
 import React, { useMemo } from "react";
 import useSWR from "swr";
 import { PanelProvider } from "@/context/PanelContext";
@@ -16,15 +16,11 @@ const fetcher = (url) =>
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getCookie("token")}`,
     },
   }).then((res) => res.json());
 
 const Dashboard = () => {
-  const { data, error, isLoading } = useSWR(
-    "https://rentify.bonto.run/api/properties/admin-panel",
-    fetcher,
-  );
+  const { data, error, isLoading } = useSWR("/api/admin/dashboard/", fetcher);
 
   // Process chart data safely
   const chartData = useMemo(() => {
@@ -95,15 +91,15 @@ const Dashboard = () => {
     }
   }, [data, isLoading, error]);
 
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+  if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="" role="admin">
+      {isLoading && <Loader />}
       <Content isDashboard={true}>
-        <InfoCards data={data.data && data.data.infoBoxes} />
+        <InfoCards data={data?.data && data.data.infoBoxes} />
         <div className="panel-main">
           <div className="panel-charts">
-            {chartData.columnCharts.length > 0 && (
+            {chartData.columnCharts?.length > 0 && (
               <ColumnChart
                 series={chartData.columnCharts[0].datasets}
                 categories={chartData.columnCharts[0].categories.map((cat) =>
@@ -115,7 +111,7 @@ const Dashboard = () => {
                 title="توزیع املاک بر اساس نوع"
               />
             )}
-            {chartData.lineCharts.length > 0 && (
+            {chartData.lineCharts?.length > 0 && (
               <LineChart
                 series={chartData.lineCharts[0].datasets}
                 categories={chartData.lineCharts[0].categories}

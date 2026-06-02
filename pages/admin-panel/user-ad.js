@@ -18,7 +18,7 @@ import useSWR from "swr";
 import Loader from "@/components/module/Loader/Loader";
 
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/properties/admin-ads", {
+  fetch("/api/admin/properties/", {
     method: "GET",
     headers: { Authorization: `Bearer ${getCookie("token")}` },
   }).then((res) => res.json());
@@ -144,10 +144,11 @@ const MyAdvertisement = () => {
     }
   };
 
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error)  toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده" role="admin">
+        {isLoading&&<Loader />}
       <TabPanel>
         <TabPanelItem
           title="همه آگهی ها"

@@ -137,6 +137,7 @@
 .formRow {
   display: flex;
   gap: 2rem;
+  width: 100%;
 }
 .mb4 {
   margin-bottom: 4.5rem;

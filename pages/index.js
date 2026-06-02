@@ -12,62 +12,37 @@ import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
 import Loader from "@/components/module/Loader/Loader";
 
+import { userVerify } from "@/lib/userAuth";
+import { getProperties } from "@/service/propertyService";
 const fetcher = async (url) => {
-  const token = Cookies.get("token");
-
   const headers = {
     "Content-Type": "application/json",
   };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
   const res = await fetch(url, { headers });
 
   if (!res.ok) {
     throw new Error(`API Error: ${res.status}`);
   }
-
   const data = await res.json();
-
-  // مهم: چک کنیم که data.data آرایه هست یا نه
-  if (Array.isArray(data?.data)) {
+  if (Array.isArray(data?.properties)) {
     return data.data;
-  } else if (Array.isArray(data)) {
-    return data;
   } else {
     console.error("Unexpected data format:", data);
     return [];
   }
 };
-
-const Page = () => {
+const Page = ({ homes }) => {
   const {
     data: houses,
     error,
     isLoading,
     isValidating,
-  } = useSWR("https://rentify.bonto.run/api/properties", fetcher, {
+  } = useSWR("/api/properties", fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
-    fallbackData: [],
-    dedupingInterval: 2000,
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      if (retryCount >= 3) return;
-      setTimeout(() => revalidate({ retryCount }), 5000);
-    },
+    fallbackData: homes,
   });
-
-  // نمایش خطا فقط یکبار
-  useEffect(() => {
-    if (error) {
-      toast.error("خطا در دریافت اطلاعات", toastOption);
-    }
-  }, [error]);
-
-  // مطمئن بشیم که houses همیشه آرایه هست
-  const housesList = Array.isArray(houses) ? houses : [];
+  const housesList = Array.isArray(houses.properties) ? houses.properties : [];
 
   return (
     <div className={styles.main}>
@@ -76,20 +51,27 @@ const Page = () => {
         <BestHome
           src={"/images/bh-3.png"}
           title="ویلا"
-          count={housesList.filter((item) => item.type === "Villa").length}
-          type="Villa"
+          count={
+            housesList.filter((item) => item.propertyType === "villa").length
+          }
+          type="villa"
         />
         <BestHome
           src={"/images/bh-2.png"}
           title="آپارتمان"
-          count={housesList.filter((item) => item.type === "Apartment").length}
-          type="Apartment"
+          count={
+            housesList.filter((item) => item.propertyType === "apartment")
+              .length
+          }
+          type="apartment"
         />
         <BestHome
           src={"/images/bh-1.png"}
           title="خانه ویلایی"
-          count={housesList.filter((item) => item.type === "House").length}
-          type="House"
+          count={
+            housesList.filter((item) => item.propertyType === "house").length
+          }
+          type="house"
         />
       </div>
       <LastVisited houses={housesList} />
@@ -104,34 +86,19 @@ const Page = () => {
   );
 };
 
+export async function getServerSideProps({ query, req, res }) {
+  const user =await userVerify(req, res);
+  const data = await getProperties(
+    {
+      limit: 8,
+    },
+    user._id,
+  );
+
+  return {
+    props: {
+      homes: JSON.parse(JSON.stringify(data)),
+    },
+  };
+}
 export default Page;
-// export async function getServerSideProps(context) {
-//   try {
-//     const token = context.req.cookies?.token;
-
-//     const res = await fetch("http://rentify-api.runflare.run/api/properties", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//         ...(token && { Authorization: `Bearer ${token}` }),
-//       },
-//     });
-
-//     if (!res.ok) {
-//       console.error("API Error:", res.status);
-//       return { props: { houses: [] } };
-//     }
-
-//     const data = await res.json();
-
-//     return {
-//       props: {
-//         houses: data?.data || [],
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Fetch error:", error.message);
-//     return { props: { houses: [] } };
-//   }
-// }
-// export default Page;

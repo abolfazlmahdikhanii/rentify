@@ -6,27 +6,23 @@ import { useRouter } from "next/router";
 const HeroBg = ({ children, houses = [] }) => {
   const router = useRouter();
 
-
   const newLocation = useMemo(() => {
-    if (!houses || houses.length === 0) {
-      return ["تهران", "اصفهان", "شیراز"]; // مقادیر پیش‌فرض
-    }
-    const locations = houses
-      .map((item) => item?.location)
-      .filter(Boolean); // فیلتر کردن undefined و null
-    return Array.from(new Set(locations));
+    if (!houses?.length) return [];
+
+    return [
+      ...new Set(houses.map((item) => item?.location?.city.title).filter(Boolean)),
+    ];
   }, [houses]);
 
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedHomeType, setSelectedHomeType] = useState("Apartment");
-  const [selectedContractType, setSelectedContractType] = useState("رهن");
-
+  const [selectedHomeType, setSelectedHomeType] = useState("apartment");
+  const [selectedContractType, setSelectedContractType] = useState("rent");
 
   useEffect(() => {
     if (newLocation.length > 0 && !selectedLocation) {
       setSelectedLocation(newLocation[0]);
     }
-  }, [newLocation, selectedLocation,setSelectedLocation]);
+  }, [newLocation, selectedLocation, setSelectedLocation]);
 
   const searchHomeHandler = () => {
     if (!selectedLocation) {
@@ -43,8 +39,6 @@ const HeroBg = ({ children, houses = [] }) => {
       },
     });
   };
-
- 
 
   return (
     <div className={styles.heroBg}>
@@ -64,15 +58,16 @@ const HeroBg = ({ children, houses = [] }) => {
             />
             <DropDown
               title="نوع ملک"
-              datas={["Apartment", "Villa", "House"]}
+              datas={["apartment", "villa", "house"]}
               selected={selectedHomeType}
               setSelected={setSelectedHomeType}
             />
             <DropDown
               title="نوع قرارداد"
-              datas={["رهن", "اجاره"]}
+              datas={["mortgage", "rent", "sale"]}
               selected={selectedContractType}
               setSelected={setSelectedContractType}
+              isContract={true}
             />
           </div>
           <div className={styles.searchBox__left} onClick={searchHomeHandler}>

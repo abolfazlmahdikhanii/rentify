@@ -7,16 +7,15 @@ import styles from "../../styles/Compare.module.css";
 import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { getCookie } from "cookies-next";
+
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import Loader from "@/components/module/Loader/Loader";
 import { toast } from "react-toastify";
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/favorites", {
+  fetch("/api/favorites", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getCookie("token")}`,
     },
   }).then((res) => {
     if (res.ok) return res.json();
@@ -36,7 +35,8 @@ const compare = () => {
   useEffect(() => {
     toggleCompare();
   }, []);
-  const displayedHomes = data?.slice(0, 6) || [];
+
+  const displayedHomes = data.data?.slice(0, 6) || [];
   if (isLoading) return <Loader />;
   if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
   return (

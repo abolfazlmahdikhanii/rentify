@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import Cookies from "js-cookie";
@@ -11,6 +17,8 @@ import Home from "@/components/module/Home/Home";
 import NotFound from "@/components/module/NotFound/NotFound";
 import { CompareContext } from "@/context/CompareContext";
 import Loader from "@/components/module/Loader/Loader";
+import { getProperties } from "@/service/propertyService";
+import { userVerify } from "@/lib/userAuth";
 
 const FilterModal = dynamic(
   () => import("@/components/module/FilterModal/FilterModal"),
@@ -21,72 +29,59 @@ const buildUrl = (query) => {
   const page = query.page || 1;
   const limit = 8 * page;
 
-  let url = `https://rentify.bonto.run/api/properties?limit=${limit}`;
+  let url = `/api/properties?page=${page}&limit=${limit}`;
 
-  // Sorting
-  if (query.sort === "newest") {
-    url += `&_sort=created_date&_order=desc`;
-  } else if (query.sort === "cheap") {
-    url += `&_sort=price,ejare_price&_order=asc`;
-  } else if (query.sort === "expensive") {
-    url += `&_sort=price,ejare_price&_order=desc`;
+  if (query.sort) {
+    url += `&sort=${query.sort}`;
   }
 
-  // Filters
   if (query.minPrice) {
-    url += `&price_gte=${query.minPrice}`;
+    url += `&minPrice=${query.minPrice}`;
   }
+
   if (query.maxPrice) {
-    url += `&price_lte=${query.maxPrice}`;
+    url += `&maxPrice=${query.maxPrice}`;
   }
-  if (query.room) {
-    url += `&roomCount=${query.room}`;
-  }
+
+ 
   if (query.houseType) {
-    if (Array.isArray(query.houseType) && query.houseType.length > 0) {
-      const validTypes = ["Villa", "House", "Apartment"];
-      const filterType = query.houseType.filter((item) =>
-        validTypes.includes(item),
-      );
-      url += filterType.map((item) => `&type=${item}`).join("");
+    if (Array.isArray(query.houseType)) {
+      query.houseType.forEach((type) => {
+        url += `&propertyType=${type}`;
+      });
     } else {
-      url += `&type=${query.houseType}`;
+      url += `&propertyType=${query.houseType}`;
     }
+  }
+
+  if (query.location) {
+    url += `&city=${query.location}`;
+  }
+
+  if (query.cType) {
+    url += `&listingType=${query.cType}`;
+  }
+
+  if (query.search) {
+    url += `&search=${query.search}`;
   }
 
   return url;
 };
 
 // Fetcher function
+
 const fetcher = async (url) => {
-  const token = Cookies.get("token");
-
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const res = await fetch(url, { headers });
+  const res = await fetch(url);
 
   if (!res.ok) {
-    throw new Error(`خطا در دریافت اطلاعات (${res.status})`);
+    throw new Error("خطا در دریافت اطلاعات");
   }
 
-  const data = await res.json();
-  return data?.data || [];
+  return res.json();
 };
 
-const totalFetcher = async (url) => {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Failed to fetch total");
-  const data = await res.json();
-  return data?.data?.length || 0;
-};
-
-const Homes = () => {
+const Homes = ({ fallbackData }) => {
   const { isCompare, addToCompare, compare, showCompare, toggleCompare } =
     useContext(CompareContext);
   const router = useRouter();
@@ -105,24 +100,19 @@ const Homes = () => {
 
   const page = parseInt(query.page) || 1;
 
+  const apiUrl = useMemo(() => buildUrl(query), [query]);
+
   const {
     data: houses,
     error,
     isLoading,
-  } = useSWR(buildUrl(query), fetcher, {
+  } = useSWR(apiUrl, fetcher, {
+    fallbackData,
     revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 5000,
+    keepPreviousData: true,
   });
-
-  const { data: totalCount } = useSWR(
-    "https://rentify.bonto.run/api/properties",
-    totalFetcher,
-    {
-      revalidateOnFocus: false,
-    },
-  );
-
+  const totalCount = houses?.total || 0;
+  console.log(houses);
   const totalPage = totalCount ? Math.ceil(totalCount / 8) : 1;
 
   useEffect(() => {
@@ -286,13 +276,13 @@ const Homes = () => {
           }}
         >
           <h2 style={{ color: "#856404", marginBottom: "15px" }}>
-            ⚠️ خطا در دریافت اطلاعات
+            خطا در دریافت اطلاعات
           </h2>
           <p style={{ color: "#856404", marginBottom: "20px" }}>
             {error.message}
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => router.reload()}
             style={{
               padding: "12px 30px",
               background: "#007bff",
@@ -303,14 +293,14 @@ const Homes = () => {
               fontSize: "16px",
             }}
           >
-            🔄 تلاش مجدد
+            تلاش مجدد
           </button>
         </div>
       </div>
     );
   }
 
-  const housesList = houses || [];
+  const housesList = houses.properties || [];
 
   return (
     <div>
@@ -348,10 +338,12 @@ const Homes = () => {
           {housesList.length ? (
             housesList.map((home) => (
               <Home
-                key={home.id}
+                key={home._id}
                 {...home}
                 isCompare={isCompare}
-                checked={compare.some((item) => item.id === home.id)}
+                checked={compare.some(
+                  (item) => item._id.toString() === home._id.toString(),
+                )}
                 onChecked={(e) => addToCompare(home)}
               />
             ))
@@ -418,68 +410,17 @@ const Homes = () => {
 
 export default Homes;
 
-// export async function getServerSideProps(context) {
-//   const { params, query } = context;
+export async function getServerSideProps({ query, req, res }) {
+      const user=userVerify(req,res);
+  const data = await getProperties({
+    ...query,
+    page: query.page || 1,
+    limit: 8,
+  },user._id);
 
-//   const page = query.page || 1;
-//   const limit = 8 * page; // 8 items per page
-//   const start = (page - 1) * limit;
-//   // Get total count
-//   const countRes = await fetch(
-//     "https://rentify.bonto.run/api/properties"
-//   );
-//   const total = await countRes.json();
-
-//   let url = `https://rentify.bonto.run/api/properties?limit=${limit}`;
-
-//   // Add sorting if specified
-//   if (query.sort === "newest") {
-//     url += `&_sort=created_date&_order=desc`;
-//   } else if (query.sort === "cheap") {
-//     url += `&_sort=price,ejare_price&_order=asc`;
-//   } else if (query.sort === "expensive") {
-//     url += `&_sort=pric,ejare_pricee&_order=desc`;
-//   }
-//   // Add filter if specified
-//   if (query.minPrice) {
-//     url += `&price_gte=${query.minPrice}`;
-//   }
-//   if (query.maxPrice) {
-//     url += `&price_lte=${query.maxPrice}`;
-//   }
-//   if (query.room) {
-//     url += `&roomCount=${query.room}`;
-//   }
-//   if (query.houseType) {
-//     if (Array.isArray(query.houseType) && query.houseType.length > 0) {
-//       const newHouseType = ["Villa", "House", "Apartment"];
-//       const filterType = query.houseType.filter((item, i) =>
-//         newHouseType.includes(item)
-//       );
-//       url += filterType.map((item) => `&type=${item}`).join("");
-//     } else {
-//       url += `&type=${query.houseType}`;
-//     }
-//   }
-//   console.log(url);
-//   const res = await fetch(url);
-
-//   if (res.status !== 200) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-//   const data = await res.json();
-
-//   const totalPage = Math.ceil(total.length / 8);
-
-//   return {
-//     props: {
-//       houses: data.data,
-//       page: Number(query.page),
-//       totalPage,
-//       query,
-//     },
-//   };
-// }
-// export default Homes;
+  return {
+    props: {
+      fallbackData: JSON.parse(JSON.stringify(data)),
+    },
+  };
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { X } from "lucide-react";
 import styles from "./Uploader.module.css";
-import Image from "next/image";
+import { Image } from "@imagekit/next";
 
 const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   const id = useId();
@@ -14,9 +14,13 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   useEffect(() => {
     if (existingImage) {
       // Handle both URL strings and file objects
-      const url = typeof existingImage === 'string' 
-        ? existingImage 
-        : existingImage.url || (existingImage instanceof File ? URL.createObjectURL(existingImage) : null);
+      const url =
+        typeof existingImage === "string"
+          ? existingImage
+          : existingImage.url ||
+            (existingImage instanceof File
+              ? URL.createObjectURL(existingImage)
+              : null);
       setPreviewUrl(url);
     } else {
       setPreviewUrl(null);
@@ -26,7 +30,7 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   // Clean up object URLs
   useEffect(() => {
     return () => {
-      if (previewUrl && previewUrl.startsWith('blob:')) {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
       }
     };
@@ -45,13 +49,13 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   };
 
   const validateFile = (file) => {
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       setError("Please upload an image file");
       return false;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      setError(`File size exceeds ${2}MB limit.`);
+    if (file.size > 6 * 1024 * 1024) {
+      setError(`File size exceeds ${6}MB limit.`);
       return false;
     }
 
@@ -80,7 +84,7 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
   const processFile = (file) => {
     if (validateFile(file)) {
       // Clean up previous preview URL if it was a blob
-      if (previewUrl && previewUrl.startsWith('blob:')) {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
       }
 
@@ -101,22 +105,22 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
 
   const handleRemove = (e) => {
     e.stopPropagation();
-    
+
     // Clean up blob URL if it exists
-    if (previewUrl && previewUrl.startsWith('blob:')) {
+    if (previewUrl && previewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(previewUrl);
     }
-    
+
     setPreviewUrl(null);
     setError(null);
-    
+
     if (onRemove) {
       onRemove();
     }
-    
+
     // Reset file input
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -132,24 +136,44 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
         onClick={handleClick}
       >
         {previewUrl ? (
-          <div className={styles.previewContainer}>
-            <Image
-            width={172}
-            height={42}
-              src={previewUrl}
-              alt="Preview"
-              className={styles.preview}
-              onError={(e) => {
-                e.target.src = '/placeholder.svg'; // Fallback if image fails to load
-              }}
-            />
-            <div className={styles.changeOverlay}>
-              <span>برای تغییر کلیک کنید</span>
-            </div>
-           
-          </div>
+          <>
+            {existingImage ? (
+              <div className={styles.previewContainer}>
+                <Image
+                  urlEndpoint="https://ik.imagekit.io/wzuqfh7er/"
+                  width={172}
+                  height={172}
+                  src={previewUrl}
+                  alt="Preview"
+                  className={styles.preview}
+                  onError={(e) => {
+                    e.target.src = "/placeholder.svg"; // Fallback if image fails to load
+                  }}
+                />
+                <div className={styles.changeOverlay}>
+                  <span>برای تغییر کلیک کنید</span>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.previewContainer}>
+                <Image
+                  width={172}
+                  height={172}
+                  src={previewUrl}
+                  alt="Preview"
+                  className={styles.preview}
+                  onError={(e) => {
+                    e.target.src = "/placeholder.svg"; // Fallback if image fails to load
+                  }}
+                />
+                <div className={styles.changeOverlay}>
+                  <span>برای تغییر کلیک کنید</span>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
-         <div className={styles.iconContainer}>
+          <div className={styles.iconContainer}>
             <div className={styles.imageIcon}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

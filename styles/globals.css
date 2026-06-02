@@ -478,7 +478,9 @@ input:focus-visible {
   margin-bottom: -0.5rem;
   z-index: 2;
 }
-
+.inputContainer {
+  width: 100%;
+}
 .inputWrapper {
   position: relative;
 
@@ -564,7 +566,9 @@ input:focus-visible {
   height: 10px;
   border-radius: 50%;
   background-color: #fff;
-  box-shadow: 32px 0 #fff, -32px 0 #fff;
+  box-shadow:
+    32px 0 #fff,
+    -32px 0 #fff;
   position: relative;
   animation: flash 0.5s ease-out infinite alternate;
 }
@@ -572,15 +576,21 @@ input:focus-visible {
 @keyframes flash {
   0% {
     background-color: #fff2;
-    box-shadow: 18px 0 #fff2, -18px 0 #fff;
+    box-shadow:
+      18px 0 #fff2,
+      -18px 0 #fff;
   }
   50% {
     background-color: #fff;
-    box-shadow: 18px 0 #fff2, -18px 0 #fff2;
+    box-shadow:
+      18px 0 #fff2,
+      -18px 0 #fff2;
   }
   100% {
     background-color: #fff2;
-    box-shadow: 18px 0 #fff, -18px 0 #fff2;
+    box-shadow:
+      18px 0 #fff,
+      -18px 0 #fff2;
   }
 }
 
@@ -714,13 +724,12 @@ input:focus-visible {
   text-align: center;
 }
 
-
-  .container {
-    width: 96vw;
-    max-width: 130.4rem;
-    margin: 0 auto;
-  }
-.btn-drawerMenu{
+.container {
+  width: 96vw;
+  max-width: 130.4rem;
+  margin: 0 auto;
+}
+.btn-drawerMenu {
   width: 100%;
   display: flex;
 }

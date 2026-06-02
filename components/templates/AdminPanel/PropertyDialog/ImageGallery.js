@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import styles from "./PropertyDialog.module.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+import { Image } from "@imagekit/next";
 
-const ImageGallery = ({ property }) => {
+const ImageGallery = ({ images = [] }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Determine which image array to use
-  const images = property?.images || property?.main_image || [];
+
   const hasMultipleImages = images.length > 1;
 
   // Reset current index when property changes
   useEffect(() => {
     setCurrentImageIndex(0);
-  }, [property]);
+  }, [images]);
 
   // Ensure current index is within bounds
   useEffect(() => {
@@ -45,9 +45,10 @@ const ImageGallery = ({ property }) => {
       {/* Main Image Display */}
       <div className={styles.mainImage}>
         <Image
+          urlEndpoint="https://ik.imagekit.io/wzuqfh7er/"
           width={300}
           height={256}
-          src={imageUrl}
+          src={images[currentImageIndex]?.imageUrl || "/images/empty-image.jpg"}
           alt={`تصویر ملک ${currentImageIndex + 1}`}
           className={styles.propertyImage}
         />
@@ -93,9 +94,10 @@ const ImageGallery = ({ property }) => {
               aria-label={`نمایش تصویر ${index + 1}`}
             >
               <Image
+                urlEndpoint="https://ik.imagekit.io/wzuqfh7er/"
                 width={64}
                 height={64}
-                src={image.url || "/images/empty-image.jpg"}
+                src={image.imageUrl || "/images/empty-image.jpg"}
                 alt={`تصویر کوچک ${index + 1}`}
                 className={styles.thumbnailImage}
               />

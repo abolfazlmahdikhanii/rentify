@@ -35,8 +35,8 @@ const LastVisted = ({ houses }) => {
         </Link>
       </div>
       <div className="homes-grid">
-        {houses?.slice(0, 8).map((home, i) => (
-          <Home key={home.id} {...home} />
+        {houses?.map((home, i) => (
+          <Home key={home._id} {...home} />
         ))}
       </div>
     </div>

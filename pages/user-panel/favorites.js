@@ -3,42 +3,42 @@ import Loader from "@/components/module/Loader/Loader";
 import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
-import { toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
+import { toastOption } from "@/helper/helper"
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/favorites", {
+  fetch("/api/favorites", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getCookie("token")}`,
     },
   }).then((res) => {
     if (res.ok) return res.json();
   });
 const Favorites = () => {
   const { data = [], isLoading, mutate, error } = useSWR("favorites", fetcher);
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="آگهی‌های ذخیره شده">
+      {isLoading && <Loader />}
       <Content>
-        {data?.length > 0 ? (
+        {data?.data?.length > 0 ? (
           <div className="fav-grid">
-            {data &&
-              data?.map((home) => (
-                <Home
-                  key={home.id}
-                  {...home}
-                  isBorder={true}
-                  getFav={() => mutate()}
-                  is_favorite={true}
-                />
-              ))}
+            {data?.data?.map((home) => (
+              <Home
+                key={home._id}
+                {...home}
+                isBorder={true}
+                getFav={() => {
+                  mutate();
+                }}
+                is_favorite={true}
+              />
+            ))}
           </div>
         ) : (
           <EmptyList

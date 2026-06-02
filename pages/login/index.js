@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "../../styles/login.module.css";
 import Input from "@/components/module/Form/Input";
@@ -11,6 +11,7 @@ import { getCookie, setCookie } from "cookies-next";
 import { timeFormat, toastOption } from "@/helper/helper";
 import { toast } from "react-toastify";
 import Loader from "@/components/module/Loader/Loader";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const route = useRouter();
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const [countdown, setCountdown] = useState(180);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [isVerify, setIsVerify] = useState(false);
+  const { refetchUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -37,6 +39,7 @@ export default function LoginPage() {
       name: "",
       last_name: "",
       agency_name: "",
+      email: "",
       phone: "",
     },
     mode: "onBlur",
@@ -46,13 +49,11 @@ export default function LoginPage() {
     let timer;
     if (countdown > 0) {
       timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    } else {
+      setIsResendDisabled(false);
     }
-    // } else if (countdown === 0) {
-    //   setIsResendDisabled(false);
-    //   setCountdown(180);
-    // }
     return () => clearTimeout(timer);
-  }, [countdown, isResendDisabled]);
+  }, [countdown]);
 
   const checkValidate = (fields) => {
     let isValid = true;
@@ -91,15 +92,6 @@ export default function LoginPage() {
       const fields = [
         { name: "name", required: true },
         { name: "last_name", required: true },
-        {
-          name: "email",
-          required: true,
-          validate: (value) => {
-            const emailRegex =
-              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return emailRegex.test(value) || "ایمیل معتبر نیست";
-          },
-        },
       ];
       return checkValidate(fields);
     } else if (tab === "agency") {
@@ -107,15 +99,6 @@ export default function LoginPage() {
         { name: "name", required: true },
         { name: "last_name", required: true },
         { name: "agency_name", required: true },
-        {
-          name: "email",
-          required: true,
-          validate: (value) => {
-            const emailRegex =
-              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return emailRegex.test(value) || "ایمیل معتبر نیست";
-          },
-        },
       ];
       return checkValidate(fields);
     }
@@ -134,10 +117,10 @@ export default function LoginPage() {
     const isValid = checkValidate(fields);
 
     if (isValid) {
-      setOtp(true);
       const email = getValues("email");
       setCountdown(180);
-      fetch("https://rentify.bonto.run/api/auth/send-otp", {
+      setIsLoading(true);
+      fetch("/api/auth/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,125 +131,155 @@ export default function LoginPage() {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.success) {
-            console.log(data);
+          if (data.success || data.devOtp) {
+            setOtp(true);
+            setIsResendDisabled(true);
+            setCountdown(180);
             toast.success("کد تایید به ایمیل شما ارسال شد", toastOption);
+            setIsLoading(false);
           }
           // Set otp to true after sending OTP
         })
         .catch((error) => {
           toast.error("خطا در ارسال کد تایید", toastOption);
+          setIsLoading(false);
         });
     } else {
       toast.error("لطفا ایمیل معتبر وارد کنید", toastOption);
+      setIsLoading(false);
     }
   };
-  const verifyOtp = () => {
+  const verifyOtp = async () => {
     setIsLoading(true);
-    fetch("https://rentify.bonto.run/api/auth/verify-otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: getValues("email"),
-        otp: otpValue,
-      }),
-    })
-      .then((response) => {
-        if (response.status === 400) {
-          setOtp(false);
-          setOtpValue("");
-          toast.error("کد تایید منقضی شده است", toastOption);
-          return Promise.reject("Expired OTP");
-        }
-        if (!response.ok) {
-          return Promise.reject("Request failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data?.success) {
-          setIsLoading(false);
-          const cookieOptions = {
-            maxAge: data.needsProfileSetup ? 60 * 60 * 24 : 60 * 60 * 24 * 7,
-          };
-          setCookie("token", data.token, cookieOptions);
 
-          if (!data.needsProfileSetup) {
-            route.replace("/");
-          } else {
-            setIsVerify(true);
-          }
-        } else {
-          throw new Error("OTP verification failed");
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        if (!error?.includes("Expired OTP")) {
-          toast.error("کد تایید اشتباه است", toastOption);
-        }
+    try {
+      const response = await fetch("/api/auth/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: getValues("email"),
+          otp: otpValue,
+        }),
       });
+
+      if (response.status === 400) {
+        setOtp(false);
+        setOtpValue("");
+        toast.error("کد تایید منقضی شده است", toastOption);
+        throw new Error("Expired OTP");
+      }
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      const data = await response.json();
+
+      if (!data?.success) {
+        throw new Error("OTP verification failed");
+      }
+
+      await refetchUser();
+
+      if (!data.needsProfileSetup) {
+        route.replace("/");
+      } else {
+        setIsVerify(true);
+      }
+    } catch (error) {
+      toast.error(error.message, toastOption);
+    } finally {
+      setIsLoading(false);
+    }
   };
   const resendOtp = () => {
+    const fields = [
+      {
+        name: "email",
+        required: true,
+        validate: (value) => {
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return emailRegex.test(value) || "ایمیل معتبر نیست";
+        },
+      },
+    ];
+
+    if (!checkValidate(fields)) {
+      toast.error("لطفا ایمیل معتبر وارد کنید", toastOption);
+      return;
+    }
+
     const email = getValues("email");
-    fetch("https://rentify.bonto.run/api/auth/send-otp", {
+    setIsLoading(true);
+    fetch("/api/auth/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email,
+        email,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
+        if (data.success || data.devOtp) {
           setIsResendDisabled(true);
           setCountdown(180);
           toast.success("کد تایید مجدد ارسال شد", toastOption);
+        } else {
+          throw new Error(data.message || "خطا در ارسال کد تایید");
         }
       })
       .catch((error) => {
-        toast.error("خطا در ارسال کد تایید", toastOption);
+        toast.error(error.message || "خطا در ارسال کد تایید", toastOption);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
-  const setupProfile = () => {
+  const setupProfile = async () => {
     const isValid = validationFormHandler(activeTab);
-    if (isValid) {
-      const formData = {
-        name: getValues("name"),
-        lastName: getValues("last_name"),
-        agencyName: getValues("agency_name"),
-      };
-      fetch("https://rentify.bonto.run/api/auth/setup-profile", {
-        method: "POST",
+
+    if (!isValid) return;
+
+    const formData = {
+      name: getValues("name"),
+      lastName: getValues("last_name"),
+      agencyName: getValues("agency_name"),
+    };
+
+    try {
+      const response = await fetch("/api/auth/setup-profile", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getCookie("token")}`,
         },
         body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            setCookie("token", data.token, { maxAge: 60 * 60 * 24 * 7 });
-            toast.success("پروفایل با موفقیت ایجاد شد", toastOption);
-            setTimeout(() => {
-              route.replace("/");
-            }, 600);
-          }
-        })
-        .catch((error) => {
-          toast.error("خطا در ایجاد پروفایل", toastOption);
-        });
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await refetchUser();
+        toast.success("پروفایل با موفقیت ایجاد شد", toastOption);
+        setTimeout(() => {
+          route.replace("/");
+        }, 600);
+      } else {
+        throw new Error(data.message || "خطا در ایجاد پروفایل");
+      }
+    } catch (error) {
+      toast.error(error.message || "خطا در ایجاد پروفایل", toastOption);
     }
   };
-  if (isLoading) return <Loader />;
+
   return (
     <div className={styles.containerRow}>
+      {isLoading && <Loader />}
       <div className={styles.rightSection}>
         <div className={styles.logoContainer}>
           <div className={styles.logo}>
@@ -368,18 +381,15 @@ export default function LoginPage() {
                   </defs>
                 </svg>
                 <p className={styles.otpTimeText}>
-                  {countdown > 0 ? (
-                    <>
-                      <span className={styles.otpTimer}>
-                        {timeFormat(countdown)}
-                      </span>
-                      تا دریافت مجدد کد
-                    </>
-                  ) : (
-                    <button className="btn pageLink" onClick={resendOtp}>
-                      دریافت کد مجدد
-                    </button>
-                  )}
+                  <button
+                    className="btn pageLink"
+                    onClick={resendOtp}
+                    disabled={isResendDisabled || isLoading}
+                  >
+                    {countdown > 0
+                      ? `ارسال مجدد (${timeFormat(countdown)})`
+                      : "دریافت کد مجدد"}
+                  </button>
                 </p>
               </div>
             </>
@@ -498,7 +508,9 @@ export default function LoginPage() {
           {!isVerify ? (
             <button
               className={styles.loginButton}
-              disabled={!isVerify && otp ? otpValue.length < 4 : false} // Call the function here
+              disabled={
+                (!isVerify && otp ? otpValue.length < 4 : false) || isLoading
+              } // Call the function here
               onClick={!isVerify && !otp ? sendOtp : verifyOtp}
             >
               {!isVerify && otp ? "تایید کد" : "ورود و دریافت کد"}
@@ -518,6 +530,7 @@ export default function LoginPage() {
             width={640}
             height={400}
             className={styles.illustration}
+            loading="eager"
           />
         </div>
       </div>

@@ -6,27 +6,24 @@ import Loader from "../Loader/Loader";
 const PrivateRoute = ({ role, children }) => {
   const { user, loading } = useContext(AuthContext);
   const router = useRouter();
+  const allowedRoles = role ? (Array.isArray(role) ? role : [role]) : null;
 
   useEffect(() => {
-    // Don't do anything while loading
-    if (loading) return <Loader />;
+    if (loading) return;
 
-    // If there's no user, redirect to login
     if (!user) {
       router.replace("/login");
       return;
     }
 
-    // If role is specified and user doesn't have required role, redirect
-    if (role && !role.includes(user.role)) {
-      router.replace("/"); // Consider having a dedicated unauthorized page
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+      router.replace("/");
     }
-  }, [user, role, router, loading]);
+  }, [user, allowedRoles, router, loading]);
 
-  // Don't render children while loading or if auth checks fail
-  if (loading || !user || (role && !role.includes(user?.role))) {
-    return <Loader />; // or return a loading spinner
-  }
+  if (loading) return <Loader />;
+  if (!user) return null;
+  if (allowedRoles && !allowedRoles.includes(user.role)) return null;
 
   return <>{children}</>;
 };

@@ -9,7 +9,6 @@ import UserVisitBox from "@/components/module/UserPanel/UserVisitBox/UserVisitBo
 import ModalMap from "@/components/templates/RegisterStep/ModalMap";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
 import Image from "next/image";
 import React, { use, useEffect, useState } from "react";
 import { set } from "react-hook-form";
@@ -17,11 +16,10 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 
 const fetcher = () =>
-  fetch("https://rentify.bonto.run/api/visits/user", {
+  fetch("/api/visits/my", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getCookie("token")}`,
     },
   }).then((res) => {
     if (res.ok) return res.json();
@@ -38,11 +36,10 @@ const MyAdvertisement = () => {
     setCurrentPage(page);
   };
   const cancelVisitHandler = (id) => {
-    fetch(`https://rentify.bonto.run/api/visits/${id}/cancel`, {
+    fetch(`/api/visits/${id}/cancel`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
     })
       .then((res) => {
@@ -67,10 +64,11 @@ const MyAdvertisement = () => {
   const paginationData = data
     ? data.slice((currentPage - 1) * 9, currentPage * 9)
     : [];
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="بازدیدهای من">
+      {isLoading && <Loader />}
       <Content>
         {data && data?.length > 0 ? (
           <>

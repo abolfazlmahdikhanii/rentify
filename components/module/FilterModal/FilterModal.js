@@ -48,33 +48,33 @@ export default function FilterModal({ close, onFilter,minPrice,setMinPrice,maxPr
             <div className={styles.checkboxGroup}>
               <CheckboxItem
                 label="آپارتمان"
-                onCheck={() => setHouseType((prev) => houseType.length?[...prev, "Apartment"]:[ "Apartment"])}
+                onCheck={() => setHouseType((prev) => houseType.length?[...prev, "apartment"]:[ "apartment"])}
                 remove={() =>
                   setHouseType((prev) =>
-                    prev.filter((item) => item !== "Apartment")
+                    prev.filter((item) => item !== "apartment")
                   )
                 }
-                check={houseType.includes("Apartment")}
+                check={houseType.includes("apartment")}
               />
               <CheckboxItem
                 label=" ویلا"
-                onCheck={() => setHouseType((prev) => houseType.length?[...prev, "Villa"]:[ "Villa"])}
+                onCheck={() => setHouseType((prev) => houseType.length?[...prev, "villa"]:[ "villa"])}
                 remove={() =>
                   setHouseType((prev) =>
-                    prev.filter((item) => item !== "Villa")
+                    prev.filter((item) => item !== "villa")
                   )
                 }
-                check={houseType.includes("Villa")}
+                check={houseType.includes("villa")}
               />
               <CheckboxItem
                 label="خانه ویلایی"
-                onCheck={() => setHouseType((prev) => houseType.length?[...prev, "House"]:[ "House"])}
+                onCheck={() => setHouseType((prev) => houseType.length?[...prev, "house"]:[ "house"])}
                 remove={() =>
                   setHouseType((prev) =>
-                    prev.filter((item) => item !== "House")
+                    prev.filter((item) => item !== "house")
                   )
                 }
-                check={houseType.includes("House")}
+                check={houseType.includes("house")}
               />
             </div>
           </FilterSection>

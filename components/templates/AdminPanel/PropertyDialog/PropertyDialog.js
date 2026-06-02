@@ -47,6 +47,7 @@ const PropertyDialog = ({
   const [reason, setReason] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isMore, setIsMore] = useState(false);
+  
   return (
     <>
       {/* Backdrop */}
@@ -64,9 +65,9 @@ const PropertyDialog = ({
               className={`status ${
                 property?.status === "pending"
                   ? "status__pending"
-                  : property?.status === "approved"
-                  ? "status__approved"
-                  : "status__rejected"
+                  : property?.status === "published"
+                    ? "status__approved"
+                    : "status__rejected"
               }`}
             >
               {getStatusText(property?.status)}
@@ -80,7 +81,7 @@ const PropertyDialog = ({
         <div className={styles.content}>
           <div className={styles.section}>
             {/* Image Gallery */}
-            <ImageGallery property={property} />
+            <ImageGallery images={property.images} />
 
             {/* Property Information */}
             <div className={styles.card}>
@@ -90,26 +91,30 @@ const PropertyDialog = ({
               <div className={styles.cardContent}>
                 <div className={styles.propertyMeta}>
                   <MapPin className={styles.iconSmall} />
-                  {property?.full_address || property?.location}
+                  {property?.location.address}
                 </div>
 
                 <div className={styles.specsGrid}>
                   <div className={styles.specItem}>
                     <Bed className={styles.iconSmall} />
-                    <span>{property?.bedrooms || 1} </span>
+                    <span>{` ${property.details?.bedrooms || 1} اتاق`}</span>
                   </div>
                   <div className={styles.specItem}>
                     <Bath className={styles.iconSmall} />
-                    <span>{property?.bathrooms ? `1 حمام` : "حمام ندارد"}</span>
+                    <span>
+                      {property.details?.bathrooms ? `1 حمام` : "حمام ندارد"}
+                    </span>
                   </div>
                   <div className={styles.specItem}>
                     <Ruler className={styles.iconSmall} />
-                    <span>{property?.building_area}</span>
+                    <span>{` ${property.details?.buildingArea || 0} متر مربع`}</span>
                   </div>
                   <div className={styles.specItem}>
                     <Car className={styles.iconSmall} />
                     <span>
-                      {property?.parking ? `1 پارکینگ` : "پارکینگ ندارد"}
+                      {property.details?.parking
+                        ? `1 پارکینگ`
+                        : "پارکینگ ندارد"}
                     </span>
                   </div>
                 </div>
@@ -117,12 +122,30 @@ const PropertyDialog = ({
                 <div className={styles.separator} />
 
                 <div className={styles.infoGrid}>
-                  <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>اجاره ماهانه:</span>
-                    <span className={styles.priceValue}>
-                      {property?.ejare_price.toLocaleString()} تومان
-                    </span>
-                  </div>
+                  {!!property?.rentPrice && (
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>اجاره ماهانه:</span>
+                      <span className={styles.priceValue}>
+                        {property?.rentPrice.toLocaleString()} تومان
+                      </span>
+                    </div>
+                  )}
+                  {!!property?.mortgagePrice && (
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>رهن ماهانه:</span>
+                      <span className={styles.priceValue}>
+                        {property?.mortgagePrice.toLocaleString()} تومان
+                      </span>
+                    </div>
+                  )}
+                  {!!property?.price && (
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>قیمت فروش:</span>
+                      <span className={styles.priceValue}>
+                        {property?.price.toLocaleString()} تومان
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -138,7 +161,7 @@ const PropertyDialog = ({
                     isMore ? styles.expend : styles.lowest
                   }`}
                 >
-                  {property?.description}
+                  {property?.details.description}
                 </p>
                 <p
                   className={styles.btnMore}
@@ -156,13 +179,13 @@ const PropertyDialog = ({
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.amenitiesGrid}>
-                  {property?.equipment?.map((amenity) => {
+                  {property?.equipments?.map((amenity) => {
                     return (
-                      <div key={amenity.id} className={styles.amenityItem}>
-                        <span
+                      <div key={amenity._id} className={styles.amenityItem}>
+                        {/* <span
                           dangerouslySetInnerHTML={{ __html: amenity.icon }}
-                        ></span>
-                        <span>{amenity.name}</span>
+                        ></span> */}
+                        <span>{amenity.equipmentId.title}</span>
                       </div>
                     );
                   })}
@@ -179,14 +202,16 @@ const PropertyDialog = ({
                 <div className={styles.ownerProfile}>
                   <div className={styles.avatar}>
                     <div>
-                      {property.author
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                      {property.owner.name.charAt(0) || "U"}
+                     
                     </div>
                   </div>
                   <div className={styles.ownerDetails}>
-                    <p className={styles.ownerName}>{property.author}</p>
+                    <p className={styles.ownerName}>
+                      {" "}
+                      {property.owner.name || ""}{" "}
+                      {property.owner.lastName || ""}
+                    </p>
                     {property?.contact_phone && (
                       <div className={styles.ownerContact}>
                         <Phone className={styles.iconSmall} />
@@ -213,19 +238,19 @@ const PropertyDialog = ({
                 <div className={styles.infoGrid}>
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>تاریخ ثبت:</span>
-                    <span>{getDate(property.created_at)}</span>
+                    <span>{getDate(property.createdAt)}</span>
                   </div>
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>آخرین بروزرسانی:</span>
                     <span>
-                      {property.updated_at
-                        ? getDate(property?.updated_at)
-                        : "-"}
+                      {property.updated_at ? getDate(property?.updatedAt) : "-"}
                     </span>
                   </div>
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>شناسه ملک:</span>
-                    <span className={styles.infoValue}>prop-{property.id}</span>
+                    <span className={styles.infoValue}>
+                      prop-{property._id.slice(0, 6)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -268,7 +293,7 @@ const PropertyDialog = ({
                   disabled={isLoading !== null}
                   className={`${styles.btn} ${styles.btnApprove}`}
                 >
-                  {isLoading === "approve" ? (
+                  {isLoading === "published" ? (
                     "در حال تایید..."
                   ) : (
                     <>
@@ -295,7 +320,7 @@ const PropertyDialog = ({
             )}
 
             {/* Edit button - shown only to owner for non-pending properties */}
-            {property?.user_id === user?.id && (
+            {property?.owner._id.toString() === user?.id?.toString() && (
               <button
                 onClick={() => setEditingProperty(property)}
                 disabled={isLoading === "edit"}
@@ -313,7 +338,7 @@ const PropertyDialog = ({
             )}
 
             {/* Delete button - shown to owner or admin for non-pending properties */}
-            {(property?.user_id === user?.id || user?.role === "admin") && (
+            {(property?.owner._id.toString() === user?.id?.toString() || user?.role === "admin") && (
               <button
                 onClick={() => deleteHandler(property)}
                 disabled={isLoading === "delete"}
