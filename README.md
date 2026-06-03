@@ -134,22 +134,6 @@
 * Vercel
 
 ---
-
-## 📂 Folder Structure
-
-```bash
-├── components
-├── pages
-│   ├── api
-│   ├── property
-│   └── user-panel
-├── models
-├── lib
-├── context
-├── configs
-├── helper
-├── public
-└── styles
 ```
 
 ---
@@ -221,17 +205,6 @@ Or connect your GitHub repository directly through Vercel Dashboard.
 * Visit Requests
 * Admin Approval Workflow
 * Property Search & Filters
-
----
-
-## 🔮 Planned Features
-
-* Real-time Messaging
-* Notifications
-* Interactive Maps
-* Multi-language Support
-* Property Analytics
-* AI-powered Recommendations
 
 ---
 
