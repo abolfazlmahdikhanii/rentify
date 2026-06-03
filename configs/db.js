@@ -9,7 +9,7 @@ const connectToDB = async () => {
     }
 
     // Use environment variable instead of localhost
-    const mongoUri = process.env.digiblog_MONGODB_URI;
+    const mongoUri = process.env.rentify_MONGODB_URI;
 
     if (!mongoUri) {
       throw new Error("DATABASE_URL is not defined in environment variables");
