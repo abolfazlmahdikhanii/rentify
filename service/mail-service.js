@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 export async function sendMail(options) {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.zoho.com",
+      host: "smtp.zoho.eu",
       port: 465,
       secure: true,
 
