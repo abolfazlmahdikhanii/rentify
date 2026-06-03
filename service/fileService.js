@@ -1,4 +1,4 @@
-const ImageKit = require("imagekit");
+import { ImageKit } from "@imagekit/nodejs/client.js";
 const fs = require("fs");
 
 const imagekit = new ImageKit({
