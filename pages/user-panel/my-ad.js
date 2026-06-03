@@ -13,15 +13,15 @@ import useSWR from "swr";
 import { CompareContext } from "@/context/CompareContext";
 import Loader from "@/components/module/Loader/Loader";
 
-const fetcher = () =>
-  fetch("/api/properties/my", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => {
-    if (res.ok) return res.json();
-  });
+const fetcher = async () => {
+  const res = await fetch("/api/properties/my");
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch");
+  }
+
+  return res.json();
+};
 const MyAdvertisement = () => {
   const { data, isLoading, mutate, error } = useSWR("user-ad", fetcher);
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,9 +48,10 @@ const MyAdvertisement = () => {
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
-  const paginationData = data?.data
-    ? data.data.slice((currentPage - 1) * 9, currentPage * 9)
-    : [];
+  const ITEMS_PER_PAGE = 9;
+const ads = data?.data || [];
+  const paginationData = ads.slice((currentPage - 1) * 9, currentPage * 9)
+ 
 
   if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
@@ -75,7 +76,7 @@ const MyAdvertisement = () => {
               ))}
             </div>
             <Pagination
-              totalPages={Math.ceil(data.data.length / 10)}
+              totalPages={Math.ceil(data.data.length / ITEMS_PER_PAGE)}
               currentPage={currentPage}
               onPageChange={onPageChange}
             />

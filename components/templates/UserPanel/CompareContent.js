@@ -48,9 +48,9 @@ const CompareContent = ({ items, homes }) => {
     setDraggedItem(null);
   };
   const filterOptions = [
-    { id: 1, name: "متراژکل" },
-    { id: 2, name: "اتاق خواب" },
-    { id: 3, name: "طبقه" },
+    { id: 1, name: "متراژکل",active:true },
+    { id: 2, name: "اتاق خواب",active:true },
+    { id: 3, name: "طبقه",active:true },
     { id: 4, name: "طبقات آپارتمان" },
     { id: 5, name: "سرویس بهداشتی" },
     { id: 6, name: "حمام", active: true },
@@ -60,7 +60,7 @@ const CompareContent = ({ items, homes }) => {
     { id: 10, name: "پارکینگ" },
     { id: 11, name: "جنس کف" },
   ];
-  console.log(homes);
+  console.log(JSON.stringify(homes, null, 2));
   return (
     <div className="container">
       <div className="property-comparison-container">
@@ -118,10 +118,10 @@ const CompareContent = ({ items, homes }) => {
         </button>
         {homes.map((home) => (
           <Home
-            key={home.id}
+            key={home._id}
             {...home}
             isMyCompare={true}
-            remove={() => removeFromCompare(home.id)}
+            remove={() => removeFromCompare(home._id)}
           />
         ))}
       </div>
@@ -152,7 +152,7 @@ const CompareContent = ({ items, homes }) => {
             متراژ{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">{item?.building_area || "---"}</div>
+            <div key={item._id} className="spec-value">{item?.details?.buildingArea || "---"} متر مربع</div>
           ))}
         </div>
 
@@ -176,7 +176,7 @@ const CompareContent = ({ items, homes }) => {
             اتاق خواب{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">{item?.bedrooms || "---"}</div>
+            <div key={item._id} className="spec-value">{item.details?.bedrooms || "1"} اتاق</div>
           ))}
         </div>
 
@@ -200,7 +200,9 @@ const CompareContent = ({ items, homes }) => {
             سال ساخت{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">{item?.house_year?`${item?.house_year} سال` : "---"}</div>
+            <div key={item._id} className="spec-value">
+              {item?.details?.houseYear ? `${item.details?.houseYear} سال` : "---"}
+            </div>
           ))}
         </div>
 
@@ -224,7 +226,7 @@ const CompareContent = ({ items, homes }) => {
             سرویس بهداشتی{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">{item?.bathrooms || "---"} عدد</div>
+            <div className="spec-value">{item?.bathrooms || "1"} عدد</div>
           ))}
         </div>
 
@@ -248,7 +250,7 @@ const CompareContent = ({ items, homes }) => {
             حمام{" "}
           </div>
           {homes.map((item) => (
-            <div className="spec-value">{item?.bathrooms || "---"} عدد</div>
+            <div key={item._id} className="spec-value">{item.details?.bathrooms || "---"} عدد</div>
           ))}
         </div>
       </div>
@@ -258,16 +260,19 @@ const CompareContent = ({ items, homes }) => {
           onConfirm={() => setIsShowModal(false)}
         >
           <div className="fav-grid">
-            {items?.map((home) => (
-              <Home
-                key={home.id}
-                {...home}
-                isBorder={true}
-                isCompare={isCompare}
-                checked={compare.some((item) => item.id === home.id)}
-                onChecked={(e) => addToCompare(home)}
-              />
-            ))}
+            {Array.isArray(items.data) &&
+              items.data.map((home) => (
+                <Home
+                  key={home._id}
+                  {...home}
+                  isBorder={true}
+                  isCompare={true}
+                  checked={compare.some(
+                    (item) => item._id.toString() === home._id.toString(),
+                  )}
+                  onChecked={() => addToCompare(home)}
+                />
+              ))}
           </div>
         </ModalProperty>
       )}

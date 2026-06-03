@@ -101,8 +101,13 @@ const Visits = () => {
           <>
             {newVisits?.map((visit) => (
               <VisitCard
-                key={visit.id}
-                {...visit}
+                key={visit._id}
+                id={visit?._id}
+                {...visit.propertyId}
+                visitDate={visit.visitDate}
+                visitTime={visit.visitTime}
+                status={visit.status}
+                visitor={visit.requesterId}
                 onChangeStatus={changeStatusHandler}
               />
             ))}

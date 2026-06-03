@@ -3,15 +3,16 @@ import styles from "./ModalVisitRequest.module.css";
 import JDate from "jalali-date";
 import DatePicker from "@/components/module/DatePicker/DatePicker";
 import ConfirmationModal from "@/components/module/ConfirmationModal/ConfirmationModal";
-import { getCookie } from "cookies-next";
 import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
+import { useRouter } from "next/router";
 
 const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
   const [isOpenTime, setIsOpenTime] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const [date, setDate] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
   const timeSlots = [
     "10:00",
     "11:00",
@@ -46,7 +47,7 @@ const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
   };
   const visitRequestHandler = (e) => {
     e.preventDefault();
-    console.log(formatNewDate(date));
+
     if (!selectedTime || !date) {
       toast.error("لطفا زمان و تاریخ را انتخاب کنید", toastOption);
       return;
@@ -54,28 +55,26 @@ const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
     const newVisit = {
       visitTime: selectedTime,
       visitDate: formatNewDate(date),
+      propertyId: id,
     };
-    fetch(`https://rentify.bonto.run/api/visits/${id}`, {
+    fetch(`/api/visits/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
       body: JSON.stringify(newVisit),
     })
       .then((res) => {
-        console.log(res);
         if (!res.ok) throw Error;
         return res.json();
       })
       .then((res) => {
-        console.log(selectedTime);
-        console.log(date);
         setIsSuccess(true);
 
         setTimeout(() => {
           setIsSuccess(false);
           onClose();
+       
         }, 2000);
       })
       .catch((err) => {
@@ -89,7 +88,7 @@ const ModalVisitRequest = ({ onClose, id, approvedTime }) => {
     return approvedTime.map((item) => item.visit_time.slice(0, 5));
   };
   const disabledTimes = getDisableTime();
-  console.log(disabledTimes);
+
   return (
     <>
       <div className="backdrop">

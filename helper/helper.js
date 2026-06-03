@@ -1,3 +1,4 @@
+import { differenceInDays } from "date-fns";
 export const saveStorage = (key, value) => {
   if (typeof window !== "undefined") {
     localStorage.setItem(key, JSON.stringify(value));
@@ -24,37 +25,31 @@ export const getDate = (date, monthType) => {
     day: "2-digit",
   }).format(d);
 };
-export const getDateRelative = (date) => {
-  if (!date) return;
-  const d = new Date(date);
-  const now = Date.now();
-  const diff = d.getTime() - now;
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const month = Math.floor(days / 30);
-  const year = Math.floor(month / 12);
+export const getDateRelative = (date) => {
+  if (!date) return "";
+
+  const days = differenceInDays(new Date(date), new Date());
 
   const rtf = new Intl.RelativeTimeFormat("fa", {
     numeric: "auto",
   });
 
-  // If more than 365 days (1 year), format by years
   if (Math.abs(days) > 365) {
-    return rtf.format(year, "year");
+    return rtf.format(Math.floor(days / 365), "year");
   }
-  // If more than 31 days, format by months
-  else if (Math.abs(days) > 31) {
-    return rtf.format(month, "month");
+
+  if (Math.abs(days) > 30) {
+    return rtf.format(Math.floor(days / 30), "month");
   }
-  // Otherwise, format by days
-  else {
-    return rtf.format(days, "day");
-  }
+
+  return rtf.format(days, "day");
 };
 export const getStatusText = (status) => {
   switch (status) {
     case "pending":
       return "در انتظار بررسی";
+    case "published":
     case "approved":
       return "تایید شده";
     case "rejected":

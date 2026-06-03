@@ -8,6 +8,7 @@ import Favorite from "./Favorite";
 import PropertyView from "./PropertyView";
 import User from "./User";
 import Equipment from "./Equipment";
+import VisitRequest from "./VisitRequest";
 const PropertySchema = new mongoose.Schema(
   {
     ownerId: {
@@ -45,7 +46,7 @@ const PropertySchema = new mongoose.Schema(
     rentPrice: Number,
 
     mortgagePrice: Number,
-
+    rejectionReason: String,
     status: {
       type: String,
       enum: ["draft", "pending", "published", "rejected", "deleted"],
@@ -89,6 +90,11 @@ PropertySchema.virtual("details", {
   justOne: true,
 });
 
+PropertySchema.virtual("visits", {
+  ref: "VisitRequest",
+  localField: "_id",
+  foreignField: "propertyId",
+});
 PropertySchema.virtual("location", {
   ref: "PropertyLocation",
   localField: "_id",

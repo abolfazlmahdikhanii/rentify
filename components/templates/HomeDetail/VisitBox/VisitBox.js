@@ -13,7 +13,7 @@ const VisitBox = ({
   isMyVisit,
 }) => {
   const { user } = useContext(AuthContext);
-
+  
   return (
     <div className={styles.userProfile}>
       <div className={styles.profileHeader}>

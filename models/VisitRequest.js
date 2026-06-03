@@ -35,7 +35,7 @@ const VisitRequestSchema = new mongoose.Schema(
       type: String,
       enum: [
         "pending",
-        "accepted",
+        "approved",
         "rejected",
         "cancelled",
         "done",

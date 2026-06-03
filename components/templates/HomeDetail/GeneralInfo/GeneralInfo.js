@@ -34,7 +34,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
       },
       {
         threshold: 0.6, // Section becomes active when 50% visible
-      }
+      },
     );
 
     sections.forEach(({ id }) => {
@@ -44,6 +44,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
 
     return () => observer.disconnect();
   }, [sections]);
+ 
   return (
     <div className={` ${styles.generalInfo}`}>
       {/* tab */}
@@ -95,25 +96,25 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
         <Title title="اطلاعات اصلی" />
         <div className={styles.sectionGrid}>
           <p className={styles.sectionText}>
-            مساحت زیر بنا: <span>{data?.building_area || "-"}</span>
+            مساحت زیر بنا: <span>{data?.buildingArea || "-"} متر مربع</span>
           </p>
           <p className={styles.sectionText}>
             مساحت زمین: <span>{data?.land_area || "-"}</span>
           </p>
           <p className={styles.sectionText}>
-            طبقات: <span>{data?.floors || 1}</span>
+            طبقات: <span>{data?.floors || 1} عدد</span>
           </p>
           <p className={styles.sectionText}>
-            خواب: <span>{data?.bedrooms || 1}</span>
+            خواب: <span>{data?.bedrooms || 1} اتاق</span>
           </p>
           <p className={styles.sectionText}>
-            سرویس بهداشتی: <span>{data?.bathrooms || 1}</span>
+            سرویس بهداشتی: <span>{data?.bathrooms || 1} عدد</span>
           </p>
           <p className={styles.sectionText}>
-            طبقه: <span>{data?.floor_number || 1}</span>
+            طبقه: <span>{data?.floorNumber || 1} ام</span>
           </p>
           <p className={styles.sectionText}>
-            هر طبقه: <span>{data?.units_per_floor || 1}</span>
+            هر طبقه: <span>{data?.unitPerFloor || 1} واحد</span>
           </p>
         </div>
       </section>
@@ -123,8 +124,8 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
           {equipment?.length ? (
             equipment.map((item, i) => (
               <p key={item.id} className={styles.sectionIcon}>
-                <span dangerouslySetInnerHTML={{ __html: item.icon }}></span>
-                {item.title}
+                {/* <span dangerouslySetInnerHTML={{ __html: item.icon }}></span> */}
+                {item.equipment.title}
               </p>
             ))
           ) : (
@@ -161,7 +162,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
         <Title title="نقشه طبقه" />
         <div className={styles.sectionImg}>
           <Image
-             width={500}
+            width={500}
             height={488}
             src="/images/h-map.png"
             alt="room map"
@@ -185,12 +186,7 @@ const GeneralInfo = ({ data, locationDetail, equipment }) => {
       <section className={styles.section} id="virtual-tour">
         <Title title="تور مجازی" />
         <div className={styles.sectionTour}>
-          <Image
-            width={500}
-            height={454}
-            src="/images/h-d2.png"
-            alt="v-tour"
-          />
+          <Image width={500} height={454} src="/images/h-d2.png" alt="v-tour" />
           <button className={styles.btnPlay}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -137,7 +137,7 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
       >
         {previewUrl ? (
           <>
-            {existingImage ? (
+            {existingImage&&existingImage.includes("https://ik.imagekit.io/wzuqfh7er/") ? (
               <div className={styles.previewContainer}>
                 <Image
                   urlEndpoint="https://ik.imagekit.io/wzuqfh7er/"
@@ -156,9 +156,7 @@ const Uploader = ({ onFileSelect, onRemove, existingImage }) => {
               </div>
             ) : (
               <div className={styles.previewContainer}>
-                <Image
-                  width={172}
-                  height={172}
+                <img
                   src={previewUrl}
                   alt="Preview"
                   className={styles.preview}

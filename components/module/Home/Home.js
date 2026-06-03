@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useMemo, useState } from "react";
 import styles from "./HomeCard.module.css";
 import Link from "next/link";
 
@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { calculateTimeRemaining, toastOption } from "@/helper/helper";
 import { Clock, Eye, Map, MoreVertical, X } from "lucide-react";
 import { Image } from "@imagekit/next";
+import AuthContext from "@/context/AuthContext";
 
 const Home = ({
   propertyType,
@@ -19,7 +20,7 @@ const Home = ({
   mortgagePrice,
   _id,
   isBorder,
-  isMyAd,
+  owner,
   isCompare,
   onChecked,
   checked = false,
@@ -29,33 +30,38 @@ const Home = ({
   is_favorite,
   getFav,
   status,
-  visit_date: visitDate,
-  visit_time: visitTime,
+  visitDate,
+  visitTime,
   isMyVisit = false,
   latitude,
   longitude,
   onShowMap,
   onCancel,
   onDetail,
+  visitStatus,
+  slug
 }) => {
   const [isFav, setIsFav] = useState(is_favorite);
   const [timeRemaining, setTimeRemaining] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
-
+  const [loaded, setLoaded] = useState(false);
+  const { user } = useContext(AuthContext);
+  
   useEffect(() => {
     if (isMyVisit) {
-      if (status === "approved" && visitDate && visitTime) {
+      if (visitStatus === "approved" && visitDate && visitTime) {
         const updateTime = () => {
           setTimeRemaining(calculateTimeRemaining(visitDate, visitTime));
         };
 
         updateTime();
+      
         const interval = setInterval(updateTime, 60000); // Update every minute
 
         return () => clearInterval(interval);
       }
     }
-  }, [status, visitDate, visitTime]);
+  }, [visitStatus, visitDate, visitTime]);
   let typeColor = null;
   let typeName = null;
 
@@ -80,7 +86,6 @@ const Home = ({
     }).then((res) => {
       if (res.ok) {
         setIsFav(true);
-        
       } else if (res.status == 401) {
         toast.error("برای افزودن به موردعلاقه ها  ثبت نام کنید", toastOption);
       }
@@ -105,9 +110,14 @@ const Home = ({
   const handleCancelClick = (e) => {
     e.stopPropagation();
     // onCancelVisit?.(property.id)
-    onCancel(id);
+    onCancel(_id);
     setShowMenu(false);
   };
+
+  const isMyAd = useMemo(
+    () => user && user.id.toString() === owner?._id?.toString(),
+    [user,owner],
+  );
 
   return (
     <div
@@ -118,7 +128,11 @@ const Home = ({
       <div className={styles.cardImg}>
         <Image
           urlEndpoint="https://ik.imagekit.io/wzuqfh7er/"
-          src={images[0]?.imageUrl || "/images/empty-image.jpg"}
+          src={
+            images[0]?.imageUrl && !loaded
+              ? images[0]?.imageUrl
+              : "/images/empty-image.jpg"
+          }
           alt={title || "img"}
           width="200"
           height="200"
@@ -126,6 +140,8 @@ const Home = ({
           onError={(e) => {
             e.target.src = "/images/empty-image.jpg";
           }}
+          onLoad={(e) => setLoaded(true)}
+          onLoadingComplete={() => setLoaded(false)}
         />
         {!isMyAd ? (
           <>
@@ -159,27 +175,27 @@ const Home = ({
           <>
             {status === "pending" && <StatusBadge status="pending" />}
             {status === "rejected" && <StatusBadge status="rejected" />}
-            {status === "approved" && <StatusBadge status="approved" />}
+            {status === "published" && <StatusBadge status="approved" />}
           </>
         )}
         {isMyVisit && (
           <>
-            {status === "pending" && (
+            {visitStatus === "pending" && (
               <StatusBadge status="pending" pos="left" />
             )}
-            {status === "rejected" && (
+            {visitStatus === "rejected" && (
               <StatusBadge status="rejected" pos="left" />
             )}
-            {status === "approved" && (
+            {visitStatus === "approved" && (
               <StatusBadge status="approved" pos="left" />
             )}
-            {timeRemaining && status === "approved" && (
+            {timeRemaining && visitStatus === "approved" && (
               <span className={styles.timeRemaining}>
                 <Clock className={styles.timeIcon} />
                 {timeRemaining}
               </span>
             )}
-            {status === "pending" && (
+            {visitStatus === "pending" && (
               <div className={styles.menuContainer}>
                 <button
                   className={styles.menuBtn}
@@ -344,20 +360,20 @@ const Home = ({
       </Link>
       {isMyVisit && (
         <div className={styles.actions}>
-          {latitude && longitude && (
+          {location.latitude && location.longitude && (
             <button
               className={styles.mapBtn}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onShowMap([longitude, latitude]);
+                onShowMap([location.longitude, location.latitude]);
               }}
             >
               <Map className={styles.mapIcon} />
               نقشه
             </button>
           )}
-          <button className={styles.secondaryBtn}>
+          <button className={styles.secondaryBtn} onClick={onDetail}>
             <Eye className={styles.eyeIcon} />
             جزئیات
           </button>
@@ -371,32 +387,33 @@ const Home = ({
           </button>
         </div>
       )}
-      {(isMyAd || isMyCompare) && (
-        <button className={styles.removeBtn} onClick={remove}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <g clipPath="url(#clip0_3930_15314)">
-              <path
-                fill="#ED2E2E"
-                fillRule="evenodd"
-                stroke="#fff"
-                d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm-1.414 11L7.05 8.464 8.464 7.05 12 10.586l3.536-3.536 1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536z"
-                clipRule="evenodd"
-              ></path>
-            </g>
-            <defs>
-              <clipPath id="clip0_3930_15314">
-                <path fill="#fff" d="M0 0h24v24H0z"></path>
-              </clipPath>
-            </defs>
-          </svg>
-        </button>
-      )}
+      {isMyAd ||
+        (isMyCompare && (
+          <button className={styles.removeBtn} onClick={remove}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <g clipPath="url(#clip0_3930_15314)">
+                <path
+                  fill="#ED2E2E"
+                  fillRule="evenodd"
+                  stroke="#fff"
+                  d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm-1.414 11L7.05 8.464 8.464 7.05 12 10.586l3.536-3.536 1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536z"
+                  clipRule="evenodd"
+                ></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_3930_15314">
+                  <path fill="#fff" d="M0 0h24v24H0z"></path>
+                </clipPath>
+              </defs>
+            </svg>
+          </button>
+        ))}
     </div>
   );
 };

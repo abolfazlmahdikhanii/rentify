@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
   try {
     await connectToDB();
-const user=await userVerify(req,res)
+    const user = await userVerify(req, res);
     if (!user) {
       return res.status(404).json({ message: "User Not Found!" });
     }
@@ -38,7 +38,17 @@ const user=await userVerify(req,res)
 
     const [properties, total] = await Promise.all([
       Property.find(filter)
-        .populate("owner", "name lastName email phone")
+        .populate("details")
+        .populate("location")
+        .populate("images")
+        .populate("owner", "name lastName email agencyName")
+        .populate({
+          path: "equipments",
+          populate: {
+            path: "equipmentId",
+          },
+        })
+        .lean({ virtuals: true })
         .sort({ createdAt: -1 })
         .skip(Number(skip))
         .limit(Number(limit)),
@@ -48,7 +58,7 @@ const user=await userVerify(req,res)
 
     return res.json({
       success: true,
-      count:total,
+      count: total,
       page: Number(page),
       pages: Math.ceil(total / limit),
       data: properties,

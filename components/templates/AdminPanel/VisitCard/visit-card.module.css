@@ -44,7 +44,7 @@
   gap: 12px;
   position: relative;
 }
-.statusWrapper p{
+.statusWrapper p {
   cursor: pointer;
 }
 /* بخش‌ها */
@@ -145,8 +145,18 @@
   font-size: 16px;
   font-weight: 700;
   color: #059669;
+  
+}.cardFooter__info{
+display: flex ;
+  align-items: center;
+  column-gap: 4px;
 }
+.price  span {
+  font-size: 13px;
 
+  display: inline-block;
+  color: #6b7280;
+}
 .specs {
   font-size: 14px;
   color: #6b7280;
@@ -183,7 +193,9 @@
   font-size: 14px;
   color: #1d4ed8;
   font-weight: 500;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
   display: grid;
   place-items: center;
 }

@@ -6,6 +6,7 @@ import Pagination from "@/components/module/Pagination/Pagination";
 import Content from "@/components/module/UserPanel/Content/Content";
 import EmptyList from "@/components/module/UserPanel/EmptyList/EmptyList";
 import UserVisitBox from "@/components/module/UserPanel/UserVisitBox/UserVisitBox";
+import PropertyDialog from "@/components/templates/AdminPanel/PropertyDialog/PropertyDialog";
 import ModalMap from "@/components/templates/RegisterStep/ModalMap";
 import DashboardLayout from "@/components/templates/UserPanel/DashboardLayout";
 import { toastOption } from "@/helper/helper";
@@ -31,13 +32,16 @@ const MyAdvertisement = () => {
   const [position, setPosition] = useState(null);
   const [isShowModal, setIsShowModal] = useState(false);
   const [selectedVisit, setSelectedVisit] = useState(null);
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [adDetail, setAdDetail] = useState(null);
   const [isOpenCancelModal, setIsOpenCancelModal] = useState(false);
+  const [visitId,setVisitId]=useState(null);
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
   const cancelVisitHandler = (id) => {
-    fetch(`/api/visits/${id}/cancel`, {
-      method: "PUT",
+    fetch(`/api/visits/cancel/${id}`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
@@ -61,30 +65,38 @@ const MyAdvertisement = () => {
         toast.error("خطا در لغو بازدید", toastOption);
       });
   };
-  const paginationData = data
-    ? data.slice((currentPage - 1) * 9, currentPage * 9)
-    : [];
+  const ITEMS_PER_PAGE = 9;
+  const ads = data?.data || [];
+  const paginationData = ads.slice((currentPage - 1) * 9, currentPage * 9);
 
   if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="بازدیدهای من">
       {isLoading && <Loader />}
       <Content>
-        {data && data?.length > 0 ? (
+        {ads && ads?.length > 0 ? (
           <>
             <div className="fav-grid">
               {paginationData.map((home) => (
                 <Home
-                  key={home.id}
-                  {...home}
+                  key={home._id}
+                  {...home.propertyId}
+                  visitDate={home.visitDate}
+                  visitTime={home.visitTime}
+                  visitStatus={home.status}
                   isBorder={true}
                   isMyVisit={true}
                   onShowMap={(pos) => {
                     setIsShowModal(true);
                     setPosition(pos);
                   }}
+                  onDetail={() => {
+                    setAdDetail(home.propertyId);
+                    setIsOpenDialog(true);
+                  }}
                   onCancel={() => {
-                    setSelectedVisit(home);
+                    setSelectedVisit(home.propertyId);
+                    setVisitId(home._id);
                     setIsOpenCancelModal(true);
                   }}
                   // remove={() => removeAdHandler(home.id)}
@@ -92,7 +104,7 @@ const MyAdvertisement = () => {
               ))}
             </div>
             <Pagination
-              totalPages={Math.ceil(data.length / 10)}
+              totalPages={Math.ceil(ads.length / 10)}
               currentPage={currentPage}
               onPageChange={onPageChange}
             />
@@ -128,8 +140,16 @@ const MyAdvertisement = () => {
           property={selectedVisit}
           title="لغو بازدید"
           question="آیا از لغو بازدید این ملک اطمینان دارید؟ این عملیات قابل بازگشت نیست."
-          onConfirm={() => cancelVisitHandler(selectedVisit.id)}
+          onConfirm={() => cancelVisitHandler(visitId)}
           btnText="لغو بازدید"
+        />
+      )}
+
+      {isOpenDialog && (
+        <PropertyDialog
+          isOpen={isOpenDialog}
+          onClose={() => setIsOpenDialog(false)}
+          property={adDetail}
         />
       )}
     </DashboardLayout>

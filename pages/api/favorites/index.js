@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       const favorites = await Favorite.find({ userId: user._id })
         .populate({
           path: "propertyId",
-          populate: [{ path: "owner" }, { path: "images" },{path:"location",select:"address"}],
+          populate: [{ path: "owner" }, { path: "images" },{path:"location",select:"address"},{path:"details"}],
         })
         .sort({ createdAt: -1 });
 

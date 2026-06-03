@@ -58,7 +58,7 @@ const DeleteModal = ({
               <div className={styles.propertyInfo}>
                 <div className={styles.propertyTitle}>{property.title}</div>
                 <div className={styles.propertyAddress}>
-                  {property.location}
+                  {property.location.address}
                 </div>
               </div>
             )}

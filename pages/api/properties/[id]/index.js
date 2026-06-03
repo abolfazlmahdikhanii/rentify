@@ -191,7 +191,7 @@ export default async function handler(req, res) {
     }
 
     if (
-      property.owner._id.toString() !== user._id.toString() &&
+      property.owner._id.toString() !== user._id.toString() ||
       user.role !== "admin"
     ) {
       return res.status(403).json({

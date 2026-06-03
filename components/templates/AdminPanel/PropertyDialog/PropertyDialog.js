@@ -47,7 +47,7 @@ const PropertyDialog = ({
   const [reason, setReason] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isMore, setIsMore] = useState(false);
-  
+
   return (
     <>
       {/* Backdrop */}
@@ -61,17 +61,19 @@ const PropertyDialog = ({
         <div className={styles.header}>
           <div className={styles.headerContent}>
             <h2 className={styles.title}>{property?.title}</h2>
-            <span
-              className={`status ${
-                property?.status === "pending"
-                  ? "status__pending"
-                  : property?.status === "published"
-                    ? "status__approved"
-                    : "status__rejected"
-              }`}
-            >
-              {getStatusText(property?.status)}
-            </span>
+            {user.id.toString() === property?.owner._id.toString() && (
+              <span
+                className={`status ${
+                  property?.status === "pending"
+                    ? "status__pending"
+                    : property?.status === "published"
+                      ? "status__approved"
+                      : "status__rejected"
+                }`}
+              >
+                {getStatusText(property?.status)}
+              </span>
+            )}
           </div>
           <button className={styles.closeBtn} onClick={onClose}>
             <X className={styles.iconSmall} />
@@ -201,10 +203,7 @@ const PropertyDialog = ({
               <div className={styles.cardContent}>
                 <div className={styles.ownerProfile}>
                   <div className={styles.avatar}>
-                    <div>
-                      {property.owner.name.charAt(0) || "U"}
-                     
-                    </div>
+                    <div>{property.owner.name.charAt(0) || "U"}</div>
                   </div>
                   <div className={styles.ownerDetails}>
                     <p className={styles.ownerName}>
@@ -255,7 +254,8 @@ const PropertyDialog = ({
                 </div>
               </div>
             </div>
-            {user?.role === "admin" && (
+            {user?.role === "admin" ||
+            user.id.toString() === property?.owner._id.toString() ? (
               <div className={styles.card}>
                 <div className={styles.cardHeader}>
                   <h4 className={styles.cardTitle}>دلیل رد</h4>
@@ -267,19 +267,23 @@ const PropertyDialog = ({
                       placeholder="لطفا دلیل رد را بنویسید"
                       value={
                         property.status === "rejected"
-                          ? property.rejection_reason
+                          ? property.rejectionReason
                           : reason
                       }
-                      readOnly={property.status === "rejected"}
+                      readOnly={
+                        property.status === "rejected" &&
+                        user.id.toString() === property?.owner._id.toString()
+                      }
                       onChange={(e) =>
                         property.status !== "rejected" &&
+                        user.role === "admin" &&
                         setReason(e.target.value)
                       }
                     ></textarea>
                   </div>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -289,7 +293,7 @@ const PropertyDialog = ({
             {property.status === "pending" && user.role === "admin" && (
               <>
                 <button
-                  onClick={() => approveHandler(property?.id)}
+                  onClick={() => approveHandler(property?._id)}
                   disabled={isLoading !== null}
                   className={`${styles.btn} ${styles.btnApprove}`}
                 >
@@ -303,7 +307,7 @@ const PropertyDialog = ({
                   )}
                 </button>
                 <button
-                  onClick={() => rejectHandler(property?.id, reason)}
+                  onClick={() => rejectHandler(property?._id, reason)}
                   disabled={isLoading !== null}
                   className={`${styles.btn} ${styles.btnReject}`}
                 >
@@ -320,9 +324,9 @@ const PropertyDialog = ({
             )}
 
             {/* Edit button - shown only to owner for non-pending properties */}
-            {property?.owner._id.toString() === user?.id?.toString() && (
+            {property?.owner._id?.toString() === user?.id?.toString() && (
               <button
-                onClick={() => setEditingProperty(property)}
+                onClick={() => setEditingProperty(property._id)}
                 disabled={isLoading === "edit"}
                 className={`${styles.btn} ${styles.btnEdit}`}
               >
@@ -338,9 +342,10 @@ const PropertyDialog = ({
             )}
 
             {/* Delete button - shown to owner or admin for non-pending properties */}
-            {(property?.owner._id.toString() === user?.id?.toString() || user?.role === "admin") && (
+            {(property?.owner._id.toString() === user?.id?.toString() ||
+              user?.role === "admin") && (
               <button
-                onClick={() => deleteHandler(property)}
+                onClick={() => deleteHandler(property._id)}
                 disabled={isLoading === "delete"}
                 className={`${styles.btn} ${styles.btnReject}`}
               >

@@ -85,7 +85,11 @@ export default async function handler(req, res) {
 
   try {
     const user = await userVerify(req, res);
-
+    if (!user) {
+      return res.status(404).json({
+        message: "User Not Found!",
+      });
+    }
     const slug = req.body.slug || makeSlug(req.body.title || "property");
 
     const property = await Property.create({
@@ -147,7 +151,10 @@ export default async function handler(req, res) {
 
         locationPayload.latitude = req.body.latitude;
         locationPayload.longitude = req.body.longitude;
-        locationPayload.nearby = locationData;
+        locationPayload.nearby = locationData.nearby;
+        locationPayload.address = locationData.address.address;
+        locationPayload.city = locationData.address.city;
+        locationPayload.district = locationData.address.district;
       } catch (err) {
         locationPayload.latitude = req.body.latitude;
         locationPayload.longitude = req.body.longitude;

@@ -274,9 +274,9 @@ export default function RegisterStep() {
         house_year: data.buildingAge,
         unitType: data.unitType,
         contractType: data.contractType,
-        unitPerFloor: `${data.unitsPerFloor} واحد`,
+        unitPerFloor: data.unitsPerFloor,
         equipment: data.facilities || [],
-        position: location,
+        position: data.location,
         latitude: position?.[1],
         longitude: position?.[0],
       };

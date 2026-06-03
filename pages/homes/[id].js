@@ -15,123 +15,15 @@ import CommentWrapper from "@/components/templates/HomeDetail/Comment/CommentWra
 import ShareModal from "@/components/templates/HomeDetail/ShareModal/ShareModal";
 import Loader from "@/components/module/Loader/Loader";
 import { notFound } from "next/navigation";
+import { userVerify } from "@/lib/userAuth";
+import { getPropertyByID } from "@/service/propertyService";
 
-// Fetcher function
-const fetcher = async (url) => {
-  const token = Cookies.get("token");
-
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const res = await fetch(url, { headers });
-
-  if (!res.ok) {
-    if (res.status === 404) {
-      throw new Error("NOT_FOUND");
-    }
-    throw new Error(`خطا در دریافت اطلاعات (${res.status})`);
-  }
-
-  const data = await res.json();
-  return data;
-};
-
-const HomePageDetail = () => {
+const HomePageDetail = ({ house }) => {
   const router = useRouter();
-  const { id } = router.query;
+  const { slug } = router.query;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowShareModal, setIsShowShareModal] = useState(false);
-
-  // استفاده از SWR
-  const {
-    data: house,
-    error,
-    isLoading,
-  } = useSWR(
-    id ? `https://rentify.bonto.run/api/properties/${id}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 10000,
-      onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-        // اگه 404 بود، retry نکن
-        if (error.message === "NOT_FOUND") return;
-        if (retryCount >= 3) return;
-        setTimeout(() => revalidate({ retryCount }), 5000);
-      },
-    },
-  );
-
-  // Error - Not Found
-  if (error?.message === "NOT_FOUND") {
-    return notFound();
-  }
-
-  // Error - Other
-  if (error) {
-    return (
-      <div className="detail-bg">
-        <div
-          className="container"
-          style={{ padding: "100px 20px", textAlign: "center" }}
-        >
-          <div
-            style={{
-              background: "#fff3cd",
-              border: "1px solid #ffc107",
-              borderRadius: "10px",
-              padding: "30px",
-              maxWidth: "600px",
-              margin: "0 auto",
-            }}
-          >
-            <h2 style={{ color: "#856404", marginBottom: "15px" }}>
-              ⚠️ خطا در دریافت اطلاعات
-            </h2>
-            <p style={{ color: "#856404", marginBottom: "20px" }}>
-              {error.message}
-            </p>
-            <button
-              onClick={() => router.reload()}
-              style={{
-                padding: "12px 30px",
-                background: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-                marginRight: "10px",
-              }}
-            >
-              🔄 تلاش مجدد
-            </button>
-            <button
-              onClick={() => router.push("/")}
-              style={{
-                padding: "12px 30px",
-                background: "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
-            >
-              بازگشت به صفحه اصلی
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+console.log("house",house)
   return (
     <div className="detail-bg">
       <Head>
@@ -146,7 +38,7 @@ const HomePageDetail = () => {
             <GeneralInfo
               data={house?.details}
               locationDetail={house?.location}
-              equipment={house?.equipment}
+              equipment={house?.equipments}
             />
             <PayService />
             <Offer />
@@ -156,12 +48,12 @@ const HomePageDetail = () => {
           {/* call */}
           <div className="sticky">
             <VisitBox
-              authorName={house?.author}
-              authorEmail={house?.author_email}
+              authorName={house?.agencyName?house?.agencyName:`${house?.owner?.name} ${house?.owner?.lastName}`}
+              authorEmail={house?.owner?.email}
               authorPhone={house?.contact_phone}
               onVisitReq={() => setIsModalOpen(true)}
               isOwner={house?.isAuthor}
-              isMyVisit={house?.isMyVisit}
+              isMyVisit={house?.isVisit}
             />
           </div>
         </section>
@@ -169,7 +61,7 @@ const HomePageDetail = () => {
       {isModalOpen && (
         <ModalVisitRequest
           onClose={() => setIsModalOpen(false)}
-          id={id}
+          id={house?._id}
           approvedTime={house?.visitTimes}
         />
       )}
@@ -180,34 +72,26 @@ const HomePageDetail = () => {
           title="اشتراک گذاری ملک"
         />
       )}
-      {isLoading || !id ? <Loader /> : null}
     </div>
   );
 };
 
 export default HomePageDetail;
 
-// export async function getServerSideProps(context) {
-//   const { params } = context;
-//   const cookies = context.req.cookies || {};
-//   const token = cookies.token;
+export async function getServerSideProps({ query, req, res }) {
+  const user = await userVerify(req, res);
 
-//   const res = await fetch(
-//     `https://rentify.bonto.run/api/properties/${params.id}`,
-//     {
-//       method: "GET",
-//       headers: { Authorization: `Bearer ${token}` },
-//     }
-//   );
-//   if (res.status !== 200) {
-//     return {
-//       notFound: true,
-//     };
-//   }
+  const result = await getPropertyByID(query.id, user?._id);
 
-//   const data = await res.json();
+  if (!result?.success || !result?.property) {
+    return {
+      notFound: true,
+    };
+  }
 
-//   return {
-//     props: { houses: [data] },
-//   };
-// }
+  return {
+    props: {
+      house: JSON.parse(JSON.stringify(result.property)),
+    },
+  };
+}

@@ -20,7 +20,7 @@ const fetcher = () =>
   }).then((res) => {
     if (res.ok) return res.json();
   });
-const compare = () => {
+const Compare = () => {
   const { data = [], isLoading, mutate, error } = useSWR("favorites", fetcher);
   const {
     isCompare,
@@ -37,8 +37,8 @@ const compare = () => {
   }, []);
 
   const displayedHomes = data.data?.slice(0, 6) || [];
-  if (isLoading) return <Loader />;
-  if (error) return toast.error("خطا در دریافت اطلاعات", toastOption);
+
+  if (error)  toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <>
       {!isShowCompare ? (
@@ -46,6 +46,7 @@ const compare = () => {
           title="مقایسه املاک"
           subTitle="(حداقل ۲ کارت و حداکثر ۳ کارت را برای مقایسه انتخاب کنید)"
         >
+          {isLoading&&<Loader/>}
           <Content>
             {displayedHomes.length ? (
               <div className="fav-grid">
@@ -55,7 +56,7 @@ const compare = () => {
                     {...home}
                     isBorder={true}
                     isCompare={isCompare}
-                    checked={compare.some((item) => item.id === home.id)}
+                    checked={compare.some((item) => item._id.toString() === home._id.toString())}
                     onChecked={(e) => addToCompare(home)}
                   />
                 ))}
@@ -120,4 +121,4 @@ const compare = () => {
   );
 };
 
-export default compare;
+export default Compare;

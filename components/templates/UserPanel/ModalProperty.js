@@ -39,7 +39,7 @@ const ModalProperty = ({ children, onClose, onConfirm }) => {
 
         {/* Action buttons */}
         <div className={styles.footerModal}>
-          <button className={`btn ${styles.secondaryButton}`} type="button" onClick={()=>router.push("/homes")}>
+          <button className={`btn ${styles.secondaryButton}`} type="button" onClick={()=>router.push("/homes?from=compare")}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"

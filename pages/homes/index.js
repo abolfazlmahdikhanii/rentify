@@ -411,12 +411,12 @@ const Homes = ({ fallbackData }) => {
 export default Homes;
 
 export async function getServerSideProps({ query, req, res }) {
-      const user=userVerify(req,res);
+      const user=await userVerify(req,res);
   const data = await getProperties({
     ...query,
     page: query.page || 1,
     limit: 8,
-  },user._id);
+  },user?._id);
 
   return {
     props: {

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import styles from "./Slider.module.css";
-import Image from "next/image";
+import { Image } from "@imagekit/next";
+
 const Slider = ({ images }) => {
   const sliderRef = useRef(null);
   const nextSlideHandler = () => {
@@ -35,11 +36,13 @@ const Slider = ({ images }) => {
               style={{ minWidth: `${100 / images?.length}%` }}
               key={slide.id}
             >
-              <img
-                src={slide.image_url}
+              <Image
+                urlEndpoint="https://ik.imagekit.io/wzuqfh7er/"
+                src={slide.imageUrl}
                 alt="img"
                 className={styles.sliderImg__img}
-              
+                width={400}
+                height={405}
                 onLoadStart={(e) => {
                   if (e.target.src !== "/images/empty-image.jpg")
                     e.currentTarget.src = "/images/empty-image.jpg";
@@ -54,6 +57,7 @@ const Slider = ({ images }) => {
         ) : (
           <div className={styles.sliderImg} style={{ minWidth: `100%` }}>
             <Image
+              urlEndpoint=""
               width={400}
               height={405}
               src={"/images/empty-image.jpg"}

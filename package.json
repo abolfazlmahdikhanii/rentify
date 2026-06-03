@@ -19,6 +19,7 @@
     "bcryptjs": "^3.0.3",
     "cookie": "^1.1.1",
     "cookies-next": "^5.1.0",
+    "data-fns": "^1.1.0",
     "date-fns": "^4.4.0",
     "formidable": "^3.5.4",
     "imagekit": "^6.0.0",

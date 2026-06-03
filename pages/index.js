@@ -87,12 +87,12 @@ const Page = ({ homes }) => {
 };
 
 export async function getServerSideProps({ query, req, res }) {
-  const user =await userVerify(req, res);
+  const user = await userVerify(req, res);
   const data = await getProperties(
     {
       limit: 8,
     },
-    user._id,
+    user?._id,
   );
 
   return {
