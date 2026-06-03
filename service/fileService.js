@@ -13,7 +13,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 /**
  * Validate formidable file
  */
-const validateFile = (file) => {
+export const validateFile = (file) => {
   if (!file?.filepath) {
     throw new Error("Invalid file: No file path");
   }
@@ -30,7 +30,9 @@ const validateFile = (file) => {
   }
 
   if (!ALLOWED_TYPES.includes(file.mimetype)) {
-    throw new Error(`Invalid file type: ${file.mimetype}. Allowed types: ${ALLOWED_TYPES.join(", ")}`);
+    throw new Error(
+      `Invalid file type: ${file.mimetype}. Allowed types: ${ALLOWED_TYPES.join(", ")}`,
+    );
   }
 };
 
@@ -49,7 +51,7 @@ const generateFileName = (originalName) => {
 /**
  * Upload formidable file to ImageKit
  */
-const uploadFile = async (file, folder = "uploads") => {
+export const uploadFile = async (file, folder = "uploads") => {
   try {
     // Validate the formidable file object
     validateFile(file);
@@ -85,7 +87,11 @@ const uploadFile = async (file, folder = "uploads") => {
 /**
  * Upload file from buffer (alternative method)
  */
-const uploadFileFromBuffer = async (buffer, originalName, folder = "uploads") => {
+export const uploadFileFromBuffer = async (
+  buffer,
+  originalName,
+  folder = "uploads",
+) => {
   try {
     const result = await imagekit.upload({
       file: buffer,
@@ -108,7 +114,7 @@ const uploadFileFromBuffer = async (buffer, originalName, folder = "uploads") =>
 /**
  * Delete file from ImageKit
  */
-const deleteFile = async (fileId) => {
+export const deleteFile = async (fileId) => {
   try {
     await imagekit.deleteFile(fileId);
     return true;
@@ -117,10 +123,4 @@ const deleteFile = async (fileId) => {
   }
 };
 
-module.exports = {
-  uploadFile,
-  uploadFileFromBuffer,
-  deleteFile,
-  validateFile,
-  generateFileName,
-};
+
