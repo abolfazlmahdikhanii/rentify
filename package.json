@@ -23,7 +23,6 @@
     "data-fns": "^1.1.0",
     "date-fns": "^4.4.0",
     "formidable": "^3.5.4",
-    "imagekit": "^6.0.0",
     "jalali-date": "^1.2.0",
     "js-cookie": "^3.0.5",
     "json-server": "^1.0.0-beta.3",
@@ -43,7 +42,6 @@
     "react-otp-input": "^3.1.1",
     "react-toastify": "^11.0.5",
     "swr": "^2.3.3",
-    "uninstall": "^0.0.0",
     "zod": "^4.4.3"
   }
 }

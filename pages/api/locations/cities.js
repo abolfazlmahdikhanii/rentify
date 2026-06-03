@@ -1,10 +1,11 @@
 import connectToDB from "@/configs/db";
-import Province from "@/models/Province";
+import State from "@/models/State";
+
 
 export default async function handler(req, res) {
   await connectToDB();
 
-  const provinces = await Province.find().sort({
+  const provinces = await State.find().sort({
     name: 1,
   });
 
