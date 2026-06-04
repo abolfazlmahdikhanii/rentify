@@ -113,7 +113,7 @@ export async function getPropertyByID(pId, userId = null) {
       .populate("details")
       .populate({
         path: "comments",
-        match: { parentId: null },
+
         populate: [
           {
             path: "userId",
@@ -142,7 +142,7 @@ export async function getPropertyByID(pId, userId = null) {
       })
       .populate("images")
       .lean({ virtuals: true });
-    
+
     if (!property) {
       throw new Error("Property not found");
     }

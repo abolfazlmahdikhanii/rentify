@@ -112,6 +112,7 @@ PropertySchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",
   foreignField: "propertyId",
+  match: { status: "approved" },
 });
 
 PropertySchema.virtual("favorites", {
