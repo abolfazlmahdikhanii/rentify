@@ -3,6 +3,7 @@ import connectToDB from "@/configs/db";
 import VisitRequest from "@/models/VisitRequest";
 import Property from "@/models/Property";
 import { userVerify } from "@/lib/userAuth";
+import { isValidObjectId } from "mongoose";
 
 export default async function handler(req, res) {
   await connectToDB();
@@ -13,12 +14,13 @@ export default async function handler(req, res) {
       message: "Method not allowed",
     });
   }
+  
 
   try {
     const { visitId } = req.query;
     const { status } = req.body;
     const user = await userVerify(req, res);
-    if (user) {
+    if (!user) {
       return res.status(403).json({
         success: false,
         message: "Access denied",
@@ -31,8 +33,13 @@ export default async function handler(req, res) {
         message: "Invalid status",
       });
     }
+    if(!isValidObjectId(visitId)){
+       return res.status(400).json({
+        message: "Invalid visit ID",
+      });
+    }
 
-    const visit = await VisitRequest.findById(visitId);
+    const visit = await VisitRequest.findOne({_id:visitId});
 
     if (!visit) {
       return res.status(404).json({
@@ -53,7 +60,7 @@ export default async function handler(req, res) {
         });
       }
 
-      if (property.ownerId.toString() !== user.id) {
+      if (property.ownerId.toString() !== user._id.toString()) {
         return res.status(403).json({
           success: false,
           message: "Access denied",

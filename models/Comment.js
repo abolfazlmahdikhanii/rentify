@@ -31,7 +31,9 @@ const CommentSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
 CommentSchema.virtual("user", {
   ref: "User",

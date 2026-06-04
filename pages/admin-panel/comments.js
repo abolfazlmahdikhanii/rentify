@@ -45,10 +45,9 @@ const Comments = () => {
   const [tabActive, setTabActive] = useState("all");
 
   useEffect(() => {
-    if (data&&data.comments) {
+    if (data && data.comments) {
       filterContent("all");
     }
-  
   }, [data]);
   const filterContent = (filterType) => {
     if (!data.comments) return;
@@ -109,7 +108,6 @@ const Comments = () => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
     })
       .then((res) => {
@@ -132,7 +130,6 @@ const Comments = () => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
     })
       .then((res) => {
@@ -156,7 +153,6 @@ const Comments = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
     })
       .then((res) => {
@@ -177,11 +173,10 @@ const Comments = () => {
       });
   };
 
-
-  if (error)  toast.error("خطا در دریافت اطلاعات", toastOption);
+  if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
   return (
     <DashboardLayout title="نظرات" role="admin">
-        {isLoading&&<Loader />}
+      {isLoading && <Loader />}
       <TabPanel>
         <TabPanelItem
           title="همه نظرات"
@@ -223,12 +218,12 @@ const Comments = () => {
             <tbody className="tbody">
               {filterComment.length > 0
                 ? newComment.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={item._id}>
                       <td>
-                        {item.name} {item.last_name}
+                        {item.userId.name} {item.userId.lastName}
                       </td>
 
-                      <td className="tbl-txt">{item.property_title}</td>
+                      <td className="tbl-txt">{item.propertyId.title}</td>
                       <td className="tbl-txt">
                         <p className={`status status__${item.status}-2`}>
                           {getStatusText(item.status)}
@@ -268,7 +263,7 @@ const Comments = () => {
                         <button
                           className="btn btn-outline-5"
                           onClick={() => {
-                            setOpenDropdownId(item.id);
+                            setOpenDropdownId(item._id);
                             setShowDropdown((prev) => !prev);
                           }}
                         >
@@ -276,14 +271,14 @@ const Comments = () => {
                         </button>
                         <ul
                           className={`drop-down--tbl shadow-light
-              ${openDropdownId === item.id && showDropdown ? "active" : ""}`}
+              ${openDropdownId === item._id && showDropdown ? "active" : ""}`}
                           onMouseLeave={() => setShowDropdown(false)}
                         >
                           {item.status !== "approved" && (
                             <li
                               className="drop-down__btn"
                               onClick={() => {
-                                approveCommentHandler(item.id);
+                                approveCommentHandler(item._id);
                                 setShowDropdown(false);
                               }}
                             >
@@ -294,7 +289,7 @@ const Comments = () => {
                             <li
                               className="drop-down__btn"
                               onClick={() => {
-                                rejectCommentHandler(item.id);
+                                rejectCommentHandler(item._id);
                                 setShowDropdown(false);
                               }}
                             >
@@ -306,7 +301,7 @@ const Comments = () => {
                             onClick={() => {
                               setIsReply(true);
                               setShowDropdown(false);
-                              setCommentId(item.id);
+                              setCommentId(item._id);
                             }}
                           >
                             پاسخ دادن
@@ -316,7 +311,7 @@ const Comments = () => {
                             onClick={() => {
                               setIsOpenDeleteModal(true);
                               setShowDropdown(false);
-                              setCommentId(item.id);
+                              setCommentId(item._id);
                             }}
                           >
                             حذف

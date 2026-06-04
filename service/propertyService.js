@@ -112,6 +112,23 @@ export async function getPropertyByID(pId, userId = null) {
       .populate("owner", "-password")
       .populate("details")
       .populate({
+        path: "comments",
+        match: { parentId: null },
+        populate: [
+          {
+            path: "userId",
+            select: "name lastName avatar role agencyName",
+          },
+          {
+            path: "replies",
+            populate: {
+              path: "userId",
+              select: "name lastName avatar role agencyName",
+            },
+          },
+        ],
+      })
+      .populate({
         path: "location",
         populate: {
           path: "city",
@@ -125,7 +142,7 @@ export async function getPropertyByID(pId, userId = null) {
       })
       .populate("images")
       .lean({ virtuals: true });
-  
+    
     if (!property) {
       throw new Error("Property not found");
     }

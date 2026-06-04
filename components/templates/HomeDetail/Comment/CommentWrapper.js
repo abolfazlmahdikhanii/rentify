@@ -15,7 +15,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { toastOption } from "@/helper/helper";
-import { getCookie } from "cookies-next";
+
 import DeleteModal from "@/components/module/DeleteModal/DeleteModal";
 import EmptyItem from "@/components/module/EmptyItem/EmptyItem";
 
@@ -30,23 +30,6 @@ export default function CommentWrapper({ comments }) {
   const [propertyComment, setPropertyComment] = useState(comments || []);
   const { query } = useRouter();
 
-  const getComments = () => {
-    fetch(`https://rentify.bonto.run/api/comments/property/${query.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPropertyComment(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   const handleAddComment = (content) => {
     if (!content.trim()) {
       toast.error("متن کامنت خالی میباشد !", toastOption);
@@ -56,18 +39,17 @@ export default function CommentWrapper({ comments }) {
       propertyId: query.id,
       content,
     };
-    fetch("https://rentify.bonto.run/api/comments", {
+    fetch("/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
       body: JSON.stringify(newComment),
     })
       .then((res) => {
         if (res.status === 201) {
           toast.success("کامنت با موفقیت ثبت شد", toastOption);
-          getComments();
+        
         } else if (res.status === 500) {
           toast.error("ثبت کامنت با مشکل مواجه شد", toastOption);
         }
@@ -86,11 +68,10 @@ export default function CommentWrapper({ comments }) {
     const newComment = {
       content: replyContent,
     };
-    fetch(`https://rentify.bonto.run/api/comments/${parentId}`, {
+    fetch(`/api/comments/${parentId}/reply`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
       body: JSON.stringify(newComment),
     })
@@ -102,7 +83,6 @@ export default function CommentWrapper({ comments }) {
         }
       })
       .then((data) => {
-        getComments();
         setReplyContent("");
         setReplyingTo(null);
       })
@@ -111,61 +91,21 @@ export default function CommentWrapper({ comments }) {
         console.log(err);
       });
   };
-  const handleEdit = (parentId) => {
-    if (!editContent.trim()) {
-      toast.error("متن کامنت خالی میباشد !", toastOption);
-      return;
-    }
-    const updateComment = {
-      content: editContent,
-    };
-    fetch(`https://rentify.bonto.run/api/comments/${parentId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
-      body: JSON.stringify(updateComment),
-    })
-      .then((res) => {
-        if (res.status === 201) {
-          toast.success(" کامنت با موفقیت ویرایش شد", toastOption);
-        } else if (res.status === 500) {
-          toast.error("ویرایش  کامنت با مشکل مواجه شد", toastOption);
-        }
-      })
-      .then((data) => {
-        getComments();
-        setEditContent("");
-        setEditComment(null);
-      })
-      .catch((err) => {
-        toast.error("ویرایش کامنت با مشکل مواجه شد", toastOption);
-        console.log(err);
-      });
-  };
+
   const handleDelete = (commentId) => {
-    fetch(`https://rentify.bonto.run/api/comments/${commentId}`, {
+    fetch(`/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getCookie("token")}`,
       },
     })
       .then((res) => {
         if (res.status === 201) {
           toast.success(" کامنت با موفقیت حذف شد", toastOption);
-        } else if (
-          res.status === 500 ||
-          res.status === 404 ||
-          res.status === 403
-        ) {
-          toast.error("حذف  کامنت با مشکل مواجه شد", toastOption);
-        }
+        } else toast.error("حذف  کامنت با مشکل مواجه شد", toastOption);
       })
       .then((data) => {
         setDeleteComment(null);
-        getComments();
       })
       .catch((err) => {
         toast.error("حذف کامنت با مشکل مواجه شد", toastOption);
@@ -198,11 +138,6 @@ export default function CommentWrapper({ comments }) {
               replyContent={replyContent}
               setReplyContent={setReplyContent}
               handleAddReply={handleAddReply}
-              editComment={editComment}
-              setEditComment={setEditComment}
-              editContent={editContent}
-              setEditContent={setEditContent}
-              handleEdit={handleEdit}
               setDeleteComment={setDeleteComment}
             />
           ))

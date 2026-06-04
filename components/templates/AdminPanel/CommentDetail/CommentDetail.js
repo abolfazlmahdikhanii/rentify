@@ -23,7 +23,7 @@ const CommentDetail = ({
   const [newComment, setNewComment] = useState(comment || {});
   // Track which reply's menu is open using its ID
   const [openMenuId, setOpenMenuId] = useState(null);
-  
+
   if (!isOpen) return null;
 
   const handleMenuToggle = (replyId) => {
@@ -34,7 +34,7 @@ const CommentDetail = ({
     // Close the menu after action
     setOpenMenuId(null);
     // Execute the action (approve/reject
-     action(replyId);
+    action(replyId);
   };
 
   return (
@@ -62,13 +62,13 @@ const CommentDetail = ({
             <div className={styles.commentHeader}>
               <div className={styles.userInfo}>
                 <span className={styles.userName}>
-                  {newComment.name} {newComment.last_name}
+                  {newComment.userId.name} {newComment.userId.lastName}
                 </span>
                 <span className={styles.timestamp}>
                   {getDate(
-                    newComment.updated_at
-                      ? newComment.updated_at
-                      : newComment.created_at
+                    newComment.updatedAt
+                      ? newComment.updatedAt
+                      : newComment.createdAt,
                   )}
                 </span>
               </div>
@@ -81,7 +81,7 @@ const CommentDetail = ({
             <div className={styles.commentContent}>{newComment.content}</div>
             <div className={styles.commentFooter}>
               <span className={styles.location}>
-                ملک: {newComment.property_title}
+                ملک: {newComment.propertyId.title}
               </span>
             </div>
           </div>
@@ -95,15 +95,15 @@ const CommentDetail = ({
             </div>
 
             {newComment.replies?.map((item) => (
-              <div className={styles.replyItem} key={item.id}>
+              <div className={styles.replyItem} key={item._id}>
                 <div className={styles.replyHeader}>
                   <div className={styles.userInfo}>
                     <span className={styles.userName}>
-                      {item.name} {item.last_name}
+                      {item.userId.name} {item.userId.lastName}
                     </span>
                     <span className={styles.timestamp}>
                       {getDate(
-                        item.updated_at ? item.updated_at : item.created_at
+                        item.updatedAt ? item.updatedAt : item.createdAt,
                       )}
                     </span>
                   </div>
@@ -114,11 +114,11 @@ const CommentDetail = ({
                     <div className={styles.menuContainer}>
                       <button
                         className={styles.moreButton}
-                        onClick={() => handleMenuToggle(item.id)}
+                        onClick={() => handleMenuToggle(item._id)}
                       >
                         <LucideEllipsis size={17} />
                       </button>
-                      {openMenuId === item.id && (
+                      {openMenuId === item._id && (
                         <div
                           className={styles.dropdownMenu}
                           onMouseLeave={() => setOpenMenuId(null)}
@@ -126,7 +126,7 @@ const CommentDetail = ({
                           {item.status !== "approved" && (
                             <div
                               className={styles.dropdownMenuItem}
-                              onClick={() => handleAction(onApprove, item.id)}
+                              onClick={() => handleAction(onApprove, item._id)}
                             >
                               <CircleCheckBig size={14} /> تائید کردن
                             </div>
@@ -134,7 +134,7 @@ const CommentDetail = ({
                           {item.status !== "rejected" && (
                             <div
                               className={styles.dropdownMenuItem}
-                              onClick={() => handleAction(onReject, item.id)}
+                              onClick={() => handleAction(onReject, item._id)}
                             >
                               <XCircle size={14} /> رد کردن
                             </div>
@@ -145,7 +145,7 @@ const CommentDetail = ({
                               setOpenMenuId(null);
 
                               setIsOpenDeleteModal(true);
-                              setCommentId(item.id);
+                              setCommentId(item._id);
                               onClose();
                             }}
                           >
@@ -166,7 +166,7 @@ const CommentDetail = ({
             className={`${styles.addReplyButton}`}
             onClick={() => {
               setIsReply(true);
-              setCommentId(comment.id);
+              setCommentId(comment._id);
               onClose();
             }}
           >

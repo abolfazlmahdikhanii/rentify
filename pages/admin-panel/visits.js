@@ -36,30 +36,36 @@ const Visits = () => {
       setNewVisits(data.visits.filter((item) => item.status === filterType));
     }
   };
-  const changeStatusHandler = (id, status) => {
-    fetch(`/api/visits/${id}/status`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        mutate();
-        // After mutation, re-filter the content based on current tab
-        filterContent(tabActive);
-        toast.success(
-          `ملک با موفقیت ${status === "approved" ? "تایید" : "رد"} شد`,
-          toastOption,
-        );
-      })
-      .catch((err) => {
-        toast.error(
-          `خطا در ${status === "approved" ? "تایید" : "رد"} ملک`,
-          toastOption,
-        );
+  const changeStatusHandler = async (id, status) => {
+    try {
+      const res = await fetch(`/api/visits/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
       });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Request failed");
+      }
+
+      filterContent(tabActive);
+
+      toast.success(
+        `ملک با موفقیت ${status === "approved" ? "تایید" : "رد"} شد`,
+        toastOption,
+      );
+
+      mutate("visits");
+    } catch (err) {
+      toast.error(
+        `خطا در ${status === "approved" ? "تایید" : "رد"} ملک`,
+        toastOption,
+      );
+    }
   };
 
   if (error) toast.error("خطا در دریافت اطلاعات", toastOption);
@@ -102,7 +108,7 @@ const Visits = () => {
             {newVisits?.map((visit) => (
               <VisitCard
                 key={visit._id}
-                id={visit?._id}
+                visitId={visit?._id}
                 {...visit.propertyId}
                 visitDate={visit.visitDate}
                 visitTime={visit.visitTime}

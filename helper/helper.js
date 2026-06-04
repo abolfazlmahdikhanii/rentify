@@ -17,6 +17,7 @@ export const timeFormat = (time) => {
   return `${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`;
 };
 export const getDate = (date, monthType) => {
+  if (!date) return;
   const d = new Date(date);
 
   return new Intl.DateTimeFormat("fa", {

@@ -1,5 +1,7 @@
 import connectToDB from "@/configs/db";
+import { userVerify } from "@/lib/userAuth";
 import Comment from "@/models/Comment";
+import { isValidObjectId } from "mongoose";
 
 export const createReply = async (req, res) => {
   await connectToDB();
@@ -7,7 +9,19 @@ export const createReply = async (req, res) => {
   try {
     const { commentId } = req.query;
     const { content } = req.body;
-
+    const user = await userVerify(req, res);
+    if (!user) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+    if (!isValidObjectId(commentId)) {
+      return res.status(400).json({ message: "invalid comment id!" });
+    }
+    if (!content.trim()) {
+      return res.status(402).json({ message: "please fill the field!" });
+    }
     const parentComment = await Comment.findById(commentId);
 
     if (!parentComment) {
@@ -16,12 +30,12 @@ export const createReply = async (req, res) => {
       });
     }
 
-    const status = req.user.role === "admin" ? "approved" : "pending";
-
+    const status = user.role === "admin" ? "approved" : "pending";
+    await Comment.findOneAndUpdate({ _id: commentId }, { status });
     const reply = await Comment.create({
       propertyId: parentComment.propertyId,
       parentId: commentId,
-      userId: req.user.id,
+      userId: user._id,
       content,
       status,
     });
@@ -42,6 +56,16 @@ export const deleteComment = async (req, res) => {
 
   try {
     const { commentId } = req.query;
+    const user = await userVerify(req, res);
+    if (!user) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+    if (!isValidObjectId(commentId)) {
+      return res.status(400).json({ message: "invalid comment id!" });
+    }
 
     const comment = await Comment.findById(commentId);
 
@@ -52,8 +76,8 @@ export const deleteComment = async (req, res) => {
     }
 
     if (
-      comment.userId.toString() !== req.user.id &&
-      req.user.role !== "admin"
+      comment.userId.toString() !== user._id.toString() &&
+      user.role !== "admin"
     ) {
       return res.status(403).json({
         message: "Unauthorized",

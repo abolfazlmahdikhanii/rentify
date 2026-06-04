@@ -25,7 +25,7 @@ export default function VisitCard({
   visit_phone,
   message,
   images,
-  id,
+  visitId,
   rentPrice,
   listingType,
   onChangeStatus,
@@ -41,7 +41,7 @@ export default function VisitCard({
       <div className={`${styles.card} ${isMore ? styles.cardActive : ""}`}>
         {/* هدر */}
         <div className={styles.header}>
-          <div className={styles.visitId}>کد بازدید: RNT-{id?.slice(0, 6)}</div>
+          <div className={styles.visitId}>کد بازدید: RNT-{visitId?.slice(0, 6)}</div>
           <div className={styles.statusWrapper}>
             <div className={styles.statusBadge}>{getStatusText(status)}</div>
             {status === "pending" && (
@@ -62,7 +62,7 @@ export default function VisitCard({
                   <li
                     className="drop-down__btn"
                     onClick={() => {
-                      onChangeStatus(id, "approved");
+                      onChangeStatus(visitId, "approved");
                       setIsShowDropdown(false);
                     }}
                   >
@@ -71,7 +71,7 @@ export default function VisitCard({
                   <li
                     className="drop-down__btn"
                     onClick={() => {
-                      onChangeStatus(id, "rejected");
+                      onChangeStatus(visitId, "rejected");
                       setIsShowDropdown(false);
                     }}
                   >
