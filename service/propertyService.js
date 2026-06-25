@@ -1,8 +1,8 @@
 import connectToDB from "@/configs/db";
 import Favorite from "@/models/Favorite";
 import Property from "@/models/Property";
-import PropertyImage from "@/models/PropertyImage";
 import VisitRequest from "@/models/VisitRequest";
+
 export async function getProperties(filters = {}, userId = null) {
   await connectToDB();
   try {
@@ -103,51 +103,58 @@ export async function getProperties(filters = {}, userId = null) {
     };
   }
 }
-
 export async function getPropertyByID(pId, userId = null) {
   await connectToDB();
 
   try {
-    const [property, images, isVisit, favs] = await Promise.all([
-      Property.findOne({ _id: pId })
-        .populate("owner", "-password")
-        .populate("details")
-        .populate({
-          path: "comments",
-          match: { status: "approved" },
-          populate: [
-            { path: "userId", select: "name lastName avatar role agencyName" },
-            {
-              path: "replies",
-              populate: {
-                path: "userId",
-                select: "name lastName avatar role agencyName",
-              },
+    const property = await Property.findOne({ _id: pId })
+      .populate("owner", "-password")
+      .populate("details")
+      .populate({
+        path: "comments",
+
+        populate: [
+          {
+            path: "userId",
+            select: "name lastName avatar role agencyName",
+          },
+          {
+            path: "replies",
+            populate: {
+              path: "userId",
+              select: "name lastName avatar role agencyName",
             },
-          ],
-        })
-        .populate({
-          path: "location",
-          populate: { path: "city" },
-        })
-        .populate({
-          path: "equipments",
-          populate: { path: "equipment" },
-        })
-        .lean({ virtuals: false }),
-
-      PropertyImage.find({ propertyId: pId }).lean(),
-
-      VisitRequest.exists({ requesterId: userId, propertyId: pId }),
-
-      userId
-        ? Favorite.find({ userId }).select("propertyId").lean()
-        : Promise.resolve([]),
-    ]);
+          },
+        ],
+      })
+      .populate({
+        path: "location",
+        populate: {
+          path: "city",
+        },
+      })
+      .populate({
+        path: "equipments",
+        populate: {
+          path: "equipment",
+        },
+      })
+      .populate("images")
+      .lean({ virtuals: true });
 
     if (!property) {
       throw new Error("Property not found");
     }
+    // console.log(property.location.nearby.nearby)
+
+    const isVisit = await VisitRequest.exists({
+      requesterId: userId,
+      propertyId: pId,
+    });
+
+    const favs = userId
+      ? await Favorite.find({ userId }).select("propertyId").lean()
+      : [];
 
     const favSet = new Set(favs.map((f) => f.propertyId.toString()));
 
@@ -155,16 +162,16 @@ export async function getPropertyByID(pId, userId = null) {
       success: true,
       property: {
         ...property,
-        images,
         is_favorite: favSet.has(property._id.toString()),
-        isVisit: Boolean(isVisit),
+        isVisit: Boolean(isVisit) ?? false,
         isAuthor: userId
           ? property.owner._id.toString() === userId.toString()
           : false,
       },
     };
   } catch (error) {
-    console.error("getPropertyByID error:", error);
+    console.error(error);
+
     return {
       success: false,
       property: null,
