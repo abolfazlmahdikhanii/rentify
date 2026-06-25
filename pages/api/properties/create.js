@@ -116,7 +116,7 @@ export default async function handler(req, res) {
 
       bathrooms: req.body.bathrooms || 1,
 
-      floor: req.body.floor_number,
+      floor: String(req.body.floor_number),
 
       totalFloors: req.body.floors,
 

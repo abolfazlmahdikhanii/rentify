@@ -22,7 +22,6 @@ export async function getProperties(filters = {}, userId = null) {
 
     const filter = { status: "published" };
 
-   
     if (propertyType) {
       filter.propertyType = Array.isArray(propertyType)
         ? { $in: propertyType }
@@ -44,14 +43,36 @@ export async function getProperties(filters = {}, userId = null) {
       ];
     }
 
+    
     if (city) {
-      const locations = await PropertyLocation.find({ city })
-        .select("propertyId")
-        .lean();
-      const propertyIds = locations.map((l) => l.propertyId);
-      filter._id = { $in: propertyIds };
-    }
+      const cityDoc = await City.findOne({
+        $or: [
+          { name: city },
+          { slug: city },
+          { _id: mongoose.isValidObjectId(city) ? city : undefined },
+        ],
+      }).lean();
 
+      if (cityDoc) {
+        const locations = await PropertyLocation.find({
+          city: cityDoc._id, 
+        })
+          .select("propertyId")
+          .lean();
+
+        const propertyIds = locations.map((l) => l.propertyId);
+        filter._id = { $in: propertyIds };
+      } else {
+      
+        return {
+          success: true,
+          total: 0,
+          page: 1,
+          totalPages: 0,
+          properties: [],
+        };
+      }
+    }
 
     const sortMap = {
       newest: { createdAt: -1 },
@@ -72,7 +93,7 @@ export async function getProperties(filters = {}, userId = null) {
           path: "location",
           populate: { path: "city" },
         })
-        .sort(sortQuery) 
+        .sort(sortQuery)
         .skip((pageNum - 1) * limitNum)
         .limit(limitNum)
         .lean({ virtuals: false }),
@@ -80,7 +101,6 @@ export async function getProperties(filters = {}, userId = null) {
       Property.countDocuments(filter),
     ]);
 
-    
     const propertyIds = properties.map((p) => p._id);
     const allImages = await PropertyImage.find({
       propertyId: { $in: propertyIds },
@@ -101,7 +121,7 @@ export async function getProperties(filters = {}, userId = null) {
 
     const result = properties.map((item) => ({
       ...item,
-      images: imageMap[item._id.toString()] || [], 
+      images: imageMap[item._id.toString()] || [],
       is_favorite: favSet.has(item._id.toString()),
     }));
 

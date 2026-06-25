@@ -24,7 +24,7 @@ const PropertyDetailsSchema = new mongoose.Schema(
 
     elevator: Boolean,
 
-    floor: Number,
+    floor: String,
 
     totalFloors: Number,
 
