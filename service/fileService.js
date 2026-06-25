@@ -12,7 +12,8 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 export const validateFile = (file) => {
   if (!file?.filepath) throw new Error("Invalid file: No file path");
-  if (!fs.existsSync(file.filepath)) throw new Error("File not found in temporary location");
+  if (!fs.existsSync(file.filepath))
+    throw new Error("File not found in temporary location");
 
   const stats = fs.statSync(file.filepath);
   if (stats.size > MAX_FILE_SIZE) throw new Error("File too large (max 20MB)");
@@ -33,15 +34,18 @@ export const uploadFile = async (file, folder = "uploads") => {
   try {
     validateFile(file);
     const fileBuffer = fs.readFileSync(file.filepath);
+    const base64 = fileBuffer.toString("base64"); 
 
     const result = await imagekit.files.upload({
-      file: fileBuffer,
+      file: base64, 
       fileName: generateFileName(file.originalFilename || "image"),
       folder: `/${folder}`,
       useUniqueFileName: true,
     });
 
-    try { fs.unlinkSync(file.filepath); } catch {}
+    try {
+      fs.unlinkSync(file.filepath);
+    } catch {}
 
     return {
       url: result.url,
@@ -54,10 +58,18 @@ export const uploadFile = async (file, folder = "uploads") => {
   }
 };
 
-export const uploadFileFromBuffer = async (buffer, originalName, folder = "uploads") => {
+export const uploadFileFromBuffer = async (
+  buffer,
+  originalName,
+  folder = "uploads",
+) => {
   try {
+    const base64 = Buffer.isBuffer(buffer)
+      ? buffer.toString("base64")
+      : Buffer.from(buffer).toString("base64"); 
+
     const result = await imagekit.files.upload({
-      file: buffer,
+      file: base64, 
       fileName: generateFileName(originalName),
       folder: `/${folder}`,
       useUniqueFileName: true,
