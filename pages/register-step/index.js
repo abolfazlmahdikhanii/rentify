@@ -264,10 +264,12 @@ export default function RegisterStep() {
         building_area: data.areaSize
           ? parseInt(String(data.areaSize).replace(/\D/g, ""), 10)
           : undefined,
-        floor_number:
-          floorMap[floorValue] !== undefined
-            ? floorMap[floorValue]
-            : parseInt(floorValue, 10) || 0,
+        floor_number: (() => {
+          const floorMap = { penthouse: 21, rooftop: 22, ground: 0 };
+          return floorMap[data.floor] !== undefined
+            ? floorMap[data.floor]
+            : parseInt(data.floor, 10) || 0;
+        })(),
         floors: data.totalFloors,
         house_year: data.buildingAge,
         unitType: data.unitType,
