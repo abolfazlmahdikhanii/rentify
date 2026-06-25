@@ -2,6 +2,7 @@ import connectToDB from "@/configs/db";
 import Favorite from "@/models/Favorite";
 import Property from "@/models/Property";
 import PropertyImage from "@/models/PropertyImage";
+import PropertyLocation from "@/models/PropertyLocation";
 import VisitRequest from "@/models/VisitRequest";
 
 export async function getProperties(filters = {}, userId = null) {
