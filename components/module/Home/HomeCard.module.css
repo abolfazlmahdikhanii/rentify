@@ -92,9 +92,14 @@
   align-items: center;
   gap: 0.4rem;
   line-height: 1.8;
+  min-width: 0; 
+}
+
+.cardInfo__location span {
   white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 .cardInfo__title {
   font-size: 1.4rem;

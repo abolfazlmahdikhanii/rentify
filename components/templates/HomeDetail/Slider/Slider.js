@@ -41,8 +41,8 @@ const Slider = ({ images }) => {
                 src={slide.imageUrl}
                 alt="img"
                 className={styles.sliderImg__img}
-                width={400}
-                height={405}
+                width={600}
+                height={600}
                 onLoadStart={(e) => {
                   if (e.target.src !== "/images/empty-image.jpg")
                     e.currentTarget.src = "/images/empty-image.jpg";
@@ -58,8 +58,8 @@ const Slider = ({ images }) => {
           <div className={styles.sliderImg} style={{ minWidth: `100%` }}>
             <Image
               urlEndpoint=""
-              width={400}
-              height={405}
+              width={600}
+              height={600}
               src={"/images/empty-image.jpg"}
               alt="img"
               className={styles.sliderImg__img}
