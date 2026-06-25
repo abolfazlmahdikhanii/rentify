@@ -3,6 +3,7 @@ import Favorite from "@/models/Favorite";
 import Property from "@/models/Property";
 import PropertyImage from "@/models/PropertyImage";
 import PropertyLocation from "@/models/PropertyLocation";
+import State from "@/models/State";
 import VisitRequest from "@/models/VisitRequest";
 
 export async function getProperties(filters = {}, userId = null) {
@@ -43,19 +44,17 @@ export async function getProperties(filters = {}, userId = null) {
       ];
     }
 
-    
     if (city) {
-      const cityDoc = await City.findOne({
+      const cityDoc = await State.findOne({
         $or: [
-          { name: city },
-          { slug: city },
-          { _id: mongoose.isValidObjectId(city) ? city : undefined },
+          { title: city },
+          { _id: mongoose.isValidObjectId(city) ? city : null },
         ],
       }).lean();
 
       if (cityDoc) {
         const locations = await PropertyLocation.find({
-          city: cityDoc._id, 
+          city: cityDoc._id,
         })
           .select("propertyId")
           .lean();
@@ -63,7 +62,6 @@ export async function getProperties(filters = {}, userId = null) {
         const propertyIds = locations.map((l) => l.propertyId);
         filter._id = { $in: propertyIds };
       } else {
-      
         return {
           success: true,
           total: 0,
