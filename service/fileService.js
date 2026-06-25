@@ -1,5 +1,5 @@
-import ImageKit from "@imagekit/nodejs";
-const fs = require("fs");
+import { ImageKit } from "@imagekit/nodejs";
+import fs from "fs";
 
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -7,38 +7,19 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
 });
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
-/**
- * Validate formidable file
- */
 export const validateFile = (file) => {
-  if (!file?.filepath) {
-    throw new Error("Invalid file: No file path");
-  }
+  if (!file?.filepath) throw new Error("Invalid file: No file path");
+  if (!fs.existsSync(file.filepath)) throw new Error("File not found in temporary location");
 
-  // Check if file exists
-  if (!fs.existsSync(file.filepath)) {
-    throw new Error("File not found in temporary location");
-  }
-
-  // Get file stats to check size
   const stats = fs.statSync(file.filepath);
-  if (stats.size > MAX_FILE_SIZE) {
-    throw new Error("File too large (max 20MB)");
-  }
-
-  if (!ALLOWED_TYPES.includes(file.mimetype)) {
-    throw new Error(
-      `Invalid file type: ${file.mimetype}. Allowed types: ${ALLOWED_TYPES.join(", ")}`,
-    );
-  }
+  if (stats.size > MAX_FILE_SIZE) throw new Error("File too large (max 20MB)");
+  if (!ALLOWED_TYPES.includes(file.mimetype))
+    throw new Error(`Invalid file type: ${file.mimetype}`);
 };
 
-/**
- * Generate clean filename
- */
 const generateFileName = (originalName) => {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 15);
@@ -48,30 +29,19 @@ const generateFileName = (originalName) => {
   return `${timestamp}_${random}_${cleanName}`;
 };
 
-/**
- * Upload formidable file to ImageKit
- */
 export const uploadFile = async (file, folder = "uploads") => {
   try {
-    // Validate the formidable file object
     validateFile(file);
-
-    // Read the file from temporary path
     const fileBuffer = fs.readFileSync(file.filepath);
 
-    const result = await imagekit.upload({
-      file: fileBuffer, // Use the buffer we read from filepath
+    const result = await imagekit.files.upload({
+      file: fileBuffer,
       fileName: generateFileName(file.originalFilename || "image"),
       folder: `/${folder}`,
       useUniqueFileName: true,
     });
 
-    // Clean up: delete the temporary file
-    try {
-      fs.unlinkSync(file.filepath);
-    } catch (cleanupError) {
-      console.warn("Could not delete temporary file:", cleanupError.message);
-    }
+    try { fs.unlinkSync(file.filepath); } catch {}
 
     return {
       url: result.url,
@@ -84,16 +54,9 @@ export const uploadFile = async (file, folder = "uploads") => {
   }
 };
 
-/**
- * Upload file from buffer (alternative method)
- */
-export const uploadFileFromBuffer = async (
-  buffer,
-  originalName,
-  folder = "uploads",
-) => {
+export const uploadFileFromBuffer = async (buffer, originalName, folder = "uploads") => {
   try {
-    const result = await imagekit.upload({
+    const result = await imagekit.files.upload({
       file: buffer,
       fileName: generateFileName(originalName),
       folder: `/${folder}`,
@@ -111,16 +74,11 @@ export const uploadFileFromBuffer = async (
   }
 };
 
-/**
- * Delete file from ImageKit
- */
 export const deleteFile = async (fileId) => {
   try {
-    await imagekit.deleteFile(fileId);
+    await imagekit.files.delete(fileId);
     return true;
   } catch (error) {
     throw new Error(`Delete failed: ${error.message}`);
   }
 };
-
-
