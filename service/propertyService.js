@@ -5,6 +5,7 @@ import PropertyImage from "@/models/PropertyImage";
 import PropertyLocation from "@/models/PropertyLocation";
 import State from "@/models/State";
 import VisitRequest from "@/models/VisitRequest";
+import mongoose from "mongoose";
 
 export async function getProperties(filters = {}, userId = null) {
   await connectToDB();
