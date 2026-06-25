@@ -1,6 +1,5 @@
-import React from "react";
-import Select from "@/components/module/Form/Select";
 import Input from "@/components/module/Form/Input";
+import Select from "@/components/module/Form/Select";
 import styles from "../../../styles/RegisterStep.module.css";
 
 const UNITS_PER_FLOOR_OPTIONS = [
@@ -99,14 +98,14 @@ const StepDetails = ({ watch, setValue, errors }) => {
           onChange={(val) => setValue("floor", val)}
           error={errors.floor}
           options={[
-            { value:-1, label: "زیرزمین" },
-            { value: 0, label: "همکف" },
+            { value: "-1", label: "زیرزمین" },
+            { value: "0", label: "همکف" },
             ...Array.from({ length: 20 }, (_, i) => ({
-              value: i + 1,
-              label: `${i + 1}${i === 0 ? "م" : "م"}`,
+              value: String(i + 1),
+              label: `${i + 1}م`,
             })),
-            { value: "penthouse", label: "پنت هاوس" },
-            { value: "rooftop", label: "پشت بام" },
+            { value: "21", label: "پنت هاوس" }, 
+            { value: "22", label: "پشت بام" }, 
           ]}
         />
       </div>

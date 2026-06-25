@@ -1,26 +1,20 @@
-import CheckBox from "@/components/module/Form/CheckBox";
-import Input from "@/components/module/Form/Input";
-import Select from "@/components/module/Form/Select";
-import MapSelect from "@/components/module/Map/MapSelect";
-import Uploader from "@/components/module/Uploader/Uploader";
 import Layout from "@/components/templates/RegisterStep/Layout";
 import StepContent from "@/components/templates/RegisterStep/StepContent";
 import StepDeal from "@/components/templates/RegisterStep/StepDeal";
-import StepLocation from "@/components/templates/RegisterStep/StepLocation";
 import StepDetails from "@/components/templates/RegisterStep/StepDetails";
 import StepEquipment from "@/components/templates/RegisterStep/StepEquipment";
-import StepMoreInfo from "@/components/templates/RegisterStep/StepMoreInfo";
 import StepImages from "@/components/templates/RegisterStep/StepImages";
+import StepLocation from "@/components/templates/RegisterStep/StepLocation";
+import StepMoreInfo from "@/components/templates/RegisterStep/StepMoreInfo";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/RegisterStep.module.css";
 
-import ModalMap from "@/components/templates/RegisterStep/ModalMap";
-import useSWR from "swr";
-import { toast } from "react-toastify";
-import { toastOption } from "@/helper/helper";
-import PrivateRoute from "@/components/module/PrivateRoute/PrivateRoute";
 import Loader from "@/components/module/Loader/Loader";
+import PrivateRoute from "@/components/module/PrivateRoute/PrivateRoute";
+import { toastOption } from "@/helper/helper";
+import { toast } from "react-toastify";
+import useSWR from "swr";
 
 const fetcher = () =>
   fetch("api/locations/provinces").then((res) => res.json());
@@ -248,7 +242,8 @@ export default function RegisterStep() {
     try {
       setIsLoading(true);
       // Transform data to match backend expectations
-
+      const floorValue = data.floor;
+      const floorMap = { penthouse: 21, rooftop: 22, ground: 0 };
       const backendData = {
         houseType: data.houseType,
         title: data.title || fillTitle(),
@@ -269,7 +264,10 @@ export default function RegisterStep() {
         building_area: data.areaSize
           ? parseInt(String(data.areaSize).replace(/\D/g, ""), 10)
           : undefined,
-        floor_number: Number(data.floor),
+        floor_number:
+          floorMap[floorValue] !== undefined
+            ? floorMap[floorValue]
+            : parseInt(floorValue, 10) || 0,
         floors: data.totalFloors,
         house_year: data.buildingAge,
         unitType: data.unitType,
