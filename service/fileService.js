@@ -38,7 +38,7 @@ export const uploadFile = async (file, folder = "uploads") => {
     const result = await imagekit.files.upload({
       file: base64,
       fileName: generateFileName(file.originalFilename || "image"),
-      folder: `/${folder}`,
+      folder: folder,
       useUniqueFileName: true,
     });
 
