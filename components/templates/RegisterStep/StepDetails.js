@@ -99,10 +99,10 @@ const StepDetails = ({ watch, setValue, errors }) => {
           onChange={(val) => setValue("floor", val)}
           error={errors.floor}
           options={[
-            { value: "-1", label: "زیرزمین" },
-            { value: "0", label: "همکف" },
+            { value:-1, label: "زیرزمین" },
+            { value: 0, label: "همکف" },
             ...Array.from({ length: 20 }, (_, i) => ({
-              value: String(i + 1),
+              value: i + 1,
               label: `${i + 1}${i === 0 ? "م" : "م"}`,
             })),
             { value: "penthouse", label: "پنت هاوس" },
