@@ -1,6 +1,7 @@
 import connectToDB from "@/configs/db";
 import Favorite from "@/models/Favorite";
 import Property from "@/models/Property";
+import PropertyImage from "@/models/PropertyImage";
 import VisitRequest from "@/models/VisitRequest";
 
 export async function getProperties(filters = {}, userId = null) {
@@ -70,7 +71,7 @@ export async function getProperties(filters = {}, userId = null) {
           path: "location",
           populate: { path: "city" },
         })
-        .sort(sortQuery) // ✅
+        .sort(sortQuery) 
         .skip((pageNum - 1) * limitNum)
         .limit(limitNum)
         .lean({ virtuals: false }),
