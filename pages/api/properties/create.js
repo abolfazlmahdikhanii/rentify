@@ -153,7 +153,6 @@ export default async function handler(req, res) {
         locationPayload.longitude = req.body.longitude;
         locationPayload.nearby = locationData.nearby;
         locationPayload.address = locationData.address.address;
-        locationPayload.city = locationData.address.city;
         locationPayload.district = locationData.address.district;
       } catch (err) {
         locationPayload.latitude = req.body.latitude;
