@@ -1,24 +1,17 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import Cookies from "js-cookie";
-import dynamic from "next/dynamic";
-import styles from "../../styles/Homes.module.css";
-import FilterHome from "@/components/templates/Homes/FilterHome/FilterHome";
+import Home from "@/components/module/Home/Home";
+import Loader from "@/components/module/Loader/Loader";
+import NotFound from "@/components/module/NotFound/NotFound";
 import Tab from "@/components/module/Tab/Tab";
 import TabItem from "@/components/module/Tab/TabItem";
-import Home from "@/components/module/Home/Home";
-import NotFound from "@/components/module/NotFound/NotFound";
+import FilterHome from "@/components/templates/Homes/FilterHome/FilterHome";
 import { CompareContext } from "@/context/CompareContext";
-import Loader from "@/components/module/Loader/Loader";
-import { getProperties } from "@/service/propertyService";
 import { userVerify } from "@/lib/userAuth";
+import { getProperties } from "@/service/propertyService";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useMemo, useState } from "react";
+import useSWR from "swr";
+import styles from "../../styles/Homes.module.css";
 
 const FilterModal = dynamic(
   () => import("@/components/module/FilterModal/FilterModal"),
@@ -26,47 +19,29 @@ const FilterModal = dynamic(
 );
 
 const buildUrl = (query) => {
-  const page = query.page || 1;
-  const limit = 8 * page;
+  const page = parseInt(query.page) || 1;
 
-  let url = `/api/properties?page=${page}&limit=${limit}`;
+  const params = new URLSearchParams();
+  params.set("page", page);
+  params.set("limit", "8");
 
-  if (query.sort) {
-    url += `&sort=${query.sort}`;
-  }
+  if (query.sort) params.set("sort", query.sort);
+  if (query.minPrice) params.set("minPrice", query.minPrice);
+  if (query.maxPrice) params.set("maxPrice", query.maxPrice);
+  if (query.room) params.set("room", query.room);
+  if (query.withPhoto) params.set("withPhoto", query.withPhoto);
+  if (query.location) params.set("city", query.location);
+  if (query.cType) params.set("listingType", query.cType);
+  if (query.search) params.set("search", query.search);
 
-  if (query.minPrice) {
-    url += `&minPrice=${query.minPrice}`;
-  }
-
-  if (query.maxPrice) {
-    url += `&maxPrice=${query.maxPrice}`;
-  }
-
- 
   if (query.houseType) {
-    if (Array.isArray(query.houseType)) {
-      query.houseType.forEach((type) => {
-        url += `&propertyType=${type}`;
-      });
-    } else {
-      url += `&propertyType=${query.houseType}`;
-    }
+    const types = Array.isArray(query.houseType)
+      ? query.houseType
+      : [query.houseType];
+    types.forEach((type) => params.append("propertyType", type));
   }
 
-  if (query.location) {
-    url += `&city=${query.location}`;
-  }
-
-  if (query.cType) {
-    url += `&listingType=${query.cType}`;
-  }
-
-  if (query.search) {
-    url += `&search=${query.search}`;
-  }
-
-  return url;
+  return `/api/properties?${params.toString()}`;
 };
 
 // Fetcher function
@@ -317,19 +292,22 @@ const Homes = ({ fallbackData }) => {
               title="بروزترین"
               value="newest"
               tabActive={query.sort || "newest"}
-              href={"/homes?sort=newest"}
+              href={{ pathname: "/homes", query: { ...query, sort: "newest" } }}
             />
             <TabItem
               title="ارزان ترین"
               value="cheap"
               tabActive={query.sort}
-              href={"/homes?sort=cheap"}
+              href={{ pathname: "/homes", query: { ...query, sort: "cheap" } }}
             />
             <TabItem
               title="گران ترین"
               value="expensive"
               tabActive={query.sort}
-              href={"/homes?sort=expensive"}
+              href={{
+                pathname: "/homes",
+                query: { ...query, sort: "expensive" },
+              }}
             />
           </Tab>
         )}
@@ -411,12 +389,15 @@ const Homes = ({ fallbackData }) => {
 export default Homes;
 
 export async function getServerSideProps({ query, req, res }) {
-      const user=await userVerify(req,res);
-  const data = await getProperties({
-    ...query,
-    page: query.page || 1,
-    limit: 8,
-  },user?._id);
+  const user = await userVerify(req, res);
+  const data = await getProperties(
+    {
+      ...query,
+      page: query.page || 1,
+      limit: 8,
+    },
+    user?._id,
+  );
 
   return {
     props: {
