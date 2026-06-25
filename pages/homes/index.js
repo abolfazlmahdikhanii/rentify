@@ -43,7 +43,19 @@ const buildUrl = (query) => {
 
   return `/api/properties?${params.toString()}`;
 };
-
+const buildSortUrl = (sortValue) => {
+  const newQuery = { ...query, sort: sortValue };
+  delete newQuery.page;
+  const params = new URLSearchParams();
+  Object.entries(newQuery).forEach(([key, val]) => {
+    if (Array.isArray(val)) {
+      val.forEach((v) => params.append(key, v));
+    } else {
+      params.set(key, val);
+    }
+  });
+  return `/homes?${params.toString()}`;
+};
 // Fetcher function
 
 const fetcher = async (url) => {
@@ -292,22 +304,19 @@ const Homes = ({ fallbackData }) => {
               title="بروزترین"
               value="newest"
               tabActive={query.sort || "newest"}
-              href={{ pathname: "/homes", query: { ...query, sort: "newest" } }}
+              href={buildSortUrl("newest")} 
             />
             <TabItem
               title="ارزان ترین"
               value="cheap"
               tabActive={query.sort}
-              href={{ pathname: "/homes", query: { ...query, sort: "cheap" } }}
+              href={buildSortUrl("cheap")} 
             />
             <TabItem
               title="گران ترین"
               value="expensive"
               tabActive={query.sort}
-              href={{
-                pathname: "/homes",
-                query: { ...query, sort: "expensive" },
-              }}
+              href={buildSortUrl("expensive")} 
             />
           </Tab>
         )}

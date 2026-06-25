@@ -23,7 +23,7 @@ const HomePageDetail = ({ house }) => {
   const { slug } = router.query;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShowShareModal, setIsShowShareModal] = useState(false);
-console.log("house",house)
+
   return (
     <div className="detail-bg">
       <Head>
