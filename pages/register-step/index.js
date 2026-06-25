@@ -269,7 +269,7 @@ export default function RegisterStep() {
         building_area: data.areaSize
           ? parseInt(String(data.areaSize).replace(/\D/g, ""), 10)
           : undefined,
-        floor_number: data.floor,
+        floor_number: Number(data.floor),
         floors: data.totalFloors,
         house_year: data.buildingAge,
         unitType: data.unitType,
