@@ -251,7 +251,7 @@ const Home = ({
                   clipRule="evenodd"
                 ></path>
               </svg>
-              {location?.address}
+              <span>{location?.address}</span>
             </div>
           </div>
           <div>
