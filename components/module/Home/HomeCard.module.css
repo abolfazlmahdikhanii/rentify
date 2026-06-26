@@ -75,6 +75,7 @@
   -o-border-radius: 0.8rem;
   font-size: 1.4rem;
   color: #fff;
+  white-space: nowrap;
 }
 .statusSuccess {
   background-color: var(--light-success);
